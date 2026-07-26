@@ -161,11 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
         id: i + 1, title: `College Video Clip #${i + 1 < 10 ? '0' + (i + 1) : (i + 1)}`, category: 'events', duration: '04:15', url: '', comment: `<!-- VIDEO ${i + 1} -->`
     }));
 
-    // Events: 15 Photos & 5 Videos
+    // Events: 15 Photos & 10 Videos
     const DEFAULT_EVENT_IMAGES = Array.from({ length: 15 }, (_, i) => ({
         id: i + 1, title: `Event Photo #${i + 1}`, category: 'events', url: '', comment: `<!-- EVENT IMAGE ${i + 1} -->`
     }));
-    const DEFAULT_EVENT_VIDEOS = Array.from({ length: 5 }, (_, i) => ({
+    const DEFAULT_EVENT_VIDEOS = Array.from({ length: 10 }, (_, i) => ({
         id: i + 1, title: `Event Video Reel #${i + 1}`, category: 'events', duration: '04:00', url: '', comment: `<!-- EVENT VIDEO ${i + 1} -->`
     }));
 
@@ -249,6 +249,18 @@ document.addEventListener('DOMContentLoaded', () => {
             try { localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(store)); } catch(e) {}
         }
         if (!store.hero_photo) store.hero_photo = [{ id: 1, title: 'Madura College Hero Photo', url: '' }];
+        if (store.event_videos && store.event_videos.length < 10) {
+            for (let i = store.event_videos.length + 1; i <= 10; i++) {
+                store.event_videos.push({
+                    id: i,
+                    title: `Event Video Reel #${i}`,
+                    category: 'events',
+                    duration: '04:00',
+                    url: '',
+                    comment: `<!-- EVENT VIDEO ${i} -->`
+                });
+            }
+        }
         return store;
     }
 
@@ -276,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 3. Events
         renderGridSection(['events-image-grid', 'event-image-grid'], store.event_images, 'image', 'event_images', 'Event Photos (15 Photos)');
-        renderGridSection(['events-video-grid', 'event-video-grid'], store.event_videos, 'video', 'event_videos', 'Event Videos (5 Videos)');
+        renderGridSection(['events-video-grid', 'event-video-grid'], store.event_videos, 'video', 'event_videos', 'Event Videos (10 Videos)');
 
         // 4. Teachers
         renderGridSection(['teachers-image-grid', 'teacher-image-grid'], store.teacher_images, 'teacher', 'teacher_images', 'Professors Photos (10 Photos)');
