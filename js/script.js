@@ -1,6 +1,60 @@
 import { galleryImages, eventImages, friendImages, teacherImages, gradImages } from "./images.js";
 import { galleryVideos, videoArchive, eventVideos } from "./videos.js";
 
+// Immediately attach global helper functions to window object to prevent undefined/TypeError console errors
+window.toggleMobileMenu = function(e) {
+    if (e) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+    }
+    const menu = document.getElementById('nav-menu') || document.querySelector('.nav-menu');
+    const toggleBtn = document.getElementById('mobile-toggle') || document.querySelector('.mobile-toggle');
+    if (menu) {
+        const isCurrentlyActive = menu.classList.contains('active');
+        if (isCurrentlyActive) {
+            menu.classList.remove('active');
+        } else {
+            menu.classList.add('active');
+        }
+        const icon = toggleBtn?.querySelector('i');
+        if (icon) {
+            icon.className = menu.classList.contains('active') ? 'fas fa-xmark' : 'fas fa-bars';
+        }
+    }
+};
+
+window.openPageLightbox = function(element) {
+    if (!element) return;
+    const card = element.closest('.gallery-card, .gallery-item-wrapper, .apple-media-card, .placeholder-card, .story-media, .story-slot') || element;
+    const cardImg = card.querySelector('img');
+    if (!cardImg || !cardImg.src || cardImg.src.length < 5) return;
+
+    const allImgs = Array.from(document.querySelectorAll('.gallery-card img, .gallery-item-wrapper img, .apple-media-card img, .story-slot img, .story-media img')).filter(img => img.src && img.src.length > 5);
+    const imgList = allImgs.map((img, idx) => ({
+        src: img.src,
+        title: img.closest('.gallery-card, .apple-media-card, .story-slot, .story-media')?.querySelector('.overlay-label, .gallery-title, h3, .story-title')?.textContent || `Photo #${idx + 1}`
+    }));
+
+    const clickedIdx = allImgs.indexOf(cardImg);
+    if (typeof window.openFullscreenLightbox === 'function') {
+        window.openFullscreenLightbox(imgList, clickedIdx >= 0 ? clickedIdx : 0);
+    }
+};
+
+window.openPageEditor = function(element) {
+    if (!element) return;
+    const editBtn = element.closest('.btn-card-edit') || element;
+    const id = editBtn.getAttribute('data-id') || '1';
+    const sectionKey = editBtn.getAttribute('data-section') || 'gallery_images';
+    const type = editBtn.getAttribute('data-type') || 'image';
+
+    if (type === 'video') {
+        if (typeof window.openVideoEditor === 'function') window.openVideoEditor(sectionKey, id);
+    } else {
+        if (typeof window.openImageEditor === 'function') window.openImageEditor(sectionKey, id);
+    }
+};
+
 /*
 ==========================================================================
    MADURA COLLEGE MEMORIES | BATCH 2022–2025
@@ -8,6 +62,10 @@ import { galleryVideos, videoArchive, eventVideos } from "./videos.js";
    ========================================================================== */
 
 function startApplication() {
+    window.openImageEditor = openImageEditor;
+    window.openVideoEditor = openVideoEditor;
+    window.openFullscreenLightbox = openFullscreenLightbox;
+    window.deleteMediaItem = deleteMediaItem;
 
     /* --------------------------------------------------------------------------
        0. USER ROLES & AUTHENTICATION SYSTEM
@@ -47,37 +105,41 @@ function startApplication() {
         const user = getCurrentUser();
         const navActions = document.querySelector('.nav-actions');
 
-        // Only redirect from login page to index.html if user is already logged in
-        if (isAdmin() && isLoginPage) {
-            window.location.replace('index.html');
-            return;
-        }
+        const loggedInAsAdmin = isAdmin();
+        const userEmail = user?.email || (loggedInAsAdmin ? 'admin123@gmail.com' : 'batch2025@maduracollege.edu');
 
-        if (isAdmin() || user) {
-            if (navActions) {
-                if (!document.getElementById('role-badge')) {
-                    const badge = document.createElement('span');
-                    badge.id = 'role-badge';
-                    badge.className = isAdmin() ? 'role-badge admin' : 'role-badge user';
-                    badge.innerHTML = isAdmin() ? '<i class="fas fa-shield-halved"></i> Admin' : '<i class="fas fa-user"></i> Friend';
-                    const logoutBtn = document.getElementById('logout-btn');
-                    if (logoutBtn) navActions.insertBefore(badge, logoutBtn);
-                }
-
+        if (navActions) {
+            let badge = document.getElementById('role-badge');
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.id = 'role-badge';
                 const logoutBtn = document.getElementById('logout-btn');
-                if (logoutBtn) {
-                    logoutBtn.className = 'btn btn-sm btn-logout';
-                    logoutBtn.innerHTML = '<i class="fas fa-right-from-bracket"></i> <span>Logout</span>';
-                }
+                if (logoutBtn) navActions.insertBefore(badge, logoutBtn);
+                else navActions.prepend(badge);
+            }
+            badge.className = loggedInAsAdmin ? 'role-badge admin' : 'role-badge user';
+            badge.style.display = 'inline-flex';
+            badge.style.marginRight = '8px';
+            badge.innerHTML = loggedInAsAdmin 
+                ? `<i class="fas fa-shield-halved"></i> Admin` 
+                : `<i class="fas fa-user-circle"></i> Friend`;
+
+            let logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.className = 'btn btn-sm btn-logout';
+                logoutBtn.style.display = 'inline-flex';
+                logoutBtn.style.visibility = 'visible';
+                logoutBtn.style.opacity = '1';
+                logoutBtn.innerHTML = '<i class="fas fa-right-from-bracket"></i> Logout';
             }
         }
 
         // Enforce Admin visibility rules across all pages without blocking access
         document.querySelectorAll('.admin-only, .admin-card-actions').forEach(el => {
-            el.style.display = isAdmin() ? 'inline-flex' : 'none';
+            el.style.display = loggedInAsAdmin ? 'inline-flex' : 'none';
         });
         document.querySelectorAll('.admin-block-only').forEach(el => {
-            el.style.display = isAdmin() ? 'block' : 'none';
+            el.style.display = loggedInAsAdmin ? 'block' : 'none';
         });
     }
 
@@ -189,11 +251,9 @@ function startApplication() {
     const DEFAULT_TEACHER_VIDEOS = Array.from({ length: 5 }, (_, i) => ({
         id: i + 1, title: `Professor Tribute Video #${i + 1}`, duration: '05:00', url: `../assets/videos/video${(i % 3) + 1}.mp4`, comment: `<!-- TEACHER VIDEO ${i + 1} -->`
     }));
-    const DEFAULT_FRIEND_IMAGES = friendImages;
     const DEFAULT_FRIEND_VIDEOS = Array.from({ length: 10 }, (_, i) => ({
         id: i + 1, title: `Friendship Memory Reel #${i + 1}`, duration: '02:45', url: `../assets/videos/video${(i % 3) + 1}.mp4`, comment: `<!-- FRIEND VIDEO ${i + 1} -->`
     }));
-    const DEFAULT_GRAD_IMAGES = gradImages;
     const DEFAULT_GRAD_VIDEOS = Array.from({ length: 10 }, (_, i) => ({
         id: i + 1, title: `Graduation Ceremony Reel #${i + 1}`, duration: '05:30', url: `../assets/videos/video${(i % 3) + 1}.mp4`, comment: `<!-- GRADUATION VIDEO ${i + 1} -->`
     }));
@@ -305,9 +365,51 @@ function startApplication() {
         // 7. Journey
         renderGridSection(['journey-image-grid', 'journey-photos-grid'], store.journey_images, 'image', 'journey_images', 'Timeline Photos (15 Photos)');
         renderGridSection(['journey-video-grid', 'journey-videos-grid'], store.journey_videos, 'video', 'journey_videos', 'Timeline Videos (5 Videos)');
-        renderDynamicJourneyStory();
         renderHeroPhotoAdminControls();
+        applyMobileMasonryLayout();
     }
+
+    function applyMobileMasonryLayout() {
+        const cards = document.querySelectorAll('.gallery-grid .gallery-card, .masonry-layout .gallery-card');
+        if (!cards || cards.length === 0) return;
+
+        let landscapeIndex = 0;
+
+        cards.forEach((card) => {
+            const img = card.querySelector('img');
+            if (!img) return;
+
+            const checkAndApply = () => {
+                const nw = img.naturalWidth || img.width;
+                const nh = img.naturalHeight || img.height;
+
+                if (!nw || !nh) return;
+
+                // Check if wide landscape (naturalWidth > naturalHeight * 1.15)
+                if (nw > nh * 1.15) {
+                    landscapeIndex++;
+                    // Approximately 15-20% of landscape images become Featured (span 2 columns)
+                    if (landscapeIndex % 5 === 2) {
+                        card.classList.add('featured-image');
+                    } else {
+                        card.classList.remove('featured-image');
+                    }
+                } else {
+                    // Portrait or Square stay normal (span 1 column)
+                    card.classList.remove('featured-image');
+                }
+            };
+
+            if (img.complete && img.naturalWidth > 0) {
+                checkAndApply();
+            } else {
+                img.addEventListener('load', checkAndApply);
+            }
+        });
+    }
+
+    window.addEventListener('resize', applyMobileMasonryLayout);
+    window.addEventListener('load', applyMobileMasonryLayout);
 
     function renderHeroPhotoAdminControls() {
         const heroCard = document.querySelector('.hero-photo-card');
@@ -413,6 +515,10 @@ function startApplication() {
             }
         } else {
             bar.style.display = isAdmin() ? 'flex' : 'none';
+        }
+
+        if (!items || items.length === 0) {
+            if (grid.children.length > 0) return;
         }
 
         grid.innerHTML = '';
@@ -872,6 +978,14 @@ function startApplication() {
             callback();
             return;
         }
+        let fired = false;
+        const safeCallback = () => {
+            if (!fired) {
+                fired = true;
+                callback();
+            }
+        };
+
         if (!document.getElementById('cropper-css')) {
             const link = document.createElement('link');
             link.id = 'cropper-css';
@@ -883,12 +997,15 @@ function startApplication() {
             const script = document.createElement('script');
             script.id = 'cropper-js';
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js';
-            script.onload = callback;
+            script.onload = safeCallback;
+            script.onerror = safeCallback;
             document.body.appendChild(script);
         } else {
             const script = document.getElementById('cropper-js');
-            script.addEventListener('load', callback);
+            script.addEventListener('load', safeCallback);
+            script.addEventListener('error', safeCallback);
         }
+        setTimeout(safeCallback, 300);
     }
 
     function openImageEditor(sectionKey, id) {
@@ -899,8 +1016,13 @@ function startApplication() {
 
         const store = getMediaStore();
         const list = store[sectionKey] || [];
-        const item = list.find(x => String(x.id) === String(id));
-        if (!item) return;
+        let item = list.find(x => String(x.id) === String(id));
+        if (!item) {
+            const btnEl = document.querySelector(`.btn-card-edit[data-id="${id}"][data-section="${sectionKey}"]`) || document.querySelector(`.btn-card-edit[data-id="${id}"]`);
+            const cardImg = btnEl?.closest('.gallery-card, .apple-media-card, .placeholder-card')?.querySelector('img');
+            const imgUrl = cardImg?.src || '../images/gallery_001.jpeg';
+            item = { id: id, url: imgUrl, title: `Photo #${id}` };
+        }
 
         currentEditSectionKey = sectionKey;
         currentEditItemId = id;
@@ -1140,6 +1262,7 @@ function startApplication() {
             }
         });
     }
+    window.openImageEditor = openImageEditor;
 
     /* --------------------------------------------------------------------------
        3. ADMIN UPLOAD / EDIT MODAL FOR ALL SECTIONS
@@ -1333,6 +1456,7 @@ function startApplication() {
         renderAllPageSections();
         showToast(isVideo ? 'Video removed from view' : 'Image removed from view', 'success');
     }
+    window.deleteMediaItem = deleteMediaItem;
 
     function showToast(message, type = 'info') {
         let container = document.getElementById('toast-container');
@@ -1442,19 +1566,82 @@ function startApplication() {
         if (typeof updateBackToTopProgress === 'function') updateBackToTopProgress();
     });
 
-    if (mobileToggle && navMenu) {
-        mobileToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            const icon = mobileToggle.querySelector('i');
-            if (navMenu.classList.contains('active')) icon.className = 'fas fa-xmark'; else icon.className = 'fas fa-bars';
-        });
-        navMenu.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-                if (mobileToggle.querySelector('i')) mobileToggle.querySelector('i').className = 'fas fa-bars';
-            });
-        });
-    }
+    window.toggleMobileMenu = function(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        const menu = document.getElementById('nav-menu') || document.querySelector('.nav-menu');
+        const toggleBtn = document.getElementById('mobile-toggle') || document.querySelector('.mobile-toggle');
+        if (menu) {
+            menu.classList.toggle('active');
+            const icon = toggleBtn?.querySelector('i');
+            if (icon) {
+                icon.className = menu.classList.contains('active') ? 'fas fa-xmark' : 'fas fa-bars';
+            }
+        }
+    };
+
+    // Capture phase listener for mobile menu toggle, link clicks, edit buttons & photo card lightbox
+    ['click', 'touchend'].forEach(evtType => {
+        document.addEventListener(evtType, (e) => {
+            // 1. Edit Button Clicked
+            const editBtn = e.target.closest('.btn-card-edit');
+            if (editBtn) {
+                e.preventDefault();
+                e.stopPropagation();
+                const id = editBtn.getAttribute('data-id') || '1';
+                const sectionKey = editBtn.getAttribute('data-section') || 'gallery_images';
+                const type = editBtn.getAttribute('data-type') || 'image';
+
+                if (type === 'video') {
+                    if (typeof openVideoEditor === 'function') openVideoEditor(sectionKey, id);
+                } else {
+                    if (typeof openImageEditor === 'function') openImageEditor(sectionKey, id);
+                }
+                return;
+            }
+
+            // 2. Mobile Menu Toggle Clicked
+            const toggleBtn = e.target.closest('#mobile-toggle, .mobile-toggle');
+            if (toggleBtn) {
+                window.toggleMobileMenu(e);
+                return;
+            }
+
+            // 3. Nav Link Clicked
+            const navLink = e.target.closest('.nav-menu .nav-link');
+            if (navLink) {
+                const menu = document.getElementById('nav-menu') || document.querySelector('.nav-menu');
+                if (menu) {
+                    menu.classList.remove('active');
+                    const toggleIcon = document.querySelector('#mobile-toggle i, .mobile-toggle i');
+                    if (toggleIcon) toggleIcon.className = 'fas fa-bars';
+                }
+                return;
+            }
+
+            // 4. Gallery Card Image Touch/Click (Open Fullscreen Lightbox)
+            const card = e.target.closest('.gallery-card, .gallery-item-wrapper, .apple-media-card');
+            if (card) {
+                if (e.target.closest('.admin-card-actions, .btn-card-edit, .btn-card-delete')) return;
+
+                const cardImg = card.querySelector('img');
+                if (!cardImg || !cardImg.src || cardImg.src.length < 5) return;
+
+                const allImgs = Array.from(document.querySelectorAll('.gallery-card img, .gallery-item-wrapper img, .apple-media-card img')).filter(img => img.src && img.src.length > 5);
+                const imgList = allImgs.map((img, idx) => ({
+                    src: img.src,
+                    title: img.closest('.gallery-card, .apple-media-card')?.querySelector('.overlay-label, .gallery-title, h3')?.textContent || `Photo #${idx + 1}`
+                }));
+
+                const clickedIdx = allImgs.indexOf(cardImg);
+                if (typeof openFullscreenLightbox === 'function') {
+                    openFullscreenLightbox(imgList, clickedIdx >= 0 ? clickedIdx : 0);
+                }
+            }
+        }, true);
+    });
 
     function updateActiveNavLink() {
         const currentPage = window.location.pathname.split('/').pop() || 'index.html';
@@ -1466,10 +1653,65 @@ function startApplication() {
     }
     updateActiveNavLink();
 
+    function applyPinterestMasonryLayout() {
+        const grid = document.getElementById('gallery-grid');
+        if (!grid) return;
+
+        const width = window.innerWidth;
+        let colCount = 2; // Mobile default: 2 columns
+        if (width >= 1200) colCount = 5;       // Desktop: 5 columns
+        else if (width >= 900) colCount = 4;   // Laptop: 4 columns
+        else if (width >= 600) colCount = 3;   // Tablet: 3 columns
+
+        const cards = Array.from(grid.querySelectorAll('.gallery-item-wrapper, .pinterest-masonry-card'));
+        if (cards.length === 0) return;
+
+        grid.innerHTML = '';
+        grid.className = 'pinterest-masonry-container';
+
+        const columns = [];
+        const colHeights = new Array(colCount).fill(0);
+
+        for (let i = 0; i < colCount; i++) {
+            const col = document.createElement('div');
+            col.className = 'pinterest-masonry-column';
+            grid.appendChild(col);
+            columns.push(col);
+        }
+
+        cards.forEach((card) => {
+            let minColIdx = 0;
+            let minHeight = colHeights[0];
+            for (let c = 1; c < colCount; c++) {
+                if (colHeights[c] < minHeight) {
+                    minHeight = colHeights[c];
+                    minColIdx = c;
+                }
+            }
+
+            card.className = 'pinterest-masonry-card revealed';
+            card.style.opacity = '1';
+            card.style.transform = 'none';
+
+            columns[minColIdx].appendChild(card);
+
+            const img = card.querySelector('img');
+            let estimatedH = 250;
+            if (img && img.naturalWidth && img.naturalHeight) {
+                estimatedH = (img.naturalHeight / img.naturalWidth) * 200;
+            }
+            colHeights[minColIdx] += estimatedH + 12;
+        });
+    }
+
+    window.addEventListener('resize', applyPinterestMasonryLayout);
+    window.applyPinterestMasonryLayout = applyPinterestMasonryLayout;
+
     function triggerAllReveals() {
         document.querySelectorAll('[data-reveal]').forEach(el => {
             el.classList.add('revealed');
         });
+        applyPinterestMasonryLayout();
     }
     triggerAllReveals();
     setTimeout(triggerAllReveals, 50);
@@ -1519,110 +1761,256 @@ function startApplication() {
         });
     });
 
-    function getOrCreateLightboxModal() {
-        let modal = document.getElementById('lightbox-modal');
+    /* --------------------------------------------------------------------------
+       PREMIUM FULLSCREEN IMAGE VIEWER & LIGHTBOX WITH ZOOM & SWIPE/NAV
+       -------------------------------------------------------------------------- */
+    let activeLightbox = {
+        modalEl: null,
+        imgList: [],
+        currentIndex: 0,
+        zoomScale: 1,
+        panX: 0,
+        panY: 0,
+        isDragging: false,
+        startX: 0,
+        startY: 0
+    };
+
+    function openFullscreenLightbox(imgList, startIndex = 0) {
+        window.openFullscreenLightbox = openFullscreenLightbox;
+        if (!imgList || imgList.length === 0) return;
+
+        activeLightbox.imgList = imgList;
+        activeLightbox.currentIndex = Math.max(0, Math.min(startIndex, imgList.length - 1));
+        activeLightbox.zoomScale = 1;
+        activeLightbox.panX = 0;
+        activeLightbox.panY = 0;
+
+        let modal = document.getElementById('fullscreen-viewer-modal');
         if (!modal) {
             modal = document.createElement('div');
-            modal.id = 'lightbox-modal';
-            modal.className = 'lightbox-modal';
+            modal.id = 'fullscreen-viewer-modal';
+            modal.className = 'fullscreen-viewer-modal';
             modal.innerHTML = `
-                <div class="lightbox-overlay" id="lightbox-overlay"></div>
-                <button class="lightbox-close" id="lightbox-close" aria-label="Close Lightbox" style="position: fixed; top: 20px; right: 20px; font-size: 1.8rem; color: #ffffff; background: rgba(0, 0, 0, 0.85); border: 2px solid rgba(0, 242, 254, 0.7); width: 48px; height: 48px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 100005; backdrop-filter: blur(12px); box-shadow: 0 0 25px rgba(0, 242, 254, 0.6);"><i class="fas fa-xmark"></i></button>
-                <div class="lightbox-container glass-panel" style="max-width: 95vw; max-height: 90vh; padding: 20px; border-radius: 20px; background: rgba(8, 9, 14, 0.95); border: 1px solid rgba(0, 242, 254, 0.45); box-shadow: 0 30px 70px rgba(0,0,0,0.95); position: relative; z-index: 100000;">
-                    <div id="lightbox-content"></div>
+                <div class="viewer-backdrop" id="viewer-backdrop"></div>
+                <div class="viewer-header">
+                    <div class="viewer-counter" id="viewer-counter">Photo 1 of 1</div>
+                    <div class="viewer-title" id="viewer-title">College Memory</div>
+                    <button class="viewer-btn viewer-close-btn" id="viewer-close-btn" title="Close (ESC)">
+                        <i class="fas fa-xmark"></i>
+                    </button>
+                </div>
+                
+                <button class="viewer-nav-btn viewer-prev-btn" id="viewer-prev-btn" title="Previous (Left Arrow)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="viewer-nav-btn viewer-next-btn" id="viewer-next-btn" title="Next (Right Arrow)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <div class="viewer-stage" id="viewer-stage">
+                    <img id="viewer-target-img" src="" alt="Fullscreen View" draggable="false">
+                </div>
+
+                <div class="viewer-toolbar">
+                    <button class="viewer-tool-btn" id="viewer-zoom-out" title="Zoom Out (-)"><i class="fas fa-minus"></i></button>
+                    <span class="viewer-zoom-badge" id="viewer-zoom-badge">100%</span>
+                    <button class="viewer-tool-btn" id="viewer-zoom-in" title="Zoom In (+)"><i class="fas fa-plus"></i></button>
+                    <button class="viewer-tool-btn" id="viewer-zoom-reset" title="Reset Zoom"><i class="fas fa-rotate-left"></i></button>
                 </div>
             `;
             document.body.appendChild(modal);
-
-            const closeModal = () => {
-                const vid = modal.querySelector('video');
-                if (vid) {
-                    vid.pause();
-                    vid.currentTime = 0;
-                }
-                modal.classList.remove('active');
-            };
-
-            modal.addEventListener('click', (e) => {
-                if (e.target.closest('#lightbox-close') || e.target.closest('.lightbox-close') || e.target.closest('#lightbox-overlay') || e.target.closest('.lightbox-overlay')) {
-                    e.stopPropagation();
-                    closeModal();
-                }
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && modal.classList.contains('active')) {
-                    closeModal();
-                }
-            });
         }
-        return modal;
+        activeLightbox.modalEl = modal;
+
+        const imgEl = modal.querySelector('#viewer-target-img');
+        const titleEl = modal.querySelector('#viewer-title');
+        const counterEl = modal.querySelector('#viewer-counter');
+        const stageEl = modal.querySelector('#viewer-stage');
+        const zoomBadge = modal.querySelector('#viewer-zoom-badge');
+
+        const updateTransform = () => {
+            if (!imgEl) return;
+            imgEl.style.transform = `translate(${activeLightbox.panX}px, ${activeLightbox.panY}px) scale(${activeLightbox.zoomScale})`;
+            if (zoomBadge) zoomBadge.textContent = `${Math.round(activeLightbox.zoomScale * 100)}%`;
+            if (stageEl) {
+                stageEl.style.cursor = activeLightbox.zoomScale > 1 ? 'grab' : 'default';
+            }
+        };
+
+        const resetZoom = () => {
+            activeLightbox.zoomScale = 1;
+            activeLightbox.panX = 0;
+            activeLightbox.panY = 0;
+            updateTransform();
+        };
+
+        const loadCurrentImage = () => {
+            resetZoom();
+            const currentItem = activeLightbox.imgList[activeLightbox.currentIndex];
+            if (!currentItem) return;
+
+            if (imgEl) imgEl.src = currentItem.src || currentItem.url;
+            if (titleEl) titleEl.textContent = currentItem.title || 'College Memory';
+            if (counterEl) counterEl.textContent = `Photo ${activeLightbox.currentIndex + 1} of ${activeLightbox.imgList.length}`;
+
+            const prevBtn = modal.querySelector('#viewer-prev-btn');
+            const nextBtn = modal.querySelector('#viewer-next-btn');
+            if (prevBtn) prevBtn.style.display = activeLightbox.imgList.length > 1 ? 'flex' : 'none';
+            if (nextBtn) nextBtn.style.display = activeLightbox.imgList.length > 1 ? 'flex' : 'none';
+        };
+
+        const closeViewer = () => {
+            resetZoom();
+            modal.classList.remove('active');
+        };
+
+        const showPrev = () => {
+            if (activeLightbox.imgList.length <= 1) return;
+            activeLightbox.currentIndex = (activeLightbox.currentIndex - 1 + activeLightbox.imgList.length) % activeLightbox.imgList.length;
+            loadCurrentImage();
+        };
+
+        const showNext = () => {
+            if (activeLightbox.imgList.length <= 1) return;
+            activeLightbox.currentIndex = (activeLightbox.currentIndex + 1) % activeLightbox.imgList.length;
+            loadCurrentImage();
+        };
+
+        modal.querySelector('#viewer-close-btn').onclick = closeViewer;
+        modal.querySelector('#viewer-backdrop').onclick = closeViewer;
+        modal.querySelector('#viewer-prev-btn').onclick = (e) => { e.stopPropagation(); showPrev(); };
+        modal.querySelector('#viewer-next-btn').onclick = (e) => { e.stopPropagation(); showNext(); };
+
+        modal.querySelector('#viewer-zoom-in').onclick = (e) => {
+            e.stopPropagation();
+            activeLightbox.zoomScale = Math.min(4, activeLightbox.zoomScale + 0.3);
+            updateTransform();
+        };
+        modal.querySelector('#viewer-zoom-out').onclick = (e) => {
+            e.stopPropagation();
+            activeLightbox.zoomScale = Math.max(1, activeLightbox.zoomScale - 0.3);
+            if (activeLightbox.zoomScale === 1) { activeLightbox.panX = 0; activeLightbox.panY = 0; }
+            updateTransform();
+        };
+        modal.querySelector('#viewer-zoom-reset').onclick = (e) => {
+            e.stopPropagation();
+            resetZoom();
+        };
+
+        stageEl.onwheel = (e) => {
+            e.preventDefault();
+            const delta = e.deltaY < 0 ? 0.25 : -0.25;
+            activeLightbox.zoomScale = Math.max(1, Math.min(4, activeLightbox.zoomScale + delta));
+            if (activeLightbox.zoomScale === 1) {
+                activeLightbox.panX = 0;
+                activeLightbox.panY = 0;
+            }
+            updateTransform();
+        };
+
+        imgEl.ondblclick = (e) => {
+            e.stopPropagation();
+            if (activeLightbox.zoomScale > 1) {
+                resetZoom();
+            } else {
+                activeLightbox.zoomScale = 2.5;
+                updateTransform();
+            }
+        };
+
+        const handleDragStart = (e) => {
+            if (activeLightbox.zoomScale <= 1) return;
+            activeLightbox.isDragging = true;
+            const pageX = e.touches ? e.touches[0].pageX : e.pageX;
+            const pageY = e.touches ? e.touches[0].pageY : e.pageY;
+            activeLightbox.startX = pageX - activeLightbox.panX;
+            activeLightbox.startY = pageY - activeLightbox.panY;
+            if (stageEl) stageEl.style.cursor = 'grabbing';
+        };
+
+        const handleDragMove = (e) => {
+            if (!activeLightbox.isDragging || activeLightbox.zoomScale <= 1) return;
+            const pageX = e.touches ? e.touches[0].pageX : e.pageX;
+            const pageY = e.touches ? e.touches[0].pageY : e.pageY;
+            activeLightbox.panX = pageX - activeLightbox.startX;
+            activeLightbox.panY = pageY - activeLightbox.startY;
+            updateTransform();
+        };
+
+        const handleDragEnd = () => {
+            activeLightbox.isDragging = false;
+            if (stageEl) stageEl.style.cursor = activeLightbox.zoomScale > 1 ? 'grab' : 'default';
+        };
+
+        stageEl.onmousedown = handleDragStart;
+        window.onmousemove = handleDragMove;
+        window.onmouseup = handleDragEnd;
+
+        stageEl.ontouchstart = handleDragStart;
+        window.ontouchmove = handleDragMove;
+        window.ontouchend = handleDragEnd;
+
+        const handleKeydown = (e) => {
+            if (!modal.classList.contains('active')) return;
+            if (e.key === 'Escape') closeViewer();
+            else if (e.key === 'ArrowLeft') showPrev();
+            else if (e.key === 'ArrowRight') showNext();
+        };
+        window.removeEventListener('keydown', modal._keydownHandler);
+        modal._keydownHandler = handleKeydown;
+        window.addEventListener('keydown', handleKeydown);
+
+        loadCurrentImage();
+        modal.classList.add('active');
     }
 
-    // Global document-level fallback handler for closing any Lightbox modal
+    window.openFullscreenLightbox = openFullscreenLightbox;
+
+    window.openPageLightbox = function(element) {
+        if (!element) return;
+        const card = element.closest('.gallery-card, .gallery-item-wrapper, .apple-media-card, .placeholder-card, .story-media, .story-slot') || element;
+        const cardImg = card.querySelector('img');
+        if (!cardImg || !cardImg.src || cardImg.src.length < 5) return;
+
+        const allImgs = Array.from(document.querySelectorAll('.gallery-card img, .gallery-item-wrapper img, .apple-media-card img, .story-slot img, .story-media img')).filter(img => img.src && img.src.length > 5);
+        const imgList = allImgs.map((img, idx) => ({
+            src: img.src,
+            title: img.closest('.gallery-card, .apple-media-card, .story-slot, .story-media')?.querySelector('.overlay-label, .gallery-title, h3, .story-title')?.textContent || `Photo #${idx + 1}`
+        }));
+
+        const clickedIdx = allImgs.indexOf(cardImg);
+        openFullscreenLightbox(imgList, clickedIdx >= 0 ? clickedIdx : 0);
+    };
+
+    window.openPageEditor = function(element) {
+        if (!element) return;
+        const editBtn = element.closest('.btn-card-edit') || element;
+        const id = editBtn.getAttribute('data-id') || '1';
+        const sectionKey = editBtn.getAttribute('data-section') || 'gallery_images';
+        const type = editBtn.getAttribute('data-type') || 'image';
+
+        if (type === 'video') openVideoEditor(sectionKey, id);
+        else openImageEditor(sectionKey, id);
+    };
+
+    // Unified Document Click Delegation with Capture Phase
     document.addEventListener('click', (e) => {
-        if (e.target.closest('#lightbox-close, .lightbox-close, #lightbox-overlay, .lightbox-overlay')) {
-            const activeModals = document.querySelectorAll('.lightbox-modal.active, #lightbox-modal.active');
-            activeModals.forEach(m => {
-                const vid = m.querySelector('video');
-                if (vid) {
-                    vid.pause();
-                    vid.currentTime = 0;
-                }
-                m.classList.remove('active');
-            });
+        // 1. Edit Button Click
+        const editBtn = e.target.closest('.btn-card-edit');
+        if (editBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.openPageEditor(editBtn);
+            return;
         }
-    });
 
-    document.addEventListener('click', (e) => {
-        const card = e.target.closest('.placeholder-card, .gallery-card, .event-card, .hero-photo-card, .story-media, .story-slot, .video-card, .video-placeholder-card, .teacher-photo, .friend-photo');
-        if (card && !e.target.closest('.btn-card-edit') && !e.target.closest('.btn-card-delete') && !e.target.closest('.admin-bar-info') && !e.target.closest('.btn-upload-trigger') && !e.target.closest('.admin-card-actions')) {
-            const modal = getOrCreateLightboxModal();
-            const lightboxContent = modal.querySelector('#lightbox-content');
-
-            const title = card.querySelector('.gallery-title, .placeholder-title, h3, .overlay-label, .video-title, .teacher-name, .friend-name')?.textContent || 'College Memory';
-            const img = card.querySelector('img');
-            const vid = card.querySelector('video');
-
-            if (lightboxContent) {
-                if (img && img.src && img.src.length > 5) {
-                    lightboxContent.innerHTML = `
-                        <div style="text-align: center; padding: 10px; position: relative;">
-                            <img src="${img.src}" style="max-height: 78vh; max-width: 90vw; object-fit: contain; border-radius: 14px; box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 35px rgba(0, 242, 254, 0.45); border: 2px solid rgba(0, 242, 254, 0.5); display: block; margin: 0 auto 16px auto;">
-                            <h3 style="font-size: 1.5rem; font-weight: 700; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); margin: 0;">${escapeHTML(title)}</h3>
-                        </div>
-                    `;
-                } else if (vid && vid.src && vid.src.length > 5) {
-                    lightboxContent.innerHTML = `
-                        <div style="text-align: center; padding: 10px; position: relative;">
-                            <video src="${vid.src}" controls autoplay style="max-height: 78vh; max-width: 90vw; border-radius: 14px; box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 35px rgba(0, 242, 254, 0.45); border: 2px solid rgba(0, 242, 254, 0.5); display: block; margin: 0 auto 16px auto;"></video>
-                            <h3 style="font-size: 1.5rem; font-weight: 700; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); margin: 0;">${escapeHTML(title)}</h3>
-                        </div>
-                    `;
-                } else {
-                    const cardSection = card.querySelector('.btn-card-edit')?.getAttribute('data-section') || card.getAttribute('data-section') || 'gallery_images';
-                    const isVidSection = cardSection.includes('video');
-
-                    lightboxContent.innerHTML = `
-                        <div class="lightbox-placeholder-preview" style="padding: 30px; text-align: center;">
-                            <div class="placeholder-icon" style="margin: 0 auto 20px auto; width: 90px; height: 90px; font-size: 3rem;"><i class="fas ${isVidSection ? 'fa-video' : 'fa-camera'}"></i></div>
-                            <span class="placeholder-tag">Interactive Media Card Shell</span>
-                            <h2 style="font-size: 1.8rem; margin-bottom: 12px; color: #fff;">${escapeHTML(title)}</h2>
-                            <p style="color: var(--color-text-muted); max-width: 500px; margin: 0 auto 24px auto;">Clean frame ready for real photo or video upload.</p>
-                            ${isAdmin() ? `
-                                <button class="btn btn-primary btn-glow btn-lightbox-upload" data-section="${cardSection}" data-type="${isVidSection ? 'video' : 'image'}" style="margin: 0 auto; display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; padding: 12px 24px;">
-                                    <i class="fas fa-cloud-arrow-up"></i> Upload ${isVidSection ? 'Video' : 'Photo'} Now
-                                </button>
-                            ` : `
-                                <div class="code-comment" style="display: inline-block; padding: 10px 20px; font-size: 0.95rem;">Admin permissions required to upload media.</div>
-                            `}
-                        </div>
-                    `;
-                }
-            }
-            modal.classList.add('active');
+        // 2. Image Card Click (Fullscreen Lightbox)
+        const card = e.target.closest('.gallery-card, .gallery-item-wrapper, .apple-media-card, .placeholder-card, .story-media, .story-slot');
+        if (card && !e.target.closest('.btn-card-edit, .btn-card-delete, .admin-card-actions, .admin-control-bar')) {
+            window.openPageLightbox(card);
         }
-    });
+    }, true);
 
     document.addEventListener('click', (e) => {
         const uploadBtn = e.target.closest('.btn-lightbox-upload');

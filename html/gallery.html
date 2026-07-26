@@ -10,10 +10,234 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script>
-        if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+        if (localStorage.getItem("isUserLoggedIn") !== "true" && localStorage.getItem("isAdminLoggedIn") !== "true") {
             window.location.replace("login.html");
         }
+        window.toggleMobileMenu = function(e) {
+            if (e) { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); }
+            var menu = document.getElementById('nav-menu') || document.querySelector('.nav-menu');
+            var toggleBtn = document.getElementById('mobile-toggle') || document.querySelector('.mobile-toggle');
+            if (menu) {
+                menu.classList.toggle('active');
+                var icon = toggleBtn ? toggleBtn.querySelector('i') : null;
+                if (icon) {
+                    icon.className = menu.classList.contains('active') ? 'fas fa-xmark' : 'fas fa-bars';
+                }
+            }
+        };
+
+        window._cropperInst = null;
+        window.closeAdminEditorModal = function() {
+            if (window._cropperInst) {
+                try { window._cropperInst.destroy(); } catch(e) {}
+                window._cropperInst = null;
+            }
+            var modal = document.getElementById('admin-image-editor-modal');
+            if (modal) {
+                modal.classList.remove('active');
+                modal.style.cssText = 'display: none !important;';
+            }
+        };
+
+        window.rotateEditorImg = function(deg) {
+            if (window._cropperInst) window._cropperInst.rotate(deg);
+        };
+        window.zoomEditorImg = function(val) {
+            if (window._cropperInst) window._cropperInst.zoom(val);
+        };
+        window.resetEditorImg = function() {
+            if (window._cropperInst) window._cropperInst.reset();
+        };
+        window.setEditorCropRatio = function(ratioVal) {
+            if (window._cropperInst) {
+                if (ratioVal === 'free') window._cropperInst.setAspectRatio(NaN);
+                else window._cropperInst.setAspectRatio(eval(ratioVal));
+            }
+        };
+        window.replaceEditorImg = function(input) {
+            if (input && input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    if (window._cropperInst) window._cropperInst.replace(e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        };
+        window.saveEditorImg = function(id, sectionKey) {
+            if (window._cropperInst && window._activeEditorCardImg) {
+                var canvas = window._cropperInst.getCroppedCanvas({ maxWidth: 1920, maxHeight: 1920 });
+                if (canvas) {
+                    var croppedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+                    window._activeEditorCardImg.src = croppedDataUrl;
+                    
+                    try {
+                        var storeKey = 'mc_static_media_store_v6';
+                        var store = JSON.parse(localStorage.getItem(storeKey) || '{}');
+                        var list = store[sectionKey || 'gallery_images'] || [];
+                        var item = list.find(function(x) { return String(x.id) === String(id); });
+                        if (item) {
+                            item.url = croppedDataUrl;
+                        } else {
+                            list.push({ id: id, url: croppedDataUrl, title: 'Photo #' + id });
+                        }
+                        store[sectionKey || 'gallery_images'] = list;
+                        localStorage.setItem(storeKey, JSON.stringify(store));
+                    } catch(err) { console.error('LocalStorage save error:', err); }
+                }
+            }
+            window.closeAdminEditorModal();
+        };
+
+        window.openPageEditor = function(element) {
+            var editBtn = element ? (element.closest ? element.closest('.btn-card-edit') : element) : null;
+            if (!editBtn) editBtn = element;
+            var id = editBtn ? editBtn.getAttribute('data-id') : '1';
+            var sectionKey = editBtn ? editBtn.getAttribute('data-section') : 'gallery_images';
+            
+            var card = editBtn ? editBtn.closest('.gallery-item-wrapper, .gallery-card, .apple-media-card') : null;
+            var cardImg = card ? card.querySelector('img') : null;
+            var imgUrl = cardImg ? cardImg.src : '../images/gallery_001.jpeg';
+
+            window._activeEditorCardImg = cardImg;
+
+            var modal = document.getElementById('admin-image-editor-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'admin-image-editor-modal';
+                modal.className = 'lightbox-modal active';
+                modal.style.cssText = 'position:fixed; inset:0; z-index:999999; display:flex !important; align-items:center; justify-content:center; background:rgba(4,5,10,0.92); backdrop-filter:blur(20px);';
+                modal.innerHTML = `
+                    <div class="glass-panel" style="width:94%; max-width:680px; padding:22px; border-radius:20px; background:rgba(14,17,26,0.95); border:1px solid rgba(0,242,254,0.4); color:#fff; box-shadow:0 20px 50px rgba(0,0,0,0.9); max-height:92vh; overflow-y:auto;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px;">
+                            <h3 style="margin:0; font-size:1.2rem; color:#00f2fe;"><i class="fas fa-crop-simple"></i> Admin Cropper & Image Editor</h3>
+                            <button type="button" onclick="window.closeAdminEditorModal()" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer;"><i class="fas fa-xmark"></i></button>
+                        </div>
+                        
+                        <div style="text-align:center; margin-bottom:15px; background:#000; padding:10px; border-radius:12px; height:320px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                            <img id="editor-preview-target" src="${imgUrl}" style="max-width:100%; max-height:300px; display:block;">
+                        </div>
+
+                        <!-- CROP ASPECT RATIO PRESETS -->
+                        <div style="margin-bottom:12px;">
+                            <label style="display:block; font-size:0.75rem; color:#00f2fe; margin-bottom:6px; text-transform:uppercase; font-weight:700;"><i class="fas fa-crop"></i> Select Crop Ratio</label>
+                            <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                                <button type="button" class="btn btn-sm btn-outline" onclick="window.setEditorCropRatio('free')" style="padding:4px 10px; font-size:0.75rem;"><i class="fas fa-unlock"></i> Free Crop</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="window.setEditorCropRatio('1/1')" style="padding:4px 10px; font-size:0.75rem;"><i class="fas fa-square"></i> 1:1</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="window.setEditorCropRatio('3/4')" style="padding:4px 10px; font-size:0.75rem;"><i class="fas fa-mobile"></i> 3:4</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="window.setEditorCropRatio('4/3')" style="padding:4px 10px; font-size:0.75rem;"><i class="fas fa-image"></i> 4:3</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="window.setEditorCropRatio('16/9')" style="padding:4px 10px; font-size:0.75rem;"><i class="fas fa-tv"></i> 16:9</button>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="window.setEditorCropRatio('9/16')" style="padding:4px 10px; font-size:0.75rem;"><i class="fas fa-mobile-screen"></i> 9:16</button>
+                            </div>
+                        </div>
+
+                        <!-- ROTATE, ZOOM & FILE CONTROLS -->
+                        <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:15px;">
+                            <button type="button" class="btn btn-sm btn-outline" onclick="window.rotateEditorImg(-90)" style="padding:5px 10px; font-size:0.75rem;"><i class="fas fa-rotate-left"></i> Rotate L</button>
+                            <button type="button" class="btn btn-sm btn-outline" onclick="window.rotateEditorImg(90)" style="padding:5px 10px; font-size:0.75rem;"><i class="fas fa-rotate-right"></i> Rotate R</button>
+                            <button type="button" class="btn btn-sm btn-outline" onclick="window.zoomEditorImg(0.1)" style="padding:5px 10px; font-size:0.75rem;"><i class="fas fa-plus"></i> Zoom +</button>
+                            <button type="button" class="btn btn-sm btn-outline" onclick="window.zoomEditorImg(-0.1)" style="padding:5px 10px; font-size:0.75rem;"><i class="fas fa-minus"></i> Zoom -</button>
+                            <button type="button" class="btn btn-sm btn-outline" onclick="window.resetEditorImg()" style="padding:5px 10px; font-size:0.75rem;"><i class="fas fa-arrow-rotate-left"></i> Reset</button>
+                            <label class="btn btn-sm btn-outline" style="cursor:pointer; padding:5px 10px; font-size:0.75rem;">
+                                <i class="fas fa-folder-open"></i> Replace Image
+                                <input type="file" accept="image/*" style="display:none;" onchange="window.replaceEditorImg(this)">
+                            </label>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end; gap:10px;">
+                            <button type="button" class="btn btn-secondary" onclick="window.closeAdminEditorModal()" style="padding:6px 16px;">Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="window.saveEditorImg('${id}', '${sectionKey}')" style="padding:6px 18px;">Save Changes</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            } else {
+                modal.style.cssText = 'position:fixed; inset:0; z-index:999999; display:flex !important; align-items:center; justify-content:center; background:rgba(4,5,10,0.92); backdrop-filter:blur(20px);';
+                var preview = document.getElementById('editor-preview-target');
+                if (preview) preview.src = imgUrl;
+            }
+
+            setTimeout(function() {
+                var targetImg = document.getElementById('editor-preview-target');
+                if (targetImg) {
+                    if (window._cropperInst) try { window._cropperInst.destroy(); } catch(e) {}
+                    if (window.Cropper) {
+                        window._cropperInst = new Cropper(targetImg, {
+                            aspectRatio: NaN,
+                            viewMode: 1,
+                            dragMode: 'move',
+                            autoCropArea: 1,
+                            responsive: true
+                        });
+                    }
+                }
+            }, 100);
+        };
+        window.openPageLightbox = function(element) {
+            if (typeof window.openFullscreenLightbox === 'function') {
+                var card = element ? (element.closest ? element.closest('.gallery-card, .gallery-item-wrapper, .apple-media-card') : element) : null;
+                var cardImg = card ? card.querySelector('img') : null;
+                if (!cardImg || !cardImg.src || cardImg.src.length < 5) return;
+                var allImgs = Array.from(document.querySelectorAll('.gallery-card img, .gallery-item-wrapper img, .apple-media-card img')).filter(function(img) { return img.src && img.src.length > 5; });
+                var imgList = allImgs.map(function(img, idx) {
+                    var cardContainer = img.closest('.gallery-card, .apple-media-card');
+                    var titleEl = cardContainer ? cardContainer.querySelector('.overlay-label, .gallery-title, h3') : null;
+                    return { src: img.src, title: titleEl ? titleEl.textContent : ('Photo #' + (idx + 1)) };
+                });
+                var clickedIdx = allImgs.indexOf(cardImg);
+                window.openFullscreenLightbox(imgList, clickedIdx >= 0 ? clickedIdx : 0);
+            }
+        };
+        window.renderUserRoleUI = function() {
+            var isAdminLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
+            var userEmail = localStorage.getItem("userEmail") || (isAdminLoggedIn ? "admin123@gmail.com" : "batch2025@maduracollege.edu");
+            var navActions = document.querySelector('.nav-actions');
+            if (navActions) {
+                var badge = document.getElementById('role-badge');
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.id = 'role-badge';
+                    var logoutBtn = document.getElementById('logout-btn');
+                    if (logoutBtn) navActions.insertBefore(badge, logoutBtn);
+                    else navActions.prepend(badge);
+                }
+                badge.className = isAdminLoggedIn ? 'role-badge admin' : 'role-badge user';
+                badge.style.display = 'inline-flex';
+                badge.innerHTML = isAdminLoggedIn 
+                    ? '<i class="fas fa-shield-halved"></i> Admin' 
+                    : '<i class="fas fa-user-circle"></i> Friend';
+
+                var logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn) {
+                    logoutBtn.className = 'btn btn-sm btn-logout';
+                    logoutBtn.style.display = 'inline-flex';
+                    logoutBtn.style.visibility = 'visible';
+                    logoutBtn.style.opacity = '1';
+                    logoutBtn.innerHTML = '<i class="fas fa-right-from-bracket"></i> Logout';
+                    logoutBtn.onclick = function() {
+                        localStorage.removeItem("isAdminLoggedIn");
+                        localStorage.removeItem("userEmail");
+                        window.location.replace("login.html");
+                    };
+                }
+            }
+        };
+        window.openPageDelete = function(element) {
+            var deleteBtn = element ? (element.closest ? element.closest('.btn-card-delete') : element) : null;
+            if (!deleteBtn) deleteBtn = element;
+            var id = deleteBtn ? deleteBtn.getAttribute('data-id') : null;
+            var sectionKey = deleteBtn ? deleteBtn.getAttribute('data-section') : 'gallery_images';
+            if (id && confirm('Are you sure you want to delete Photo #' + id + '?')) {
+                if (typeof window.deleteMediaItem === 'function') {
+                    window.deleteMediaItem(sectionKey, id);
+                }
+                var card = deleteBtn.closest('.gallery-card, .apple-media-card, .gallery-item-wrapper');
+                if (card) card.remove();
+            }
+        };
+        document.addEventListener('DOMContentLoaded', window.renderUserRoleUI);
     </script>
 </head>
 <body>
@@ -24,6 +248,7 @@
 
     <header class="navbar-header" id="navbar">
         <div class="nav-container">
+            <button class="mobile-toggle" id="mobile-toggle" onclick="window.toggleMobileMenu(event)"><i class="fas fa-bars"></i></button>
             <a href="index.html" class="nav-brand"><span class="brand-logo"><i class="fas fa-graduation-cap"></i></span><div class="brand-text"><span class="brand-title">Madura College</span><span class="brand-sub">Batch 2022–2025</span></div></a>
             <nav class="nav-menu" id="nav-menu">
                 <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
@@ -38,7 +263,6 @@
             <div class="nav-actions">
                 <a href="review.html" class="btn btn-sm btn-outline">Our Review</a>
                 <button class="btn btn-sm btn-secondary" id="logout-btn"><i class="fas fa-lock"></i></button>
-                <button class="mobile-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></button>
             </div>
         </div>
     </header>
@@ -92,51 +316,88 @@
     <script>
         (function renderGalleryStaticGrid() {
             const FOLDER_IMAGES = [
-                "../images/mc project.jpeg",
-                "../images/WhatsApp Image 2026-07-24 at 10.56.21 PM (1).jpeg",
-                "../images/WhatsApp Image 2026-07-24 at 10.56.21 PM.jpeg",
-                "../images/WhatsApp Image 2026-07-24 at 10.56.22 PM.jpeg",
-                "../images/WhatsApp Image 2026-07-24 at 11.27.35 PM (1).jpeg",
-                "../images/WhatsApp Image 2026-07-24 at 11.27.35 PM.jpeg",
-                "../images/WhatsApp Image 2026-07-24 at 11.27.36 PM.jpeg",
-                "../images/WhatsApp Image 2026-07-24 at 11.28.49 PM (1).jpeg",
-                "../images/WhatsApp Image 2026-07-24 at 11.28.49 PM (2).jpeg",
-                "../images/WhatsApp Image 2026-07-24 at 11.28.49 PM.jpeg",
-                "../images/WhatsApp Image 2026-07-24 at 11.30.08 PM.jpeg",
-                "../images/WhatsApp Image 2026-07-24 at 11.31.27 PM.jpeg",
-                "../images/WhatsApp Image 2026-07-24 at 11.31.46 PM.jpeg",
-                "../images/WhatsApp Image 2026-07-25 at 11.27.42 PM.jpeg",
-                "../images/WhatsApp Image 2026-07-25 at 11.27.43 PM.jpeg"
+                "../images/gallery_001.jpeg",
+                // "../images/gallery_002.jpg",
+                "../images/gallery_003.jpg",
+                "../images/gallery_004.jpg",
+                "../images/gallery_005.jpg",
+                "../images/gallery_006.jpg",
+                "../images/gallery_007.jpeg",
+                "../images/gallery_008.jpeg",
+                "../images/gallery_009.jpeg",
+                "../images/gallery_010.jpeg",
+                "../images/gallery_011.jpeg",
+                "../images/gallery_012.jpeg",
+                "../images/gallery_013.jpeg",
+                // "../images/gallery_014.jpeg",
+                "../images/gallery_015.jpeg",
+                "../images/gallery_016.jpeg",
+                "../images/gallery_017.jpeg",
+                "../images/gallery_018.jpeg",
+                "../images/gallery_019.jpeg",
+                "../images/gallery_020.jpeg",
+                "../images/gallery_021.jpeg",
+                "../images/gallery_022.jpeg",
+                "../images/gallery_023.jpeg",
+                "../images/gallery_024.jpeg",
+                "../images/gallery_025.jpeg",
+                "../images/gallery_026.jpeg",
+                "../images/gallery_027.jpeg",
+                "../images/gallery_028.jpeg",
+                "../images/gallery_029.jpeg"
             ];
 
             function doRender() {
                 const isAdminUser = localStorage.getItem("isAdminLoggedIn") === "true";
+
+                // Format Top Bar Admin Badge & Logout Button
+                const logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn && isAdminUser) {
+                    let badge = document.getElementById('role-badge');
+                    if (!badge) {
+                        badge = document.createElement('span');
+                        badge.id = 'role-badge';
+                        badge.className = 'role-badge admin';
+                        badge.style.display = 'inline-flex';
+                        badge.style.marginRight = '8px';
+                        badge.innerHTML = '<i class="fas fa-shield-halved"></i> Admin';
+                        logoutBtn.parentNode.insertBefore(badge, logoutBtn);
+                    }
+                    logoutBtn.className = 'btn btn-sm btn-logout';
+                    logoutBtn.innerHTML = '<i class="fas fa-right-from-bracket"></i> Logout';
+                }
+
                 const photoGrid = document.getElementById('gallery-grid');
                 if (photoGrid && photoGrid.children.length === 0) {
                     let photoHtml = '';
+                    var storeKey = 'mc_static_media_store_v6';
+                    var store = {};
+                    try { store = JSON.parse(localStorage.getItem(storeKey) || '{}'); } catch(e){}
+                    var savedList = store['gallery_images'] || [];
+
                     for (let i = 0; i < FOLDER_IMAGES.length; i++) {
-                        const imgUrl = FOLDER_IMAGES[i];
-                        const numStr = i + 1 < 10 ? '0' + (i + 1) : (i + 1);
+                        const itemId = i + 1;
+                        const savedItem = savedList.find(x => String(x.id) === String(itemId));
+                        const imgUrl = (savedItem && savedItem.url) ? savedItem.url : FOLDER_IMAGES[i];
+                        const numStr = itemId < 10 ? '0' + itemId : itemId;
                         photoHtml += `
-                            <div class="gallery-item-wrapper glass-panel apple-media-card revealed" data-reveal="fade-up" style="opacity: 1 !important; transform: none !important;">
-                                <div class="placeholder-card gallery-card has-media natural-aspect">
-                                    <div class="gallery-badge"><i class="fas fa-camera"></i> Photo #${numStr}</div>
-                                    ${isAdminUser ? `
-                                        <div class="admin-card-actions" style="position:absolute; top:14px; right:14px; z-index:10; display:inline-flex;">
-                                            <button class="btn-card-edit" data-id="${i + 1}" data-section="gallery_images" data-type="image" title="Edit Photo"><i class="fas fa-pen"></i></button>
-                                        </div>
-                                    ` : ''}
-                                    <img src="${imgUrl}" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; object-fit:contain !important; display:block !important;">
-                                    <div class="media-watermark-overlay">© Madura College Memories 2022–2025</div>
-                                    <div class="gallery-overlay">
-                                        <span class="overlay-icon"><i class="fas fa-expand"></i></span>
-                                        <span class="overlay-label">Gallery Snapshot #${numStr}</span>
+                            <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)">
+                                <div class="gallery-badge"><i class="fas fa-camera"></i> Photo #${numStr}</div>
+                                ${isAdminUser ? `
+                                    <div class="admin-card-actions" style="position:absolute; top:10px; right:10px; z-index:99999; display:inline-flex; gap:6px; pointer-events:auto !important;">
+                                        <button type="button" class="btn-card-edit" data-id="${itemId}" data-section="gallery_images" data-type="image" title="Edit Photo" onclick="event.preventDefault(); event.stopPropagation(); window.openPageEditor(this); return false;"><i class="fas fa-pen"></i></button>
+                                        <button type="button" class="btn-card-delete" data-id="${itemId}" data-section="gallery_images" title="Delete Photo" onclick="event.preventDefault(); event.stopPropagation(); window.openPageDelete(this); return false;"><i class="fas fa-trash"></i></button>
                                     </div>
-                                </div>
+                                ` : ''}
+                                <img src="${imgUrl}" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;">
+                                <div class="card-caption">Photo #${numStr} • Madura College</div>
                             </div>
                         `;
                     }
                     photoGrid.innerHTML = photoHtml;
+                    if (typeof window.applyPinterestMasonryLayout === 'function') {
+                        window.applyPinterestMasonryLayout();
+                    }
                 }
 
                 const videoGrid = document.getElementById('gallery-video-grid');
