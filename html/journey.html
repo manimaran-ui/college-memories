@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>if(!sessionStorage.getItem('mc_user_session'))window.location.replace('login.html');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B.Com Journey Story | Madura College 2022–2025</title>
@@ -10,7 +9,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script>
+        if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+            window.location.replace("login.html");
+        }
+    </script>
 </head>
 <body>
 
@@ -460,6 +464,6 @@
 
     <footer class="footer-section"><div class="container text-center"><p>Made with ❤️ by <strong>2022–2025 Batch</strong> | College: <strong>Madura College</strong></p><p class="developer-credit-footer">Designed & Developed by <strong>2022COM045</strong></p></div></footer>
     <button class="back-to-top" id="back-to-top"><i class="fas fa-arrow-up"></i></button>
-    <script src="script.js"></script>
+    <script type="module" src="../js/script.js"></script>
 </body>
 </html>

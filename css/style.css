@@ -2136,21 +2136,19 @@ body.cursor-hover .cursor-follower {
 }
 
 /* --------------------------------------------------------------------------
-   21. SCROLL REVEAL ANIMATIONS
+   21. SCROLL REVEAL ANIMATIONS (ALWAYS 100% VISIBLE FOR IMMEDIATE UI RENDERING)
    -------------------------------------------------------------------------- */
 [data-reveal] {
-    opacity: 0;
-    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
 }
 
-[data-reveal="fade-up"] { transform: translateY(40px); }
-[data-reveal="fade-down"] { transform: translateY(-40px); }
-[data-reveal="fade-right"] { transform: translateX(-40px); }
-[data-reveal="fade-left"] { transform: translateX(40px); }
-
-[data-reveal].revealed {
-    opacity: 1;
-    transform: translate(0, 0);
+[data-reveal].revealed,
+body [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -2332,7 +2330,7 @@ body.cursor-hover .cursor-follower {
     position: fixed;
     inset: 0;
     z-index: 100;
-    background: linear-gradient(180deg, rgba(8, 9, 14, 0.2) 0%, rgba(8, 9, 14, 0.65) 60%, rgba(8, 9, 14, 0.95) 100%), url('login-bg.jpg') center/cover no-repeat;
+    background: linear-gradient(180deg, rgba(8, 9, 14, 0.2) 0%, rgba(8, 9, 14, 0.65) 60%, rgba(8, 9, 14, 0.95) 100%), url('../batch-group-photo.jpg') center/cover no-repeat;
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -2345,7 +2343,7 @@ body.cursor-hover .cursor-follower {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: linear-gradient(135deg, rgba(8, 9, 14, 0.45) 0%, rgba(8, 9, 14, 0.75) 100%), url('login-bg.jpg') center/cover no-repeat;
+    background: linear-gradient(135deg, rgba(8, 9, 14, 0.45) 0%, rgba(8, 9, 14, 0.75) 100%), url('../batch-group-photo.jpg') center/cover no-repeat;
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -4298,6 +4296,130 @@ body.cursor-hover .cursor-follower {
         min-height: 180px !important;
         max-height: 180px !important;
     }
+}
+
+/* --------------------------------------------------------------------------
+   MEDIA PROTECTION SYSTEM RULES
+   -------------------------------------------------------------------------- */
+img, video, canvas, .card-media-img, .card-media-video, .placeholder-card, .apple-media-card {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    -webkit-user-drag: none !important;
+    -khtml-user-drag: none !important;
+    -moz-user-drag: none !important;
+    -o-user-drag: none !important;
+    user-drag: none !important;
+    pointer-events: auto;
+}
+
+/* Screenshot Blur Shield Overlay */
+body.screenshot-shield-active img,
+body.screenshot-shield-active video,
+body.screenshot-shield-active canvas {
+    filter: blur(40px) brightness(0.2) !important;
+    transition: filter 0.1s ease-in-out !important;
+}
+
+/* Dynamic Protection Watermark Overlay */
+.media-watermark-overlay {
+    position: absolute !important;
+    bottom: 12px !important;
+    right: 14px !important;
+    z-index: 10 !important;
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    color: rgba(255, 255, 255, 0.45) !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
+    pointer-events: none !important;
+    user-select: none !important;
+    letter-spacing: 0.4px !important;
+    font-family: 'Outfit', sans-serif !important;
+    background: rgba(0, 0, 0, 0.25) !important;
+    padding: 3px 8px !important;
+    border-radius: 4px !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+}
+
+/* ==========================================================================
+   PERFECT DIV CONTAINER MATCH FOR ALL GALLERY IMAGES
+   ========================================================================== */
+.gallery-grid img,
+.gallery-card img,
+.gallery-item-wrapper img,
+.placeholder-card img,
+.card-media-img,
+.apple-media-card img {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: inherit;
+}
+
+/* ==========================================================================
+   RESPONSIVE MASONRY / PINTEREST-STYLE GALLERY LAYOUT & NATURAL ASPECT RATIO
+   ========================================================================== */
+.gallery-grid.masonry-layout {
+    display: block !important;
+    column-count: 4;
+    column-gap: 20px;
+    width: 100%;
+}
+
+@media (max-width: 1200px) {
+    .gallery-grid.masonry-layout {
+        column-count: 3;
+    }
+}
+
+@media (max-width: 768px) {
+    .gallery-grid.masonry-layout {
+        column-count: 2;
+        column-gap: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-grid.masonry-layout {
+        column-count: 1;
+    }
+}
+
+.gallery-grid.masonry-layout .gallery-item-wrapper {
+    break-inside: avoid !important;
+    -webkit-column-break-inside: avoid !important;
+    margin-bottom: 20px;
+    display: block !important;
+    width: 100% !important;
+}
+
+.gallery-grid.masonry-layout .gallery-card {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gallery-grid.masonry-layout .gallery-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), var(--glow-cyan);
+    border-color: rgba(0, 242, 254, 0.4);
+}
+
+.gallery-grid.masonry-layout .gallery-card img.card-media-img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    display: block !important;
 }
 
 
