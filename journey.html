@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>if(!sessionStorage.getItem('mc_user_session'))window.location.replace('login.html');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B.Com Journey Story | Madura College 2022–2025</title>
+    <meta name="description" content="Apple-style storytelling experience of our B.Com college life at Madura College Batch 2022–2025.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+    <canvas id="particle-canvas"></canvas>
+
+    <header class="navbar-header" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand"><span class="brand-logo"><i class="fas fa-graduation-cap"></i></span><div class="brand-text"><span class="brand-title">Madura College</span><span class="brand-sub">Batch 2022–2025</span></div></a>
+            <nav class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="journey.html" class="nav-link active"><i class="fas fa-route"></i> Journey</a>
+                <a href="gallery.html" class="nav-link"><i class="fas fa-images"></i> Gallery</a>
+                <a href="videos.html" class="nav-link"><i class="fas fa-video"></i> Videos</a>
+                <a href="events.html" class="nav-link"><i class="fas fa-calendar-star"></i> Events</a>
+                <a href="friends.html" class="nav-link"><i class="fas fa-user-friends"></i> Friends</a>
+                <a href="graduation.html" class="nav-link"><i class="fas fa-award"></i> Graduation</a>
+                <a href="review.html" class="nav-link"><i class="fas fa-star"></i> Our Review</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="review.html" class="btn btn-sm btn-outline">Our Review</a>
+                <button class="btn btn-sm btn-secondary" id="logout-btn"><i class="fas fa-lock"></i></button>
+                <button class="mobile-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding-top: 120px;">
+        <!-- HERO BANNER FOR STORYTELLING -->
+        <section class="section-padding text-center" style="padding-bottom: 40px;">
+            <div class="container">
+                <span class="section-tag" data-reveal="fade-up"><i class="fas fa-heart"></i> Royal B.Com Memories</span>
+                <h1 class="section-title" data-reveal="fade-up" data-delay="100">
+                    Our Unforgettable <br><span class="text-gradient">3-Year College Story</span>
+                </h1>
+                <p class="section-description" data-reveal="fade-up" data-delay="200" style="max-width: 720px;">
+                    Scroll through our Apple-style memory timeline. A tribute to every laugh, every lesson, and every friend from Madura College Batch 2022–2025.
+                </p>
+            </div>
+        </section>
+
+        <!-- APPLE-STYLE STORYTELLING CONTAINER (15 ALTERNATING SECTIONS) -->
+        <div class="container" id="journey-story-container">
+
+            <!-- SECTION 1: OUR FIRST CLASSROOM (Image Left, Text Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-1">
+                        <!-- JOURNEY PHOTO 1 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-school placeholder-main-icon"></i>
+                            <span class="gallery-title">First Day Classroom</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 1 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Our First Classroom 2022</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-heart"></i></div>
+                        <h2 class="story-title">Our First Classroom</h2>
+                        <p class="story-quote">"Every classroom has a story. Every bench remembers our laughter."</p>
+                        <p class="story-desc">
+                            We stepped into Madura College B.Com in July 2022 as quiet strangers sitting on random benches. Nobody knew that these very walls would soon witness our loudest laughs and lifelong bonds.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: THE TEACHERS WHO GUIDED US (Text Left, Image Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid reverse">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-2">
+                        <!-- JOURNEY PHOTO 2 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-user-graduate placeholder-main-icon"></i>
+                            <span class="gallery-title">Professors & Mentors</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 2 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Teachers Who Guided Us</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-chalkboard-user"></i></div>
+                        <h2 class="story-title">The Teachers Who Guided Us</h2>
+                        <p class="story-quote">"The degree is just paper. The memories are forever."</p>
+                        <p class="story-desc">
+                            Our professors were more than just teachers—they were mentors who patiently corrected our mistakes, encouraged our ideas, and prepared us to conquer the corporate world with confidence.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: FRIENDS WHO BECAME FAMILY (Image Left, Text Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-3">
+                        <!-- JOURNEY PHOTO 3 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-users-rays placeholder-main-icon"></i>
+                            <span class="gallery-title">Friends Who Became Family</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 3 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Friends Who Became Family</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-handshake"></i></div>
+                        <h2 class="story-title">Friends Who Became Family</h2>
+                        <p class="story-quote">"We entered college with dreams. We left with memories."</p>
+                        <p class="story-desc">
+                            From sharing lunchboxes to standing by each other through semester panics, classmates slowly turned into brothers and sisters. Royal B.Com is not just a batch; it's a family.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: LIBRARY DAYS (Text Left, Image Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid reverse">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-4">
+                        <!-- JOURNEY PHOTO 4 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-book-bookmark placeholder-main-icon"></i>
+                            <span class="gallery-title">Library Exam Prep</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 4 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Library Prep Days</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-book-open"></i></div>
+                        <h2 class="story-title">Library Days</h2>
+                        <p class="story-quote">"Our notebooks became old. Our memories became priceless."</p>
+                        <p class="story-desc">
+                            The quiet heritage library of Madura College was where we pretended to study for exams, hunted for previous question papers, and whispered hilarious jokes behind giant reference volumes.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: CANTEEN CONVERSATIONS (Image Left, Text Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-5">
+                        <!-- JOURNEY PHOTO 5 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-mug-hot placeholder-main-icon"></i>
+                            <span class="gallery-title">Canteen Tea Break</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 5 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Canteen Conversations</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-coffee"></i></div>
+                        <h2 class="story-title">Canteen Conversations</h2>
+                        <p class="story-quote">"The bell stopped ringing, but the memories never stopped."</p>
+                        <p class="story-desc">
+                            Hot samosas, cutting chai, and endless debates under the shade tree outside the canteen. The canteen was where class stress vanished and unconditional laughter took over.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: ENDLESS CLASSROOM FUN (Text Left, Image Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid reverse">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-6">
+                        <!-- JOURNEY PHOTO 6 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-face-laugh-squint placeholder-main-icon"></i>
+                            <span class="gallery-title">Classroom Pranks & Fun</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 6 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Endless Classroom Fun</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-face-laugh-beam"></i></div>
+                        <h2 class="story-title">Endless Classroom Fun</h2>
+                        <p class="story-quote">"Every attendance became a memory."</p>
+                        <p class="story-desc">
+                            Proxy attendance calls, secret desk snack eating, birthday cake smearing, and spontaneous mass bunk plans right in the middle of a 2 PM lecture!
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 7: ASSIGNMENT NIGHTS TOGETHER (Image Left, Text Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-7">
+                        <!-- JOURNEY PHOTO 7 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-file-pen placeholder-main-icon"></i>
+                            <span class="gallery-title">Assignment Copy Panic</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 7 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Assignment Nights</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-pen-fancy"></i></div>
+                        <h2 class="story-title">Assignment Nights Together</h2>
+                        <p class="story-quote">"We studied Commerce together, but we graduated with friendship."</p>
+                        <p class="story-desc">
+                            Group WhatsApp calls at 1 AM asking for assignment answers, copying 30 pages of notes 10 minutes before professor arrival, and high-fiving when the assignment was accepted!
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 8: COMMERCE PRACTICAL SESSIONS (Text Left, Image Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid reverse">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-8">
+                        <!-- JOURNEY PHOTO 8 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-calculator placeholder-main-icon"></i>
+                            <span class="gallery-title">Ledger & Computer Lab</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 8 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Commerce Practical Sessions</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-chart-pie"></i></div>
+                        <h2 class="story-title">Commerce Practical Sessions</h2>
+                        <p class="story-quote">"We balanced ledger accounts, but balanced life together."</p>
+                        <p class="story-desc">
+                            Tally lab sessions, balancing financial ledgers, debit-credit confusion, and celebrating like we won a championship when the balance sheet finally tallied on both sides!
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 9: SEMINARS & PRESENTATIONS (Image Left, Text Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-9">
+                        <!-- JOURNEY PHOTO 9 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-display placeholder-main-icon"></i>
+                            <span class="gallery-title">Seminar Stage Pitch</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 9 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Seminars & Presentations</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-microphone"></i></div>
+                        <h2 class="story-title">Seminars & Presentations</h2>
+                        <p class="story-quote">"Behind every nervous presentation was a bench cheering loudest."</p>
+                        <p class="story-desc">
+                            Standing terrified in front of the podium in formal shirts, forgetting slide topics, while our best friends gave hints and cheered from the back row to make us win!
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 10: COLLEGE EVENTS & CELEBRATIONS (Text Left, Image Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid reverse">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-10">
+                        <!-- JOURNEY PHOTO 10 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-masks-theater placeholder-main-icon"></i>
+                            <span class="gallery-title">Cultural Fest Night</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 10 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">College Events & Culturals</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-compact-disc"></i></div>
+                        <h2 class="story-title">College Events & Celebrations</h2>
+                        <p class="story-quote">"Culturals, music, and memories that shine forever."</p>
+                        <p class="story-desc">
+                            Symposium victories, inter-college cultural dance performances, flash mobs in the open quadrangle, and cheering until our throats went sore for Royal B.Com!
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 11: EVERY GROUP PHOTO HAS A STORY (Image Left, Text Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-11">
+                        <!-- JOURNEY PHOTO 11 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-camera-retro placeholder-main-icon"></i>
+                            <span class="gallery-title">Group Photo Moments</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 11 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Every Group Photo Has A Story</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-images"></i></div>
+                        <h2 class="story-title">Every Group Photo Has A Story</h2>
+                        <p class="story-quote">"Behind every group photo is a thousand untold stories."</p>
+                        <p class="story-desc">
+                            Gathering 60 classmates under the main Madura College tree, 10 retakes because someone blinked, and laughing uncontrollably at photobombs!
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 12: LAST BENCH MEMORIES (Text Left, Image Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid reverse">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-12">
+                        <!-- JOURNEY PHOTO 12 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-couch placeholder-main-icon"></i>
+                            <span class="gallery-title">Last Bench Sanctuary</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 12 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Last Bench Memories</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-ghost"></i></div>
+                        <h2 class="story-title">Last Bench Memories</h2>
+                        <p class="story-quote">"The classroom taught us lessons. Our friends taught us life."</p>
+                        <p class="story-desc">
+                            The sacred last bench—where jokes were whispered, nicknames were invented, and lifelong bonds were sealed away from the professor's strict eyes.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 13: FAREWELL (Image Left, Text Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-13">
+                        <!-- JOURNEY PHOTO 13 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-heart-crack placeholder-main-icon"></i>
+                            <span class="gallery-title">Farewell Saree & Suit Day</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 13 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Farewell Day Memories</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                        <h2 class="story-title">Farewell — End Of An Era</h2>
+                        <p class="story-quote">"Some friendships never graduate."</p>
+                        <p class="story-desc">
+                            Dressed in elegant sarees and sharp suits, signing markers on white shirts, taking final selfies, and fighting back tears as the last bell tolled for Batch 2022–2025.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 14: GRADUATION DAY (Text Left, Image Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid reverse">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-14">
+                        <!-- JOURNEY PHOTO 14 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-graduation-cap placeholder-main-icon"></i>
+                            <span class="gallery-title">Graduation Convocation</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 14 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">Graduation Convocation</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-award"></i></div>
+                        <h2 class="story-title">Graduation Day</h2>
+                        <p class="story-quote">"Throwing caps high into the sky with pride."</p>
+                        <p class="story-desc">
+                            Wearing black convocation gowns, walking up the stage with pounding hearts, receiving our degree certificates, and tossing caps high into the Madura sky!
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 15: A NEW BEGINNING (Image Left, Text Right) -->
+            <section class="apple-story-section" data-reveal="fade-up">
+                <div class="apple-story-grid">
+                    <div class="story-media placeholder-card gallery-card" id="story-slot-15">
+                        <!-- JOURNEY PHOTO 15 -->
+                        <div class="placeholder-content">
+                            <i class="fas fa-earth-americas placeholder-main-icon"></i>
+                            <span class="gallery-title">A New Beginning</span>
+                            <span class="code-comment"><!-- JOURNEY PHOTO 15 --></span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="overlay-icon"><i class="fas fa-expand"></i></span>
+                            <span class="overlay-label">A New Beginning 2025+</span>
+                        </div>
+                    </div>
+                    <div class="story-text-card glass-panel">
+                        <div class="story-icon"><i class="fas fa-compass"></i></div>
+                        <h2 class="story-title">A New Beginning</h2>
+                        <p class="story-quote">"Scatter across the world, bound by Madura College roots."</p>
+                        <p class="story-desc">
+                            As we step into corporate careers, higher studies, and new cities across the world, we carry the pride, bond, and unshakeable spirit of Royal B.Com Batch 2022–2025 forever.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <div class="floating-music-player glass-panel" id="music-player">
+        <button class="player-toggle-btn" id="player-toggle-btn"><i class="fas fa-music"></i></button>
+        <div class="player-content">
+            <div class="track-artwork"><div class="vinyl-disc" id="vinyl-disc"><i class="fas fa-compact-disc"></i></div></div>
+            <div class="track-details"><h4 class="track-title">Madura Nostalgia Theme</h4><p class="track-artist">Batch 2022–2025</p></div>
+            <div class="player-controls"><button class="ctrl-btn" id="prev-btn"><i class="fas fa-backward"></i></button><button class="ctrl-btn play-main" id="play-btn"><i class="fas fa-play"></i></button><button class="ctrl-btn" id="next-btn"><i class="fas fa-forward"></i></button></div>
+        </div>
+    </div>
+
+    <footer class="footer-section"><div class="container text-center"><p>Made with ❤️ by <strong>2022–2025 Batch</strong> | College: <strong>Madura College</strong></p><p class="developer-credit-footer">Designed & Developed by <strong>2022COM045</strong></p></div></footer>
+    <button class="back-to-top" id="back-to-top"><i class="fas fa-arrow-up"></i></button>
+    <script src="script.js"></script>
+</body>
+</html>

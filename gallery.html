@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>if(!sessionStorage.getItem('mc_user_session'))window.location.replace('login.html');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memories Gallery | Madura College 2022–2025</title>
+    <meta name="description" content="Visual Photo & Video Archive of Madura College Batch 2022–2025.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="login-overlay" id="login-overlay">
+        <div class="login-card glass-panel">
+            <div class="login-header">
+                <div class="login-logo-ring"><i class="fas fa-graduation-cap"></i></div>
+                <h2 class="login-title">Madura College Memories</h2>
+                <p class="login-subtitle">Batch 2022–2025 • Vault Access</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group"><label for="login-email"><i class="fas fa-envelope"></i> Email Address</label><input type="email" id="login-email" placeholder="Enter your email" required></div>
+                <div class="form-group"><label for="login-password"><i class="fas fa-lock"></i> Password</label><div class="password-input-wrapper"><input type="password" id="login-password" placeholder="Enter password" required><button type="button" class="toggle-password" id="toggle-password"><i class="fas fa-eye"></i></button></div></div>
+                <div id="login-error-msg" class="login-error-msg"><i class="fas fa-triangle-exclamation"></i> Incorrect credentials!</div>
+                <button type="submit" class="btn btn-primary btn-block btn-glow">Unlock</button>
+            </form>
+            <div class="login-footer"><p class="developer-credit">Designed & Developed by <strong>2022COM045</strong></p></div>
+        </div>
+    </div>
+
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+    <canvas id="particle-canvas"></canvas>
+
+    <header class="navbar-header" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand"><span class="brand-logo"><i class="fas fa-graduation-cap"></i></span><div class="brand-text"><span class="brand-title">Madura College</span><span class="brand-sub">Batch 2022–2025</span></div></a>
+            <nav class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="journey.html" class="nav-link"><i class="fas fa-route"></i> Journey</a>
+                <a href="gallery.html" class="nav-link active"><i class="fas fa-images"></i> Gallery</a>
+                <a href="videos.html" class="nav-link"><i class="fas fa-video"></i> Videos</a>
+                <a href="events.html" class="nav-link"><i class="fas fa-calendar-star"></i> Events</a>
+                <a href="friends.html" class="nav-link"><i class="fas fa-user-friends"></i> Friends</a>
+                <a href="graduation.html" class="nav-link"><i class="fas fa-award"></i> Graduation</a>
+                <a href="review.html" class="nav-link"><i class="fas fa-star"></i> Our Review</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="review.html" class="btn btn-sm btn-outline">Our Review</a>
+                <button class="btn btn-sm btn-secondary" id="logout-btn"><i class="fas fa-lock"></i></button>
+                <button class="mobile-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding-top: 120px;">
+        <section class="section-padding gallery-section" id="gallery">
+            <div class="container">
+                <div class="section-header text-center" data-reveal="fade-up">
+                    <span class="section-tag"><i class="fas fa-images"></i> Photo & Video Vault</span>
+                    <h2 class="section-title">Memories <span class="text-gradient">Gallery</span></h2>
+                    <p class="section-description">
+                       A gallery filled with our favorite faces.
+                    </p>
+                </div>
+
+                <div class="gallery-filters" data-reveal="fade-up" data-delay="100">
+                    <button class="filter-btn active" data-filter="all">All Memories</button>
+                </div>
+                <br>
+
+                <!-- SECTION 1: PHOTO VAULT -->
+                <div class="glass-panel" data-reveal="fade-up" style="padding: 24px 30px; margin-bottom: 24px; border-color: rgba(0, 242, 254, 0.3); background: rgba(0, 242, 254, 0.05); text-align: center;">
+                    <p style="font-family: var(--font-quote); font-size: 1.35rem; font-style: italic; color: #ffffff; margin: 0;">
+                        <i class="fas fa-quote-left" style="color: var(--color-cyan); margin-right: 8px;"></i>
+                        "A single photo freezes a moment, but a thousand photos can't contain our 3-year laughter."
+                    </p>
+                </div>
+                <h3 style="margin-bottom: 20px; font-size: 1.5rem; color: var(--color-cyan);"><i class="fas fa-camera"></i></h3>
+                <div class="gallery-grid" id="gallery-grid" style="margin-bottom: 60px;">
+                    <!-- Dynamically rendered 50 photo cards -->
+                </div>
+
+                <!-- SECTION 2: VIDEO VAULT -->
+                <div class="glass-panel" data-reveal="fade-up" style="padding: 24px 30px; margin-bottom: 24px; border-color: rgba(127, 0, 255, 0.3); background: rgba(127, 0, 255, 0.05); text-align: center;">
+                    <p style="font-family: var(--font-quote); font-size: 1.35rem; font-style: italic; color: #ffffff; margin: 0;">
+                        <i class="fas fa-quote-left" style="color: var(--color-pink); margin-right: 8px;"></i>
+                        "We took photos to decorate our phones, but ended up decorating our lives with memories."
+                    </p>
+                </div>
+                <h3 style="margin-bottom: 20px; font-size: 1.5rem; color: var(--color-purple);"><i class="fas fa-video"></i> Dedicated Video Vault (10 Videos)</h3>
+                <div class="video-grid" id="gallery-video-grid">
+                    <!-- Dynamically rendered 10 video cards -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-section"><div class="container text-center"><p>Made with ❤️ by <strong>2022–2025 Batch</strong> | College: <strong>Madura College</strong></p><p class="developer-credit-footer">Designed & Developed by <strong>2022COM045</strong></p></div></footer>
+    <button class="back-to-top" id="back-to-top"><i class="fas fa-arrow-up"></i></button>
+    <script src="script.js"></script>
+</body>
+</html>

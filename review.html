@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>if(!sessionStorage.getItem('mc_user_session'))window.location.replace('login.html');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Review | Madura College Memories Vault</title>
+    <meta name="description" content="Share and read honest reviews & experiences from Batch 2022-2025 at Madura College.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+
+    <!-- Custom Glowing Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+
+    <!-- Background Canvas Particle Field -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Animated Ambient Glowing Blobs -->
+    <div class="ambient-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Top Navigation Header -->
+    <header class="navbar-header" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-logo"><i class="fas fa-graduation-cap"></i></span>
+                <div class="brand-text">
+                    <span class="brand-title">Madura College</span>
+                    <span class="brand-sub">Batch 2022–2025</span>
+                </div>
+            </a>
+
+            <nav class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="journey.html" class="nav-link"><i class="fas fa-route"></i> Journey</a>
+                <a href="gallery.html" class="nav-link"><i class="fas fa-images"></i> Gallery</a>
+                <a href="videos.html" class="nav-link"><i class="fas fa-video"></i> Videos</a>
+                <a href="events.html" class="nav-link"><i class="fas fa-calendar-star"></i> Events</a>
+                <a href="friends.html" class="nav-link"><i class="fas fa-user-friends"></i> Friends</a>
+                <a href="graduation.html" class="nav-link"><i class="fas fa-award"></i> Graduation</a>
+                <a href="review.html" class="nav-link active"><i class="fas fa-star"></i> Our Review</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="review.html" class="btn btn-sm btn-outline">Our Review</a>
+                <button class="btn btn-sm btn-secondary" id="logout-btn" title="Lock Website"><i class="fas fa-lock"></i></button>
+                <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <main style="padding-top: 100px;">
+        <section class="section-container">
+            <div class="container">
+                
+                <!-- Section Header -->
+                <div class="section-header text-center" data-reveal="fade-up">
+                    <div class="hero-badge">
+                        <span class="badge-dot"></span>
+                        <span>✨ Voice of Batch 2022–2025</span>
+                    </div>
+                    <h1 class="hero-title" style="font-size: 2.5rem; margin-top: 12px;">
+                        Our <span class="text-gradient">Honest Reviews</span>
+                    </h1>
+                    <p class="hero-subtitle" style="margin: 10px auto 30px auto; max-width: 600px;">
+                        Share your thoughts, feedback, and honest reviews about our college journey and batch memories.
+                    </p>
+                </div>
+
+                <!-- Side-by-Side Review Grid -->
+                <div class="review-grid-container">
+
+                    <!-- Left Column: Honest Review Form -->
+                    <div class="review-form-card" data-reveal="fade-right">
+                        <h3><i class="fas fa-pen-nib"></i> Write Your Review</h3>
+                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 20px;">
+                            Your feedback matters. Please share your honest experience with us.
+                        </p>
+
+                        <form id="honest-review-form">
+                            <div class="form-group">
+                                <label for="review-name"><i class="fas fa-user"></i> Name</label>
+                                <input type="text" id="review-name" placeholder="Enter your full name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="review-rating"><i class="fas fa-star"></i> Star Rating</label>
+                                <div class="star-rating-select" id="star-rating-select" data-rating="5">
+                                    <i class="fas fa-star active" data-value="1"></i>
+                                    <i class="fas fa-star active" data-value="2"></i>
+                                    <i class="fas fa-star active" data-value="3"></i>
+                                    <i class="fas fa-star active" data-value="4"></i>
+                                    <i class="fas fa-star active" data-value="5"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="review-content"><i class="fas fa-comment-dots"></i> Our Honest Review</label>
+                                <textarea id="review-content" rows="5" placeholder="Write your honest review and thoughts here..." required style="width: 100%; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-md); color: #fff; font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block btn-glow">
+                                <span>Submit Review</span>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right Column: Submitted Reviews Display -->
+                    <div class="reviews-display-panel" data-reveal="fade-left">
+                        <div class="reviews-header">
+                            <h3><i class="fas fa-comments"></i> Honest Reviews (<span id="review-count">0</span>)</h3>
+                            <span class="footer-batch-badge" style="padding: 3px 12px; font-size: 0.75rem;">Real Feedback</span>
+                        </div>
+
+                        <div class="reviews-list-wrapper" id="reviews-display-list">
+                            <!-- Dynamic Reviews Rendered Here -->
+                            <div class="empty-reviews-state">
+                                <i class="fas fa-comment-dots"></i>
+                                <p>No reviews submitted yet. Be the first to share your honest review!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="brand-logo"><i class="fas fa-graduation-cap"></i> Madura College</div>
+                    <p class="footer-desc">
+                        A digital sanctuary celebrating the irreplaceable memories, smiles, and bonds of Batch 2022–2025.
+                    </p>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Quick Navigation</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="journey.html">Journey</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="videos.html">Videos</a></li>
+                        <li><a href="graduation.html">Graduation</a></li>
+                        <li><a href="review.html">Our Review</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-quote">
+                    <h4>Eternal Batch Quote</h4>
+                    <p>"Classrooms are temporal, but true friendship is immortal."</p>
+                    <div class="footer-batch-badge">Batch 2022 – 2025</div>
+                </div>
+            </div>
+
+            <div class="footer-bottom text-center">
+                <p>Made with ❤️ by <strong>2022–2025 Batch</strong></p>
+                <p class="college-footer-name">College: <strong>Madura College</strong></p>
+                <p class="developer-credit-footer">Designed & Developed by <strong>2022COM045</strong></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back To Top Button -->
+    <button class="back-to-top" id="back-to-top" title="Back to Top">
+        <svg class="progress-ring" width="50" height="50">
+            <circle class="progress-ring-circle" stroke="#00f2fe" stroke-width="4" fill="transparent" r="20" cx="25" cy="25"/>
+        </svg>
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>if(!sessionStorage.getItem('mc_user_session'))window.location.replace('login.html');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Madura College Memories | Batch 2022–2025</title>
+    <meta name="description" content="A premium emotional friendship memories website honoring Madura College Batch 2022–2025. Unforgettable moments, friendship quotes, video gallery, and memory wall.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- LOGIN PROTECTION OVERLAY / PAGE -->
+    <div class="login-overlay" id="login-overlay">
+        <div class="login-card glass-panel">
+            <div class="login-header">
+                <div class="login-logo-ring">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h2 class="login-title">Madura College Memories</h2>
+                <p class="login-subtitle">Batch 2022–2025 • Memories Vault Access</p>
+            </div>
+
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="login-email"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="login-email" placeholder="Enter your email" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password"><i class="fas fa-lock"></i> Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="login-password" placeholder="Enter password" required autocomplete="current-password">
+                        <button type="button" class="toggle-password" id="toggle-password" title="Toggle password visibility">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="login-error-msg" class="login-error-msg">
+                    <i class="fas fa-triangle-exclamation"></i> Incorrect email or password! Please try again.
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-glow">
+                    <span>Unlock Memories</span>
+                    <i class="fas fa-unlock"></i>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p class="developer-credit">Designed & Developed by <strong>2022COM045</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Glowing Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+
+    <!-- Background Canvas Particle Field -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Animated Ambient Glowing Blobs -->
+    <div class="ambient-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Top Navigation Header -->
+    <header class="navbar-header" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-logo"><i class="fas fa-graduation-cap"></i></span>
+                <div class="brand-text">
+                    <span class="brand-title">Madura College</span>
+                    <span class="brand-sub">Batch 2022–2025</span>
+                </div>
+            </a>
+
+            <nav class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Home</a>
+                <a href="journey.html" class="nav-link"><i class="fas fa-route"></i> Journey</a>
+                <a href="gallery.html" class="nav-link"><i class="fas fa-images"></i> Gallery</a>
+                <a href="videos.html" class="nav-link"><i class="fas fa-video"></i> Videos</a>
+                <a href="events.html" class="nav-link"><i class="fas fa-calendar-star"></i> Events</a>
+                <a href="friends.html" class="nav-link"><i class="fas fa-user-friends"></i> Friends</a>
+                <a href="graduation.html" class="nav-link"><i class="fas fa-award"></i> Graduation</a>
+                <a href="review.html" class="nav-link"><i class="fas fa-star"></i> Our Review</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="review.html" class="btn btn-sm btn-outline">Our Review</a>
+                <button class="btn btn-sm btn-secondary" id="logout-btn" title="Lock Website"><i class="fas fa-lock"></i></button>
+                <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <main>
+
+        <!-- 1. HERO LANDING SECTION -->
+        <section class="hero-section" id="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <div class="hero-badge" data-reveal="fade-up">
+                        <span class="badge-dot"></span>
+                        <span>✨ Eternal Friendship • Batch 2022–2025</span>
+                    </div>
+
+                    <h1 class="hero-title" data-reveal="fade-up" data-delay="100">
+                        Madura College <br>
+                        <span class="text-gradient">Memories & Magic</span>
+                    </h1>
+
+                    <p class="hero-subtitle" data-reveal="fade-up" data-delay="200">
+                        <span id="typing-quote">"Some classrooms teach lessons, but our friendship taught us life."</span>
+                        <span class="typing-cursor">|</span>
+                    </p>
+
+                    <!-- Hero Group Photo Frame -->
+                    <div class="hero-photo-placeholder-wrapper" data-reveal="fade-up" data-delay="300">
+                        <div class="placeholder-card hero-photo-card has-media">
+                            <img src="login-bg.jpg" alt="Madura College Batch 2022-2025 Royal B.Com Group Photo" class="card-media-img">
+                            <div class="gallery-overlay">
+                                <span class="overlay-icon"><i class="fas fa-users"></i></span>
+                                <span class="overlay-label">Madura College Batch 2022–2025 • Royal B.Com</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Counter Cards -->
+                    <div class="hero-stats" data-reveal="fade-up" data-delay="400">
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon"><i class="fas fa-calendar-days"></i></div>
+                            <div class="stat-number" data-target="1095">0</div>
+                            <div class="stat-label">Days Together</div>
+                        </div>
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon"><i class="fas fa-camera"></i></div>
+                            <div class="stat-number" data-target="500">0</div>
+                            <div class="stat-label">Memories Saved</div>
+                        </div>
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon"><i class="fas fa-face-laugh-beam"></i></div>
+                            <div class="stat-number" data-target="999">0</div>
+                            <div class="stat-label">Endless Laughs</div>
+                        </div>
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon"><i class="fas fa-heart"></i></div>
+                            <div class="stat-number-text">∞</div>
+                            <div class="stat-label">Friends Forever</div>
+                        </div>
+                    </div>
+
+                    <div class="hero-buttons" data-reveal="fade-up" data-delay="500">
+                        <a href="gallery.html" class="btn btn-primary btn-glow">
+                            <span>Explore Photo Gallery</span>
+                            <i class="fas fa-images"></i>
+                        </a>
+                        <a href="journey.html" class="btn btn-secondary glass-panel">
+                            <i class="fas fa-route"></i>
+                            <span>View Our Journey</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EMOTIONAL QUOTE BANNER SECTION -->
+        <section class="section-padding text-center" style="padding: 40px 0;">
+            <div class="container">
+                <div class="glass-panel" data-reveal="fade-up" style="padding: 40px 30px; border-color: rgba(0, 242, 254, 0.3); background: linear-gradient(135deg, rgba(0, 242, 254, 0.08) 0%, rgba(127, 0, 255, 0.08) 100%);">
+                    <i class="fas fa-quote-left" style="font-size: 2.2rem; color: var(--color-cyan); margin-bottom: 16px; display: block;"></i>
+                    <h2 style="font-family: var(--font-quote); font-size: 1.8rem; font-style: italic; color: #ffffff; max-width: 800px; margin: 0 auto 12px auto; line-height: 1.5;">
+                        "We didn't realize we were making memories; we just knew we were having fun together."
+                    </h2>
+                    <p style="color: var(--color-pink); font-weight: 600; font-size: 1rem;">— Royal B.Com Batch 2022–2025 • Madura College</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SUBPAGES DIRECTORY GRID -->
+        <section class="section-padding subpages-directory-section">
+            <div class="container">
+                <div class="section-header text-center" data-reveal="fade-up">
+                    <span class="section-tag"><i class="fas fa-compass"></i> Explore Pages</span>
+                    <h2 class="section-title">Batch <span class="text-gradient">Memory Vaults</span></h2>
+                    <p class="section-description">
+                        Navigate through dedicated pages celebrating every aspect of our Madura College journey.
+                    </p>
+                </div>
+
+                <div class="subpages-grid">
+
+                    <!-- CARD 1: JOURNEY -->
+                    <a href="journey.html" class="directory-card glass-panel" data-reveal="fade-up">
+                        <div class="directory-icon"><i class="fas fa-route"></i></div>
+                        <h3>About Our Journey</h3>
+                        <p>Timeline from First Day 2022 to Graduation 2025.</p>
+                        <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+                    </a>
+
+                    <!-- CARD 2: QUOTES -->
+                    <!-- <a href="quotes.html" class="directory-card glass-panel" data-reveal="fade-up" data-delay="100">
+                        <div class="directory-icon"><i class="fas fa-quote-left"></i></div>
+                        <h3>Friendship Quotes</h3>
+                        <p>Emotional real-time quotes & reflections.</p>
+                        <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+                    </a> -->
+
+                    <!-- CARD 3: GALLERY -->
+                    <a href="gallery.html" class="directory-card glass-panel highlight-dir" data-reveal="fade-up" data-delay="200">
+                        <div class="directory-icon"><i class="fas fa-images"></i></div>
+                        <h3>Memories Gallery</h3>
+                        <p>Every picture tells a story worth revisiting..</p>
+                        <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+                    </a>
+
+                    <!-- CARD 4: VIDEOS -->
+                    <a href="videos.html" class="directory-card glass-panel" data-reveal="fade-up" data-delay="300">
+                        <div class="directory-icon"><i class="fas fa-video"></i></div>
+                        <h3>College Videos</h3>
+                        <p>Relive every laugh, celebration, and unforgettable moment.</p>
+                        <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+                    </a>
+
+                    <!-- CARD 5: EVENTS -->
+                    <a href="events.html" class="directory-card glass-panel" data-reveal="fade-up" data-delay="100">
+                        <div class="directory-icon"><i class="fas fa-calendar-star"></i></div>
+                        <h3>College Events</h3>
+                        <p>Freshers, Culturals, Symposium, Sports & Farewell.The events that brought us closer together.</p>
+                        <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+                    </a>
+
+                   
+                   
+
+                    <!-- CARD 7: FRIENDS -->
+                    <a href="friends.html" class="directory-card glass-panel" data-reveal="fade-up" data-delay="300">
+                        <div class="directory-icon"><i class="fas fa-user-friends"></i></div>
+                        <h3>Best Friends</h3>
+                        <p>Friendships that will last far beyond college.</p>
+                        <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+                    </a>
+
+                    <!-- CARD 8: GRADUATION -->
+                    <a href="graduation.html" class="directory-card glass-panel highlight-dir" data-reveal="fade-up">
+                        <div class="directory-icon"><i class="fas fa-award"></i></div>
+                        <h3>Graduation Section</h3>
+                        <p>We left the campus, but never the memories.</p>
+                        <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+                    </a>
+
+                    <!-- CARD 11: GUEST BOOK -->
+                    <a href="guestbook.html" class="directory-card glass-panel" data-reveal="fade-up" data-delay="200">
+                        <div class="directory-icon"><i class="fas fa-book-open"></i></div>
+                        <h3>Guest Book</h3>
+                        <p>Every review becomes a cherished memory.</p>
+                        <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- LIGHTBOX PREVIEW MODAL -->
+    <div class="lightbox-modal" id="lightbox-modal">
+        <div class="lightbox-overlay" id="lightbox-overlay"></div>
+        <div class="lightbox-container glass-panel">
+            <button class="lightbox-close" id="lightbox-close"><i class="fas fa-xmark"></i></button>
+            <div class="lightbox-content" id="lightbox-content"></div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="footer-bottom text-center">
+                <p>Made with ❤️ by <strong>2022–2025 Batch</strong></p>
+                <p class="college-footer-name">College: <strong>Madura College</strong></p>
+                <p class="developer-credit-footer">Designed & Developed by <strong>2022COM045</strong></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- BACK TO TOP BUTTON WITH SCROLL PROGRESS CIRCLE -->
+    <button class="back-to-top" id="back-to-top" title="Back to Top">
+        <svg class="progress-ring" width="50" height="50">
+            <circle class="progress-ring-circle" stroke="#00f2fe" stroke-width="4" fill="transparent" r="20" cx="25" cy="25"/>
+        </svg>
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>

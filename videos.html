@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>if(!sessionStorage.getItem('mc_user_session'))window.location.replace('login.html');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Videos | Madura College 2022–2025</title>
+    <meta name="description" content="College Video Archive with 10+ video placeholders for Madura College Batch 2022–2025.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- LOGIN OVERLAY -->
+    <div class="login-overlay" id="login-overlay">
+        <div class="login-card glass-panel">
+            <div class="login-header">
+                <div class="login-logo-ring"><i class="fas fa-graduation-cap"></i></div>
+                <h2 class="login-title">Madura College Memories</h2>
+                <p class="login-subtitle">Batch 2022–2025 • Vault Access</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="login-email"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="login-email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password"><i class="fas fa-lock"></i> Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="login-password" placeholder="Enter password" required>
+                        <button type="button" class="toggle-password" id="toggle-password"><i class="fas fa-eye"></i></button>
+                    </div>
+                </div>
+                <div id="login-error-msg" class="login-error-msg"><i class="fas fa-triangle-exclamation"></i> Incorrect credentials!</div>
+                <button type="submit" class="btn btn-primary btn-block btn-glow">Unlock</button>
+            </form>
+            <div class="login-footer">
+                <p class="developer-credit">Designed & Developed by <strong>2022COM045</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+    <canvas id="particle-canvas"></canvas>
+
+    <header class="navbar-header" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-logo"><i class="fas fa-graduation-cap"></i></span>
+                <div class="brand-text"><span class="brand-title">Madura College</span><span class="brand-sub">Batch 2022–2025</span></div>
+            </a>
+            <nav class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="journey.html" class="nav-link"><i class="fas fa-route"></i> Journey</a>
+                <a href="gallery.html" class="nav-link"><i class="fas fa-images"></i> Gallery</a>
+                <a href="videos.html" class="nav-link active"><i class="fas fa-video"></i> Videos</a>
+                <a href="events.html" class="nav-link"><i class="fas fa-calendar-star"></i> Events</a>
+                <a href="friends.html" class="nav-link"><i class="fas fa-user-friends"></i> Friends</a>
+                <a href="graduation.html" class="nav-link"><i class="fas fa-award"></i> Graduation</a>
+                <a href="review.html" class="nav-link"><i class="fas fa-star"></i> Our Review</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="review.html" class="btn btn-sm btn-outline">Our Review</a>
+                <button class="btn btn-sm btn-secondary" id="logout-btn"><i class="fas fa-lock"></i></button>
+                <button class="mobile-toggle" id="mobile-toggle"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding-top: 120px;">
+        <section class="section-padding videos-section" id="videos">
+            <div class="container">
+                <div class="section-header text-center" data-reveal="fade-up">
+                    <span class="section-tag"><i class="fas fa-video"></i> Motion Memories</span>
+                    <h2 class="section-title">College <span class="text-gradient">Video Archive</span></h2>
+                    <p class="section-description">
+                        Every video tells a story of our friendship.
+                </div>
+
+                <div class="glass-panel" data-reveal="fade-up" style="padding: 24px 30px; margin-bottom: 30px; border-color: rgba(127, 0, 255, 0.3); background: rgba(127, 0, 255, 0.05); text-align: center;">
+                    <p style="font-family: var(--font-quote); font-size: 1.35rem; font-style: italic; color: #ffffff; margin: 0;">
+                        <i class="fas fa-quote-left" style="color: var(--color-pink); margin-right: 8px;"></i>
+                        "Pictures freeze time, but videos bring back the sound of our unscripted laughter."
+                    </p>
+                </div>
+
+                <div class="video-grid" id="video-archive-grid">
+                    <!-- VIDEO ITEM 1 TO 10 -->
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">03:45</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Freshers Party Dance Highlights</h4><span class="code-comment"><!-- VIDEO 1 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-film"></i> Event Reel</span><h3>Freshers Welcome Night 2022</h3></div></div>
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">05:12</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Canteen Bunk Conversations</h4><span class="code-comment"><!-- VIDEO 2 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-comments"></i> Fun Moments</span><h3>Tea & Samosa Gossip Vlog</h3></div></div>
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">04:30</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Cultural Stage Performance</h4><span class="code-comment"><!-- VIDEO 3 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-masks-theater"></i> Culturals</span><h3>Grand Stage Musical Performance</h3></div></div>
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">02:18</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Symposium Inauguration Video</h4><span class="code-comment"><!-- VIDEO 4 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-microchip"></i> Academic Fest</span><h3>National Tech Fest After-Movie</h3></div></div>
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">06:04</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">College Industrial Trip Vlog</h4><span class="code-comment"><!-- VIDEO 5 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-bus"></i> Outing Trip</span><h3>Batch Outstation Journey 2024</h3></div></div>
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">03:50</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Sports Day Final Relay Race</h4><span class="code-comment"><!-- VIDEO 6 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-trophy"></i> Sports</span><h3>Final Lap Victory Cheer</h3></div></div>
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">08:20</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Classroom Backbench Pranks</h4><span class="code-comment"><!-- VIDEO 7 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-laugh-squint"></i> Humor</span><h3>Unfiltered Classroom Laughs</h3></div></div>
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">04:15</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Flashmob Dance Highlights</h4><span class="code-comment"><!-- VIDEO 8 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-bolt"></i> Surprise Flashmob</span><h3>Campus Quad Performance</h3></div></div>
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">07:40</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Farewell Emotional Goodbye Reel</h4><span class="code-comment"><!-- VIDEO 9 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-heart-crack"></i> Farewell</span><h3>The Last Day Tribute Film</h3></div></div>
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">05:00</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Batch Master Montage</h4><span class="code-comment"><!-- VIDEO 10 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-star"></i> Retrospective</span><h3>Madura College 2022–2025</h3></div></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FLOATING MUSIC PLAYER UI -->
+    <div class="floating-music-player glass-panel" id="music-player">
+        <button class="player-toggle-btn" id="player-toggle-btn"><i class="fas fa-music"></i></button>
+        <div class="player-content">
+            <div class="track-artwork"><div class="vinyl-disc" id="vinyl-disc"><i class="fas fa-compact-disc"></i></div></div>
+            <div class="track-details"><h4 class="track-title">Madura Nostalgia Theme</h4><p class="track-artist">Batch 2022–2025</p></div>
+            <div class="player-controls">
+                <button class="ctrl-btn" id="prev-btn"><i class="fas fa-backward"></i></button>
+                <button class="ctrl-btn play-main" id="play-btn"><i class="fas fa-play"></i></button>
+                <button class="ctrl-btn" id="next-btn"><i class="fas fa-forward"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIGHTBOX MODAL -->
+    <div class="lightbox-modal" id="lightbox-modal">
+        <div class="lightbox-overlay" id="lightbox-overlay"></div>
+        <div class="lightbox-container glass-panel">
+            <button class="lightbox-close" id="lightbox-close"><i class="fas fa-xmark"></i></button>
+            <div class="lightbox-content" id="lightbox-content"></div>
+        </div>
+    </div>
+
+    <footer class="footer-section">
+        <div class="container text-center">
+            <p>Made with ❤️ by <strong>2022–2025 Batch</strong> | College: <strong>Madura College</strong></p>
+            <p class="developer-credit-footer">Designed & Developed by <strong>2022COM045</strong></p>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="back-to-top"><i class="fas fa-arrow-up"></i></button>
+    <script src="script.js"></script>
+</body>
+</html>
