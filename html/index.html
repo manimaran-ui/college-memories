@@ -17,7 +17,7 @@
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="../css/style.css">
     <script>
-        if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+        if (localStorage.getItem("isUserLoggedIn") !== "true" && localStorage.getItem("isAdminLoggedIn") !== "true") {
             window.location.replace("login.html");
         }
         window.toggleMobileMenu = function(e) {

@@ -76,10 +76,19 @@
                     e.preventDefault();
                     var email = (document.getElementById('login-email').value || '').trim().toLowerCase();
                     var pass = (document.getElementById('login-password').value || '').trim();
-                    var role = (email.includes('admin') || pass.includes('admin') || pass === 'teammc123') ? 'admin' : 'user';
-                    var userObj = { email: email || 'admin123@gmail.com', role: role, name: role === 'admin' ? 'Administrator' : 'Batch Friend' };
-                    localStorage.setItem("isAdminLoggedIn", "true");
-                    sessionStorage.setItem('mc_user_session', JSON.stringify(userObj));
+                    var isAdmin = (email === 'admin@gmail.com' || email === 'admin123@gmail.com' || email === 'admin' || email === 'admin123' || pass === 'admin' || pass === 'teammc123');
+                    
+                    if (isAdmin) {
+                        localStorage.setItem("isAdminLoggedIn", "true");
+                        localStorage.setItem("isUserLoggedIn", "true");
+                        localStorage.setItem("userEmail", email || 'admin123@gmail.com');
+                        sessionStorage.setItem('mc_user_session', JSON.stringify({ email: email || 'admin123@gmail.com', role: 'admin', name: 'Administrator' }));
+                    } else {
+                        localStorage.setItem("isAdminLoggedIn", "false");
+                        localStorage.setItem("isUserLoggedIn", "true");
+                        localStorage.setItem("userEmail", email || 'batch2025@maduracollege.edu');
+                        sessionStorage.setItem('mc_user_session', JSON.stringify({ email: email || 'batch2025@maduracollege.edu', role: 'user', name: 'Batch Friend' }));
+                    }
                     window.location.replace('index.html');
                 });
             }

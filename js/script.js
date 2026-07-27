@@ -79,9 +79,12 @@ function startApplication() {
     };
 
     const SESSION_KEY = 'mc_user_session';
-    const MEDIA_STORAGE_KEY = 'mc_static_media_store_v6';
+    const MEDIA_STORAGE_KEY = 'mc_static_media_store_v9';
 
     // Clear legacy storage cache to instantly load real static images
+    localStorage.removeItem('mc_static_media_store_v8');
+    localStorage.removeItem('mc_static_media_store_v7');
+    localStorage.removeItem('mc_static_media_store_v6');
     localStorage.removeItem('mc_dynamic_media_store_v5');
     localStorage.removeItem('mc_dynamic_media_store_v4');
     localStorage.removeItem('mc_dynamic_media_store_v3');
@@ -523,6 +526,9 @@ function startApplication() {
 
         grid.innerHTML = '';
         (items || []).forEach((item, idx) => {
+            if (item && item.url && !item.url.startsWith('data:') && !item.url.includes('?')) {
+                item.url = item.url + '?v=9';
+            }
             const cardWrapper = document.createElement('div');
             
             // Dynamic Apple Asymmetrical & Staggered Patterns with Mixed Aspect Ratios

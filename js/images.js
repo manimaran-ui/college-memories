@@ -4,13 +4,11 @@
 
 const FOLDER_IMAGES = [
     "../images/gallery_001.jpeg",
-    "../images/gallery_002.jpg",
-    "../images/gallery_003.jpg",
-    "../images/gallery_004.jpg",
-    "../images/gallery_005.jpg",
-    "../images/gallery_006.jpg",
+    "../images/gallery_002.jpeg",
+    "../images/gallery_003.jpeg",
+    "../images/gallery_005.jpeg",
+    "../images/gallery_006.jpeg",
     "../images/gallery_007.jpeg",
-    "../images/gallery_008.jpeg",
     "../images/gallery_009.jpeg",
     "../images/gallery_010.jpeg",
     "../images/gallery_011.jpeg",
@@ -21,17 +19,18 @@ const FOLDER_IMAGES = [
     "../images/gallery_016.jpeg",
     "../images/gallery_017.jpeg",
     "../images/gallery_018.jpeg",
-    "../images/gallery_019.jpeg",
     "../images/gallery_020.jpeg",
     "../images/gallery_021.jpeg",
     "../images/gallery_022.jpeg",
     "../images/gallery_023.jpeg",
     "../images/gallery_024.jpeg",
     "../images/gallery_025.jpeg",
-    "../images/gallery_026.jpeg",
-    "../images/gallery_027.jpeg",
-    "../images/gallery_028.jpeg",
-    "../images/gallery_029.jpeg"
+    "../images/gallery_030.jpeg",
+    "../images/gallery_031.jpeg",
+    "../images/gallery_032.jpeg",
+    "../images/gallery_033.jpeg",
+    "../images/gallery_034.jpeg",
+    "../images/gallery_035.jpeg"
 ];
 
 // 1. Gallery: Only unique 15 images (no repetition)

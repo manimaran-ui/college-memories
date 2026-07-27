@@ -74,7 +74,7 @@
                     window._activeEditorCardImg.src = croppedDataUrl;
                     
                     try {
-                        var storeKey = 'mc_static_media_store_v6';
+                        var storeKey = 'mc_static_media_store_v9';
                         var store = JSON.parse(localStorage.getItem(storeKey) || '{}');
                         var list = store[sectionKey || 'gallery_images'] || [];
                         var item = list.find(function(x) { return String(x.id) === String(id); });
@@ -317,34 +317,33 @@
         (function renderGalleryStaticGrid() {
             const FOLDER_IMAGES = [
                 "../images/gallery_001.jpeg",
-                // "../images/gallery_002.jpg",
-                "../images/gallery_003.jpg",
-                "../images/gallery_004.jpg",
-                "../images/gallery_005.jpg",
-                "../images/gallery_006.jpg",
+                "../images/gallery_002.jpeg",
+                "../images/gallery_003.jpeg",
+                "../images/gallery_005.jpeg",
+                "../images/gallery_006.jpeg",
                 "../images/gallery_007.jpeg",
-                "../images/gallery_008.jpeg",
                 "../images/gallery_009.jpeg",
                 "../images/gallery_010.jpeg",
                 "../images/gallery_011.jpeg",
                 "../images/gallery_012.jpeg",
                 "../images/gallery_013.jpeg",
-                // "../images/gallery_014.jpeg",
+                "../images/gallery_014.jpeg",
                 "../images/gallery_015.jpeg",
                 "../images/gallery_016.jpeg",
                 "../images/gallery_017.jpeg",
                 "../images/gallery_018.jpeg",
-                "../images/gallery_019.jpeg",
                 "../images/gallery_020.jpeg",
                 "../images/gallery_021.jpeg",
                 "../images/gallery_022.jpeg",
                 "../images/gallery_023.jpeg",
                 "../images/gallery_024.jpeg",
                 "../images/gallery_025.jpeg",
-                "../images/gallery_026.jpeg",
-                "../images/gallery_027.jpeg",
-                "../images/gallery_028.jpeg",
-                "../images/gallery_029.jpeg"
+                "../images/gallery_030.jpeg",
+                "../images/gallery_031.jpeg",
+                "../images/gallery_032.jpeg",
+                "../images/gallery_033.jpeg",
+                "../images/gallery_034.jpeg",
+                "../images/gallery_035.jpeg"
             ];
 
             function doRender() {
@@ -370,7 +369,7 @@
                 const photoGrid = document.getElementById('gallery-grid');
                 if (photoGrid && photoGrid.children.length === 0) {
                     let photoHtml = '';
-                    var storeKey = 'mc_static_media_store_v6';
+                    var storeKey = 'mc_static_media_store_v9';
                     var store = {};
                     try { store = JSON.parse(localStorage.getItem(storeKey) || '{}'); } catch(e){}
                     var savedList = store['gallery_images'] || [];
@@ -378,7 +377,8 @@
                     for (let i = 0; i < FOLDER_IMAGES.length; i++) {
                         const itemId = i + 1;
                         const savedItem = savedList.find(x => String(x.id) === String(itemId));
-                        const imgUrl = (savedItem && savedItem.url) ? savedItem.url : FOLDER_IMAGES[i];
+                        const rawUrl = (savedItem && savedItem.url) ? savedItem.url : FOLDER_IMAGES[i];
+                        const imgUrl = (rawUrl && !rawUrl.startsWith('data:') && !rawUrl.includes('?')) ? (rawUrl + '?v=9') : rawUrl;
                         const numStr = itemId < 10 ? '0' + itemId : itemId;
                         photoHtml += `
                             <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)">
