@@ -7,7 +7,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Admin Login</title>
+    <title>Admin Login | Madura College</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -19,10 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
     <style>
-        /* ===========================
-RESET
-=========================== */
-
+        /* RESET */
         * {
             margin: 0;
             padding: 0;
@@ -30,591 +27,266 @@ RESET
             font-family: 'Poppins', sans-serif;
         }
 
-        html,
-        body {
-
+        html, body {
             width: 100%;
             height: 100%;
             overflow: hidden;
-
         }
 
-        /* ===========================
-BACKGROUND IMAGE
-=========================== */
-
+        /* BACKGROUND IMAGE */
         .bg-image {
-
             position: fixed;
-
             top: 0;
             left: 0;
-
             width: 100%;
             height: 100%;
-
             object-fit: cover;
-
             object-position: center;
-
             z-index: -5;
-
             animation: bgZoom 18s ease-in-out infinite alternate;
-
         }
 
-        /* ===========================
-OVERLAY
-=========================== */
-
+        /* OVERLAY */
         .bg-overlay {
-
             position: fixed;
-
             top: 0;
             left: 0;
-
             width: 100%;
             height: 100%;
-
-            background:
-
-                linear-gradient(180deg,
-                    rgba(0, 0, 0, .10),
-                    rgba(0, 0, 0, .35),
-                    rgba(0, 0, 0, .78));
-
+            background: linear-gradient(180deg, rgba(0, 0, 0, .10), rgba(0, 0, 0, .35), rgba(0, 0, 0, .78));
             backdrop-filter: blur(2px);
-
             z-index: -4;
-
         }
 
-        /* ===========================
-BODY
-=========================== */
-
+        /* BODY */
         body {
-
             display: flex;
-
             justify-content: center;
-
             align-items: flex-end;
-
             padding: 40px;
-
         }
 
-        /* ===========================
-LOGIN WRAPPER
-=========================== */
-
+        /* LOGIN WRAPPER */
         .login-wrapper {
-
             width: 100%;
-
             display: flex;
-
             justify-content: center;
-
             align-items: flex-end;
-
         }
 
-        /* ===========================
-PREMIUM LOGIN BOX
-=========================== */
-
+        /* PREMIUM LOGIN BOX */
         .login-box {
-
             width: 100%;
-
             max-width: 720px;
-
             min-height: 180px;
-
             padding: 35px;
-
             border-radius: 28px;
-
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
             gap: 35px;
-
-            background:
-
-                rgba(255, 255, 255, .14);
-
-            border:
-
-                1px solid rgba(255, 255, 255, .20);
-
+            background: rgba(255, 255, 255, .14);
+            border: 1px solid rgba(255, 255, 255, .20);
             backdrop-filter: blur(22px);
-
             -webkit-backdrop-filter: blur(22px);
-
-            box-shadow:
-
-                0 20px 60px rgba(0, 0, 0, .45),
-
-                0 0 40px rgba(255, 255, 255, .05);
-
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .45), 0 0 40px rgba(255, 255, 255, .05);
             animation: loginUp 1s ease;
-
         }
 
-        /* ===========================
-LEFT SIDE
-=========================== */
-
+        /* LEFT SIDE */
         .left-side {
-
             flex: 1;
-
         }
 
         .left-side h1 {
-
             font-size: 34px;
-
             font-weight: 700;
-
             color: #fff;
-
             margin-bottom: 10px;
-
         }
 
         .left-side p {
-
             font-size: 17px;
-
             color: rgba(255, 255, 255, .85);
-
         }
 
-        /* ===========================
-RIGHT SIDE
-=========================== */
-
+        /* RIGHT SIDE */
         .right-side {
-
             width: 330px;
-
         }
 
-        /* ===========================
-INPUT
-=========================== */
-
+        /* INPUT */
         .input-group {
-
             position: relative;
-
             margin-bottom: 18px;
-
         }
 
         .input-group i {
-
             position: absolute;
-
             left: 16px;
-
             top: 50%;
-
             transform: translateY(-50%);
-
             color: #fff;
-
         }
 
         .input-group input {
-
             width: 100%;
-
             height: 52px;
-
             border: none;
-
             outline: none;
-
             padding-left: 45px;
-
             padding-right: 45px;
-
             border-radius: 14px;
-
-            background:
-
-                rgba(255, 255, 255, .16);
-
+            background: rgba(255, 255, 255, .16);
             color: #fff;
-
             font-size: 15px;
-
             transition: .35s;
-
         }
 
         .input-group input::placeholder {
-
             color: rgba(255, 255, 255, .70);
-
         }
 
         .input-group input:focus {
-
-            background:
-
-                rgba(255, 255, 255, .22);
-
-            box-shadow:
-
-                0 0 0 3px rgba(255, 255, 255, .12);
-
+            background: rgba(255, 255, 255, .22);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, .12);
         }
 
-        /* ===========================
-PASSWORD ICON
-=========================== */
-
+        /* PASSWORD ICON */
         .eye {
-
             position: absolute;
-
             right: 16px;
-
             top: 50%;
-
             transform: translateY(-50%);
-
             cursor: pointer;
-
             color: #fff;
-
         }
 
-        /* ===========================
-BUTTON
-=========================== */
-
+        /* BUTTON */
         .login-btn {
-
             width: 100%;
-
             height: 54px;
-
             border: none;
-
             border-radius: 14px;
-
             cursor: pointer;
-
             font-size: 16px;
-
             font-weight: 600;
-
             color: #fff;
-
-            background:
-
-                linear-gradient(135deg,
-                    #0066ff,
-                    #00bfff);
-
+            background: linear-gradient(135deg, #0066ff, #00bfff);
             transition: .35s;
-
-            box-shadow:
-
-                0 10px 25px rgba(0, 102, 255, .35);
-
+            box-shadow: 0 10px 25px rgba(0, 102, 255, .35);
         }
 
         .login-btn:hover {
-
             transform: translateY(-3px);
-
-            box-shadow:
-
-                0 15px 35px rgba(0, 102, 255, .55);
-
+            box-shadow: 0 15px 35px rgba(0, 102, 255, .55);
         }
 
-        /* ===========================
-MESSAGE
-=========================== */
-
+        /* MESSAGE */
         #msg {
-
             margin-top: 12px;
-
-            height: 20px;
-
+            min-height: 20px;
             text-align: center;
-
             font-size: 14px;
-
             color: #ffdddd;
-
         }
 
-        /* ===========================
-LOADER
-=========================== */
-
+        /* LOADER */
         .loader {
-
             display: none;
-
             margin: 15px auto;
-
             width: 30px;
-
             height: 30px;
-
             border-radius: 50%;
-
             border: 4px solid rgba(255, 255, 255, .25);
-
             border-top: 4px solid #fff;
-
             animation: spin .8s linear infinite;
-
         }
 
-        /* ===========================
-RESPONSIVE
-=========================== */
-
+        /* RESPONSIVE */
         @media(max-width:768px) {
-
             body {
-
                 padding: 20px;
-
             }
-
             .login-box {
-
                 flex-direction: column;
-
                 max-width: 100%;
-
                 padding: 25px;
-
                 gap: 20px;
-
                 border-radius: 22px;
-
             }
-
             .left-side {
-
                 text-align: center;
-
             }
-
             .left-side h1 {
-
                 font-size: 28px;
-
             }
-
             .left-side p {
-
                 font-size: 14px;
-
             }
-
             .right-side {
-
                 width: 100%;
-
             }
-
         }
 
-        /* ===========================
-ANIMATIONS
-=========================== */
-
+        /* ANIMATIONS */
         @keyframes loginUp {
-
-            from {
-
-                opacity: 0;
-
-                transform: translateY(80px);
-
-            }
-
-            to {
-
-                opacity: 1;
-
-                transform: translateY(0);
-
-            }
-
+            from { opacity: 0; transform: translateY(80px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes spin {
-
-            100% {
-
-                transform: rotate(360deg);
-
-            }
-
+            100% { transform: rotate(360deg); }
         }
 
         @keyframes bgZoom {
-
-            0% {
-
-                transform: scale(1);
-
-            }
-
-            100% {
-
-                transform: scale(1.08);
-
-            }
-
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-
-                transform: translateX(0);
-
-            }
-
-            20% {
-
-                transform: translateX(-8px);
-
-            }
-
-            40% {
-
-                transform: translateX(8px);
-
-            }
-
-            60% {
-
-                transform: translateX(-6px);
-
-            }
-
-            80% {
-
-                transform: translateX(6px);
-
-            }
-
-        }
-
-        .shake {
-
-            animation: shake .45s;
-
-        }
-
-        .bg-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            z-index: -2;
+            0% { transform: scale(1); }
+            100% { transform: scale(1.08); }
         }
     </style>
-
-
 </head>
 
 <body>
 
     <!-- Background -->
-
     <img src="../images/home/home_001.jpg" class="bg-image" alt="Background">
-
     <div class="bg-overlay"></div>
 
-    <!-- Login -->
-
+    <!-- Login Container -->
     <div class="login-wrapper">
-
         <div class="login-box" id="loginBox">
-
             <div class="left-side">
-
-                <h1>
-
-                    Madura College
-
-                </h1>
-
+                <h1>Madura College</h1>
                 <p>
-    Madura College 2022–2025 <br>
-    <span>College Memories</span>
-</p>
-
+                    Madura College 2022–2025 <br>
+                    <span>College Memories</span>
+                </p>
             </div>
 
             <div class="right-side">
-
                 <div class="input-group">
-
                     <i class="fas fa-envelope"></i>
-
                     <input type="email" id="email" placeholder="Admin Email">
-
                 </div>
 
                 <div class="input-group">
-
                     <i class="fas fa-lock"></i>
-
                     <input type="password" id="password" placeholder="Password">
-
                     <span class="eye" onclick="togglePassword()">
-
                         <i id="eyeIcon" class="fas fa-eye"></i>
-
                     </span>
-
                 </div>
 
                 <button class="login-btn" onclick="login()">
-
-                   Unlocked Memories
-
+                    Unlocked Memories
                 </button>
 
-                <div class="loader" id="loader">
-
-                </div>
-
+                <div class="loader" id="loader"></div>
                 <p id="msg"></p>
-
             </div>
-
         </div>
 
         <script type="module" src="../js/auth.js"></script>
-
     </div>
+</body>
+</html>

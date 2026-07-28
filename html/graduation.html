@@ -10,10 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <!-- Firebase Auth Guard -->
+    <script type="module" src="../js/auth-guard.js"></script>
     <script>
-        if (localStorage.getItem("isUserLoggedIn") !== "true" && localStorage.getItem("isAdminLoggedIn") !== "true") {
-            window.location.replace("login.html");
-        }
         window.toggleMobileMenu = function(e) {
             if (e) { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); }
             var menu = document.getElementById('nav-menu') || document.querySelector('.nav-menu');
@@ -26,6 +25,41 @@
                 }
             }
         };
+        window.renderUserRoleUI = function() {
+            var isAdminLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
+            var userEmail = localStorage.getItem("userEmail") || (isAdminLoggedIn ? "admin123@gmail.com" : "batch2025@maduracollege.edu");
+            var navActions = document.querySelector('.nav-actions');
+            if (navActions) {
+                var badge = document.getElementById('role-badge');
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.id = 'role-badge';
+                    var logoutBtn = document.getElementById('logout-btn');
+                    if (logoutBtn) navActions.insertBefore(badge, logoutBtn);
+                    else navActions.prepend(badge);
+                }
+                badge.className = isAdminLoggedIn ? 'role-badge admin' : 'role-badge user';
+                badge.style.display = 'inline-flex';
+                badge.innerHTML = isAdminLoggedIn 
+                    ? '<i class="fas fa-shield-halved"></i> Admin' 
+                    : '<i class="fas fa-user-circle"></i> Friend';
+
+                var logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn) {
+                    logoutBtn.className = 'btn btn-sm btn-logout';
+                    logoutBtn.style.display = 'inline-flex';
+                    logoutBtn.style.visibility = 'visible';
+                    logoutBtn.style.opacity = '1';
+                    logoutBtn.innerHTML = '<i class="fas fa-right-from-bracket"></i> Logout';
+                    logoutBtn.onclick = function() {
+                        localStorage.removeItem("isAdminLoggedIn");
+                        localStorage.removeItem("userEmail");
+                        window.location.replace("login.html");
+                    };
+                }
+            }
+        };
+        document.addEventListener('DOMContentLoaded', window.renderUserRoleUI);
     </script>
 </head>
 <body>
@@ -88,7 +122,36 @@
                 </div>
                 <h3 style="margin-bottom: 20px; font-size: 1.5rem; color: var(--color-cyan);"><i class="fas fa-camera"></i> Graduation Photos Vault (60 Photos)</h3>
                 <div class="gallery-grid graduation-grid" id="graduation-image-grid" style="margin-bottom: 60px;">
-                    <!-- Dynamically rendered 60 graduation photo cards -->
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)">
+                        <div class="gallery-badge"><i class="fas fa-award"></i> Grad Photo #01</div>
+                        <img src="../images/graduation/graduation_001.jpg" class="card-media-img" loading="lazy" style="width:100%; height:auto; border-radius:16px; display:block; object-fit:cover;">
+                        <div class="card-caption">Graduation Memory #01 • Class of 2025</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)">
+                        <div class="gallery-badge"><i class="fas fa-award"></i> Grad Photo #02</div>
+                        <img src="../images/graduation/graduation_002.jpg" class="card-media-img" loading="lazy" style="width:100%; height:auto; border-radius:16px; display:block; object-fit:cover;">
+                        <div class="card-caption">Graduation Memory #02 • Class of 2025</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)">
+                        <div class="gallery-badge"><i class="fas fa-award"></i> Grad Photo #03</div>
+                        <img src="../images/graduation/graduation_003.jpg" class="card-media-img" loading="lazy" style="width:100%; height:auto; border-radius:16px; display:block; object-fit:cover;">
+                        <div class="card-caption">Graduation Memory #03 • Class of 2025</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)">
+                        <div class="gallery-badge"><i class="fas fa-award"></i> Grad Photo #04</div>
+                        <img src="../images/graduation/graduation_004.jpg" class="card-media-img" loading="lazy" style="width:100%; height:auto; border-radius:16px; display:block; object-fit:cover;">
+                        <div class="card-caption">Graduation Memory #04 • Class of 2025</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)">
+                        <div class="gallery-badge"><i class="fas fa-award"></i> Grad Photo #05</div>
+                        <img src="../images/graduation/graduation_005.jpg" class="card-media-img" loading="lazy" style="width:100%; height:auto; border-radius:16px; display:block; object-fit:cover;">
+                        <div class="card-caption">Graduation Memory #05 • Class of 2025</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)">
+                        <div class="gallery-badge"><i class="fas fa-award"></i> Grad Photo #06</div>
+                        <img src="../images/graduation/graduation_006.jpg" class="card-media-img" loading="lazy" style="width:100%; height:auto; border-radius:16px; display:block; object-fit:cover;">
+                        <div class="card-caption">Graduation Memory #06 • Class of 2025</div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -97,5 +160,6 @@
     <footer class="footer-section"><div class="container text-center"><p>Made with ❤️ by <strong>2022–2025 Batch</strong> | College: <strong>Madura College</strong></p><p class="developer-credit-footer">Designed & Developed by <strong>2022COM045</strong></p></div></footer>
     <button class="back-to-top" id="back-to-top"><i class="fas fa-arrow-up"></i></button>
     <script type="module" src="../js/script.js"></script>
+    <script type="module" src="../js/main.js"></script>
 </body>
 </html>

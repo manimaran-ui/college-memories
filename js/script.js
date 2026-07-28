@@ -79,9 +79,10 @@ function startApplication() {
     };
 
     const SESSION_KEY = 'mc_user_session';
-    const MEDIA_STORAGE_KEY = 'mc_static_media_store_v9';
+    const MEDIA_STORAGE_KEY = 'mc_static_media_store_v10';
 
     // Clear legacy storage cache to instantly load real static images
+    localStorage.removeItem('mc_static_media_store_v9');
     localStorage.removeItem('mc_static_media_store_v8');
     localStorage.removeItem('mc_static_media_store_v7');
     localStorage.removeItem('mc_static_media_store_v6');
@@ -134,6 +135,13 @@ function startApplication() {
                 logoutBtn.style.visibility = 'visible';
                 logoutBtn.style.opacity = '1';
                 logoutBtn.innerHTML = '<i class="fas fa-right-from-bracket"></i> Logout';
+                logoutBtn.onclick = function() {
+                    localStorage.removeItem("isAdminLoggedIn");
+                    localStorage.removeItem("userEmail");
+                    localStorage.removeItem(SESSION_KEY);
+                    sessionStorage.clear();
+                    window.location.replace("login.html");
+                };
             }
         }
 
@@ -343,7 +351,7 @@ function startApplication() {
         const store = getMediaStore();
 
         // 1. Gallery
-        renderGridSection(['gallery-grid', 'gallery-photo-grid', 'gallery-image-grid'], store.gallery_images, 'image', 'gallery_images', 'Gallery Photo Vault (50 Photos)');
+        renderGridSection(['gallery-grid', 'gallery-photo-grid', 'gallery-image-grid'], store.gallery_images, 'image', 'gallery_images', 'Gallery Photo Vault (52 Photos)');
         renderGridSection(['gallery-video-grid', 'gallery-videos-grid'], store.gallery_videos, 'video', 'gallery_videos', 'Gallery Video Vault (10 Videos)');
 
         // 2. Videos Archive

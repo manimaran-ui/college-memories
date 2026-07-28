@@ -16,10 +16,11 @@
     
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="../css/style.css">
+    
+    <!-- Firebase Auth Guard -->
+    <script type="module" src="../js/auth-guard.js"></script>
+    
     <script>
-        if (localStorage.getItem("isUserLoggedIn") !== "true" && localStorage.getItem("isAdminLoggedIn") !== "true") {
-            window.location.replace("login.html");
-        }
         window.toggleMobileMenu = function(e) {
             if (e) { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); }
             var menu = document.getElementById('nav-menu') || document.querySelector('.nav-menu');
@@ -32,6 +33,41 @@
                 }
             }
         };
+        window.renderUserRoleUI = function() {
+            var isAdminLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
+            var userEmail = localStorage.getItem("userEmail") || (isAdminLoggedIn ? "admin123@gmail.com" : "batch2025@maduracollege.edu");
+            var navActions = document.querySelector('.nav-actions');
+            if (navActions) {
+                var badge = document.getElementById('role-badge');
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.id = 'role-badge';
+                    var logoutBtn = document.getElementById('logout-btn');
+                    if (logoutBtn) navActions.insertBefore(badge, logoutBtn);
+                    else navActions.prepend(badge);
+                }
+                badge.className = isAdminLoggedIn ? 'role-badge admin' : 'role-badge user';
+                badge.style.display = 'inline-flex';
+                badge.innerHTML = isAdminLoggedIn 
+                    ? '<i class="fas fa-shield-halved"></i> Admin' 
+                    : '<i class="fas fa-user-circle"></i> Friend';
+
+                var logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn) {
+                    logoutBtn.className = 'btn btn-sm btn-logout';
+                    logoutBtn.style.display = 'inline-flex';
+                    logoutBtn.style.visibility = 'visible';
+                    logoutBtn.style.opacity = '1';
+                    logoutBtn.innerHTML = '<i class="fas fa-right-from-bracket"></i> Logout';
+                    logoutBtn.onclick = function() {
+                        localStorage.removeItem("isAdminLoggedIn");
+                        localStorage.removeItem("userEmail");
+                        window.location.replace("login.html");
+                    };
+                }
+            }
+        };
+        document.addEventListener('DOMContentLoaded', window.renderUserRoleUI);
     </script>
 </head>
 <body>
@@ -107,8 +143,7 @@
                     <!-- Hero Group Photo Frame -->
                     <div class="hero-photo-placeholder-wrapper" data-reveal="fade-up" data-delay="300">
                         <div class="placeholder-card hero-photo-card has-media">
-                            <img src=                "../images/gallery_001.jpeg",
- alt="Madura College Batch 2022-2025 Royal B.Com Group Photo" class="card-media-img">
+                            <img src="../images/home/home_001.jpg" alt="Madura College Batch 2022-2025 Royal B.Com Group Photo" class="card-media-img">
                             <div class="gallery-overlay">
                                 <span class="overlay-icon"><i class="fas fa-users"></i></span>
                                 <span class="overlay-label">Madura College Batch 2022–2025 • Royal B.Com</span>
@@ -282,5 +317,6 @@
     </button>
 
     <script type="module" src="../js/script.js"></script>
+    <script type="module" src="../js/main.js"></script>
 </body>
 </html>

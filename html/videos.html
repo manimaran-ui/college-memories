@@ -10,10 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <!-- Firebase Auth Guard -->
+    <script type="module" src="../js/auth-guard.js"></script>
     <script>
-        if (localStorage.getItem("isUserLoggedIn") !== "true" && localStorage.getItem("isAdminLoggedIn") !== "true") {
-            window.location.replace("login.html");
-        }
         window.toggleMobileMenu = function(e) {
             if (e) { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); }
             var menu = document.getElementById('nav-menu') || document.querySelector('.nav-menu');
@@ -26,6 +25,41 @@
                 }
             }
         };
+        window.renderUserRoleUI = function() {
+            var isAdminLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
+            var userEmail = localStorage.getItem("userEmail") || (isAdminLoggedIn ? "admin123@gmail.com" : "batch2025@maduracollege.edu");
+            var navActions = document.querySelector('.nav-actions');
+            if (navActions) {
+                var badge = document.getElementById('role-badge');
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.id = 'role-badge';
+                    var logoutBtn = document.getElementById('logout-btn');
+                    if (logoutBtn) navActions.insertBefore(badge, logoutBtn);
+                    else navActions.prepend(badge);
+                }
+                badge.className = isAdminLoggedIn ? 'role-badge admin' : 'role-badge user';
+                badge.style.display = 'inline-flex';
+                badge.innerHTML = isAdminLoggedIn 
+                    ? '<i class="fas fa-shield-halved"></i> Admin' 
+                    : '<i class="fas fa-user-circle"></i> Friend';
+
+                var logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn) {
+                    logoutBtn.className = 'btn btn-sm btn-logout';
+                    logoutBtn.style.display = 'inline-flex';
+                    logoutBtn.style.visibility = 'visible';
+                    logoutBtn.style.opacity = '1';
+                    logoutBtn.innerHTML = '<i class="fas fa-right-from-bracket"></i> Logout';
+                    logoutBtn.onclick = function() {
+                        localStorage.removeItem("isAdminLoggedIn");
+                        localStorage.removeItem("userEmail");
+                        window.location.replace("login.html");
+                    };
+                }
+            }
+        };
+        document.addEventListener('DOMContentLoaded', window.renderUserRoleUI);
     </script>
 </head>
 <body>
@@ -76,17 +110,11 @@
                 </div>
 
                 <div class="video-grid" id="video-archive-grid">
-                    <!-- VIDEO ITEM 1 TO 10 -->
-                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">03:45</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Freshers Party Dance Highlights</h4><span class="code-comment"><!-- VIDEO 1 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-film"></i> Event Reel</span><h3>Freshers Welcome Night 2022</h3></div></div>
-                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">05:12</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Canteen Bunk Conversations</h4><span class="code-comment"><!-- VIDEO 2 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-comments"></i> Fun Moments</span><h3>Tea & Samosa Gossip Vlog</h3></div></div>
-                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">04:30</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Cultural Stage Performance</h4><span class="code-comment"><!-- VIDEO 3 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-masks-theater"></i> Culturals</span><h3>Grand Stage Musical Performance</h3></div></div>
-                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">02:18</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Symposium Inauguration Video</h4><span class="code-comment"><!-- VIDEO 4 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-microchip"></i> Academic Fest</span><h3>National Tech Fest After-Movie</h3></div></div>
-                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">06:04</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">College Industrial Trip Vlog</h4><span class="code-comment"><!-- VIDEO 5 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-bus"></i> Outing Trip</span><h3>Batch Outstation Journey 2024</h3></div></div>
-                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">03:50</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Sports Day Final Relay Race</h4><span class="code-comment"><!-- VIDEO 6 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-trophy"></i> Sports</span><h3>Final Lap Victory Cheer</h3></div></div>
-                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">08:20</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Classroom Backbench Pranks</h4><span class="code-comment"><!-- VIDEO 7 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-laugh-squint"></i> Humor</span><h3>Unfiltered Classroom Laughs</h3></div></div>
-                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">04:15</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Flashmob Dance Highlights</h4><span class="code-comment"><!-- VIDEO 8 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-bolt"></i> Surprise Flashmob</span><h3>Campus Quad Performance</h3></div></div>
-                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">07:40</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Farewell Emotional Goodbye Reel</h4><span class="code-comment"><!-- VIDEO 9 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-heart-crack"></i> Farewell</span><h3>The Last Day Tribute Film</h3></div></div>
-                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card"><div class="video-duration">05:00</div><div class="placeholder-content"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Batch Master Montage</h4><span class="code-comment"><!-- VIDEO 10 --></span></div></div><div class="video-info"><span class="video-category"><i class="fas fa-star"></i> Retrospective</span><h3>Madura College 2022–2025</h3></div></div>
+                    <!-- VIDEO ITEM 1 TO 4 WITH DIRECT IMAGES -->
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card has-media"><img src="../images/videos/video_001.jpg" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; opacity:0.6;"><div class="video-duration">03:45</div><div class="placeholder-content" style="position:relative; z-index:2;"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Freshers Party Dance Highlights</h4></div></div><div class="video-info"><span class="video-category"><i class="fas fa-film"></i> Event Reel</span><h3>Freshers Welcome Night 2022</h3></div></div>
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card has-media"><img src="../images/videos/video_002.jpg" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; opacity:0.6;"><div class="video-duration">05:12</div><div class="placeholder-content" style="position:relative; z-index:2;"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Canteen Bunk Conversations</h4></div></div><div class="video-info"><span class="video-category"><i class="fas fa-comments"></i> Fun Moments</span><h3>Tea & Samosa Gossip Vlog</h3></div></div>
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card has-media"><img src="../images/videos/video_003.jpg" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; opacity:0.6;"><div class="video-duration">04:30</div><div class="placeholder-content" style="position:relative; z-index:2;"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Cultural Stage Performance</h4></div></div><div class="video-info"><span class="video-category"><i class="fas fa-masks-theater"></i> Culturals</span><h3>Grand Stage Musical Performance</h3></div></div>
+                    <div class="video-card glass-panel" data-reveal="fade-up"><div class="placeholder-card video-placeholder-card has-media"><img src="../images/videos/video_004.jpg" style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; opacity:0.6;"><div class="video-duration">02:18</div><div class="placeholder-content" style="position:relative; z-index:2;"><div class="play-btn-circle"><i class="fas fa-play"></i></div><h4 class="video-title">Symposium Inauguration Video</h4></div></div><div class="video-info"><span class="video-category"><i class="fas fa-microchip"></i> Academic Fest</span><h3>National Tech Fest After-Movie</h3></div></div>
                 </div>
             </div>
         </section>
@@ -124,5 +152,6 @@
 
     <button class="back-to-top" id="back-to-top"><i class="fas fa-arrow-up"></i></button>
     <script type="module" src="../js/script.js"></script>
+    <script type="module" src="../js/main.js"></script>
 </body>
 </html>

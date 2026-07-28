@@ -12,10 +12,9 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <!-- Firebase Auth Guard -->
+    <script type="module" src="../js/auth-guard.js"></script>
     <script>
-        if (localStorage.getItem("isUserLoggedIn") !== "true" && localStorage.getItem("isAdminLoggedIn") !== "true") {
-            window.location.replace("login.html");
-        }
         window.toggleMobileMenu = function(e) {
             if (e) { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); }
             var menu = document.getElementById('nav-menu') || document.querySelector('.nav-menu');
@@ -74,7 +73,7 @@
                     window._activeEditorCardImg.src = croppedDataUrl;
                     
                     try {
-                        var storeKey = 'mc_static_media_store_v9';
+                        var storeKey = 'mc_static_media_store_v10';
                         var store = JSON.parse(localStorage.getItem(storeKey) || '{}');
                         var list = store[sectionKey || 'gallery_images'] || [];
                         var item = list.find(function(x) { return String(x.id) === String(id); });
@@ -292,150 +291,60 @@
                 </div>
                 <h3 style="margin-bottom: 20px; font-size: 1.5rem; color: var(--color-cyan);"><i class="fas fa-camera"></i></h3>
                 <div class="gallery-grid masonry-layout" id="gallery-grid" style="margin-bottom: 60px;">
-                    <!-- Dynamically rendered 50 photo cards -->
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #01</div><img src="../images/gallery/gallery_001.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #01 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #02</div><img src="../images/gallery/gallery_002.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #02 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #03</div><img src="../images/gallery/gallery_003.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #03 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #04</div><img src="../images/gallery/gallery_004.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #04 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #05</div><img src="../images/gallery/gallery_005.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #05 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #06</div><img src="../images/gallery/gallery_006.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #06 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #07</div><img src="../images/gallery/gallery_007.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #07 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #08</div><img src="../images/gallery/gallery_008.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #08 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #09</div><img src="../images/gallery/gallery_009.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #09 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #10</div><img src="../images/gallery/gallery_010.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #10 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #11</div><img src="../images/gallery/gallery_011.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #11 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #12</div><img src="../images/gallery/gallery_012.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #12 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #13</div><img src="../images/gallery/gallery_013.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #13 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #14</div><img src="../images/gallery/gallery_014.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #14 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #15</div><img src="../images/gallery/gallery_015.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #15 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #16</div><img src="../images/gallery/gallery_016.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #16 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #17</div><img src="../images/gallery/gallery_017.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #17 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #18</div><img src="../images/gallery/gallery_018.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #18 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #19</div><img src="../images/gallery/gallery_019.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #19 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #20</div><img src="../images/gallery/gallery_020.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #20 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #21</div><img src="../images/gallery/gallery_021.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #21 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #22</div><img src="../images/gallery/gallery_022.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #22 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #23</div><img src="../images/gallery/gallery_023.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #23 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #24</div><img src="../images/gallery/gallery_024.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #24 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #25</div><img src="../images/gallery/gallery_025.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #25 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #26</div><img src="../images/gallery/gallery_026.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #26 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #27</div><img src="../images/gallery/gallery_027.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #27 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #28</div><img src="../images/gallery/gallery_028.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #28 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #29</div><img src="../images/gallery/gallery_029.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #29 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #30</div><img src="../images/gallery/gallery_030.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #30 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #31</div><img src="../images/gallery/gallery_031.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #31 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #32</div><img src="../images/gallery/gallery_032.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #32 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #33</div><img src="../images/gallery/gallery_033.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #33 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #34</div><img src="../images/gallery/gallery_034.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #34 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #35</div><img src="../images/gallery/gallery_035.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #35 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #36</div><img src="../images/gallery/gallery_036.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #36 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #37</div><img src="../images/gallery/gallery_037.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #37 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #38</div><img src="../images/gallery/gallery_038.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #38 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #39</div><img src="../images/gallery/gallery_039.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #39 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #40</div><img src="../images/gallery/gallery_040.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #40 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #41</div><img src="../images/gallery/gallery_041.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #41 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #42</div><img src="../images/gallery/gallery_042.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #42 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #43</div><img src="../images/gallery/gallery_043.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #43 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #44</div><img src="../images/gallery/gallery_044.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #44 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #45</div><img src="../images/gallery/gallery_045.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #45 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #46</div><img src="../images/gallery/gallery_046.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #46 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #47</div><img src="../images/gallery/gallery_047.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #47 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #48</div><img src="../images/gallery/gallery_048.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #48 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #49</div><img src="../images/gallery/gallery_049.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #49 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #50</div><img src="../images/gallery/gallery_050.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #50 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #51</div><img src="../images/gallery/gallery_051.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #51 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)"><div class="gallery-badge"><i class="fas fa-camera"></i> Photo #52</div><img src="../images/gallery/gallery_052.jpg" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"><div class="card-caption">Photo #52 • Madura College</div></div>
                 </div>
-
-                <!-- SECTION 2: VIDEO VAULT -->
-                <div class="glass-panel" data-reveal="fade-up" style="padding: 24px 30px; margin-bottom: 24px; border-color: rgba(127, 0, 255, 0.3); background: rgba(127, 0, 255, 0.05); text-align: center;">
-                    <p style="font-family: var(--font-quote); font-size: 1.35rem; font-style: italic; color: #ffffff; margin: 0;">
-                        <i class="fas fa-quote-left" style="color: var(--color-pink); margin-right: 8px;"></i>
-                        "We took photos to decorate our phones, but ended up decorating our lives with memories."
-                    </p>
-                </div>
-                <h3 style="margin-bottom: 20px; font-size: 1.5rem; color: var(--color-purple);"><i class="fas fa-video"></i> Dedicated Video Vault (10 Videos)</h3>
-                <div class="video-grid" id="gallery-video-grid">
-                    <!-- Dynamically rendered 10 video cards -->
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer-section"><div class="container text-center"><p>Made with ❤️ by <strong>2022–2025 Batch</strong> | College: <strong>Madura College</strong></p><p class="developer-credit-footer">Designed & Developed by <strong>2022COM045</strong></p></div></footer>
-    <button class="back-to-top" id="back-to-top"><i class="fas fa-arrow-up"></i></button>
     <script type="module" src="../js/script.js"></script>
-    <script>
-        (function renderGalleryStaticGrid() {
-            const FOLDER_IMAGES = [
-                "../images/gallery_001.jpeg",
-                "../images/gallery_002.jpeg",
-                "../images/gallery_003.jpeg",
-                "../images/gallery_005.jpeg",
-                "../images/gallery_006.jpeg",
-                "../images/gallery_007.jpeg",
-                "../images/gallery_009.jpeg",
-                "../images/gallery_010.jpeg",
-                "../images/gallery_011.jpeg",
-                "../images/gallery_012.jpeg",
-                "../images/gallery_013.jpeg",
-                "../images/gallery_014.jpeg",
-                "../images/gallery_015.jpeg",
-                "../images/gallery_016.jpeg",
-                "../images/gallery_017.jpeg",
-                "../images/gallery_018.jpeg",
-                "../images/gallery_020.jpeg",
-                "../images/gallery_021.jpeg",
-                "../images/gallery_022.jpeg",
-                "../images/gallery_023.jpeg",
-                "../images/gallery_024.jpeg",
-                "../images/gallery_025.jpeg",
-                "../images/gallery_030.jpeg",
-                "../images/gallery_031.jpeg",
-                "../images/gallery_032.jpeg",
-                "../images/gallery_033.jpeg",
-                "../images/gallery_034.jpeg",
-                "../images/gallery_035.jpeg"
-            ];
-
-            function doRender() {
-                const isAdminUser = localStorage.getItem("isAdminLoggedIn") === "true";
-
-                // Format Top Bar Admin Badge & Logout Button
-                const logoutBtn = document.getElementById('logout-btn');
-                if (logoutBtn && isAdminUser) {
-                    let badge = document.getElementById('role-badge');
-                    if (!badge) {
-                        badge = document.createElement('span');
-                        badge.id = 'role-badge';
-                        badge.className = 'role-badge admin';
-                        badge.style.display = 'inline-flex';
-                        badge.style.marginRight = '8px';
-                        badge.innerHTML = '<i class="fas fa-shield-halved"></i> Admin';
-                        logoutBtn.parentNode.insertBefore(badge, logoutBtn);
-                    }
-                    logoutBtn.className = 'btn btn-sm btn-logout';
-                    logoutBtn.innerHTML = '<i class="fas fa-right-from-bracket"></i> Logout';
-                }
-
-                const photoGrid = document.getElementById('gallery-grid');
-                if (photoGrid && photoGrid.children.length === 0) {
-                    let photoHtml = '';
-                    var storeKey = 'mc_static_media_store_v9';
-                    var store = {};
-                    try { store = JSON.parse(localStorage.getItem(storeKey) || '{}'); } catch(e){}
-                    var savedList = store['gallery_images'] || [];
-
-                    for (let i = 0; i < FOLDER_IMAGES.length; i++) {
-                        const itemId = i + 1;
-                        const savedItem = savedList.find(x => String(x.id) === String(itemId));
-                        const rawUrl = (savedItem && savedItem.url) ? savedItem.url : FOLDER_IMAGES[i];
-                        const imgUrl = (rawUrl && !rawUrl.startsWith('data:') && !rawUrl.includes('?')) ? (rawUrl + '?v=9') : rawUrl;
-                        const numStr = itemId < 10 ? '0' + itemId : itemId;
-                        photoHtml += `
-                            <div class="pinterest-masonry-card revealed" onclick="window.openPageLightbox(this)">
-                                <div class="gallery-badge"><i class="fas fa-camera"></i> Photo #${numStr}</div>
-                                ${isAdminUser ? `
-                                    <div class="admin-card-actions" style="position:absolute; top:10px; right:10px; z-index:99999; display:inline-flex; gap:6px; pointer-events:auto !important;">
-                                        <button type="button" class="btn-card-edit" data-id="${itemId}" data-section="gallery_images" data-type="image" title="Edit Photo" onclick="event.preventDefault(); event.stopPropagation(); window.openPageEditor(this); return false;"><i class="fas fa-pen"></i></button>
-                                        <button type="button" class="btn-card-delete" data-id="${itemId}" data-section="gallery_images" title="Delete Photo" onclick="event.preventDefault(); event.stopPropagation(); window.openPageDelete(this); return false;"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                ` : ''}
-                                <img src="${imgUrl}" class="card-media-img" loading="lazy" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;">
-                                <div class="card-caption">Photo #${numStr} • Madura College</div>
-                            </div>
-                        `;
-                    }
-                    photoGrid.innerHTML = photoHtml;
-                    if (typeof window.applyPinterestMasonryLayout === 'function') {
-                        window.applyPinterestMasonryLayout();
-                    }
-                }
-
-                const videoGrid = document.getElementById('gallery-video-grid');
-                if (videoGrid && videoGrid.children.length === 0) {
-                    let videoHtml = '';
-                    for (let i = 0; i < 10; i++) {
-                        const numStr = i + 1 < 10 ? '0' + (i + 1) : (i + 1);
-                        videoHtml += `
-                            <div class="video-card glass-panel apple-media-card apple-layout-compact aspect-landscape revealed" data-reveal="fade-up" style="opacity: 1 !important; transform: none !important;">
-                                <div class="placeholder-card video-placeholder-card">
-                                    <div class="video-duration">03:30</div>
-                                    <div class="placeholder-content">
-                                        <div class="play-btn-circle"><i class="fas fa-play"></i></div>
-                                        <h4 class="video-title">Gallery Video Reel #${i + 1}</h4>
-                                        <span class="code-comment"><!-- VIDEO ${numStr} --></span>
-                                    </div>
-                                </div>
-                                <div class="video-info">
-                                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                                        <span class="video-category"><i class="fas fa-film"></i> Reel #${numStr}</span>
-                                    </div>
-                                    <h3>Gallery Video Reel #${i + 1}</h3>
-                                </div>
-                            </div>
-                        `;
-                    }
-                    videoGrid.innerHTML = videoHtml;
-                }
-            }
-
-            doRender();
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', doRender);
-            }
-            window.addEventListener('load', doRender);
-            setTimeout(doRender, 50);
-            setTimeout(doRender, 300);
-        })();
-    </script>
+    <script type="module" src="../js/main.js"></script>
 </body>
 </html>

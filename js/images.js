@@ -1,86 +1,73 @@
 /* ==========================================================================
    REAL STATIC IMAGE DATA STORE (Madura College Batch 2022–2025)
+   Organized by category subfolders
    ========================================================================== */
 
-const FOLDER_IMAGES = [
-    "../images/gallery_001.jpeg",
-    "../images/gallery_002.jpeg",
-    "../images/gallery_003.jpeg",
-    "../images/gallery_005.jpeg",
-    "../images/gallery_006.jpeg",
-    "../images/gallery_007.jpeg",
-    "../images/gallery_009.jpeg",
-    "../images/gallery_010.jpeg",
-    "../images/gallery_011.jpeg",
-    "../images/gallery_012.jpeg",
-    "../images/gallery_013.jpeg",
-    "../images/gallery_014.jpeg",
-    "../images/gallery_015.jpeg",
-    "../images/gallery_016.jpeg",
-    "../images/gallery_017.jpeg",
-    "../images/gallery_018.jpeg",
-    "../images/gallery_020.jpeg",
-    "../images/gallery_021.jpeg",
-    "../images/gallery_022.jpeg",
-    "../images/gallery_023.jpeg",
-    "../images/gallery_024.jpeg",
-    "../images/gallery_025.jpeg",
-    "../images/gallery_030.jpeg",
-    "../images/gallery_031.jpeg",
-    "../images/gallery_032.jpeg",
-    "../images/gallery_033.jpeg",
-    "../images/gallery_034.jpeg",
-    "../images/gallery_035.jpeg"
+export const homeImages = [
+    "../images/home/home_001.jpg",
+    "../images/home/home_002.jpg",
+    "../images/home/home_003.jpg",
+    "../images/home/home_004.jpg",
+    "../images/home/home_005.jpg"
 ];
 
-// 1. Gallery: Only unique 15 images (no repetition)
-export const galleryImages = FOLDER_IMAGES.map((imgUrl, i) => ({
-    id: i + 1,
-    src: imgUrl,
-    url: imgUrl,
-    title: `Gallery Photo #${i + 1 < 10 ? '0' + (i + 1) : (i + 1)}`,
-    category: ['campus', 'canteen', 'events', 'farewell'][i % 4]
-}));
+export const journeyImages = [
+    "../images/journey/journey_001.jpg",
+    "../images/journey/journey_002.jpg",
+    "../images/journey/journey_003.jpg",
+    "../images/journey/journey_004.jpg",
+    "../images/journey/journey_005.jpg"
+];
 
-// 2. Events: Unique 15 images
-export const eventImages = FOLDER_IMAGES.map((imgUrl, i) => ({
-    id: i + 1,
-    src: imgUrl,
-    url: imgUrl,
-    title: `Event Photo #${i + 1}`,
+export const galleryImages = Array.from({ length: 52 }, (_, idx) => {
+    const i = idx + 1;
+    const numStr = i < 10 ? '00' + i : '0' + i;
+    return {
+        id: i,
+        src: `../images/gallery/gallery_${numStr}.jpg`,
+        url: `../images/gallery/gallery_${numStr}.jpg`,
+        title: `Gallery Photo #${numStr}`,
+        category: ['campus', 'canteen', 'events', 'farewell'][i % 4]
+    };
+});
+
+export const eventImages = [1,2,3].map(i => ({
+    id: i,
+    src: `../images/events/event_00${i}.jpg`,
+    url: `../images/events/event_00${i}.jpg`,
+    title: `Event Photo #0${i}`,
     category: 'events'
 }));
 
-// 3. Friends: Unique 15 images
-export const friendImages = FOLDER_IMAGES.map((imgUrl, i) => ({
-    id: i + 1,
-    name: `Batchmate Profile #${i + 1}`,
+export const friendImages = [1,2,3,4,5,6].map(i => ({
+    id: i,
+    name: `Batchmate Profile #0${i}`,
     nickname: 'Canteen Squad',
     memory: 'Classroom laughter & tea breaks.',
-    src: imgUrl,
-    url: imgUrl
+    src: `../images/friends/friend_00${i}.jpg`,
+    url: `../images/friends/friend_00${i}.jpg`
 }));
 
-// 4. Professors / Teachers: 10 Static Images
-export const teacherImages = FOLDER_IMAGES.slice(0, 10).map((imgUrl, i) => ({
+export const gradImages = [1,2,3,4,5,6].map(i => ({
+    id: i,
+    title: `Graduation Memory #0${i}`,
+    category: 'graduation',
+    src: `../images/graduation/graduation_00${i}.jpg`,
+    url: `../images/graduation/graduation_00${i}.jpg`
+}));
+
+export const teacherImages = homeImages.map((imgUrl, i) => ({
     id: i + 1,
     name: `Professor #${i + 1}`,
-    dept: 'Department of Computer Science',
+    dept: 'Department of Commerce / Computer Applications',
     quote: '"Education is the training of the mind to think."',
     src: imgUrl,
     url: imgUrl
 }));
 
-// 5. Graduation: Unique 15 images
-export const gradImages = FOLDER_IMAGES.map((imgUrl, i) => ({
-    id: i + 1,
-    title: `Graduation Memory #${i + 1 < 10 ? '0' + (i + 1) : (i + 1)}`,
-    category: 'graduation',
-    src: imgUrl,
-    url: imgUrl
-}));
-
 if (typeof window !== 'undefined') {
+    window.homeImages = homeImages;
+    window.journeyImages = journeyImages;
     window.galleryImages = galleryImages;
     window.eventImages = eventImages;
     window.friendImages = friendImages;
