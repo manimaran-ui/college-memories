@@ -351,11 +351,11 @@ function startApplication() {
         const store = getMediaStore();
 
         // 1. Gallery
-        renderGridSection(['gallery-grid', 'gallery-photo-grid', 'gallery-image-grid'], store.gallery_images, 'image', 'gallery_images', 'Gallery Photo Vault (52 Photos)');
+        renderGridSection(['gallery-grid', 'gallery-photo-grid', 'gallery-image-grid'], store.gallery_images, 'image', 'gallery_images', 'Gallery Photo Vault (71 Photos)');
         renderGridSection(['gallery-video-grid', 'gallery-videos-grid'], store.gallery_videos, 'video', 'gallery_videos', 'Gallery Video Vault (10 Videos)');
 
         // 2. Videos Archive
-        renderGridSection(['video-archive-grid', 'videos-grid', 'video-grid'], store.video_archive, 'video', 'video_archive', 'College Video Archive (20 Videos)');
+        renderGridSection(['video-archive-grid', 'videos-grid', 'video-grid'], store.video_archive, 'video', 'video_archive', 'College Video Archive (12 Videos)');
 
         // 3. Events
         renderGridSection(['events-image-grid', 'event-image-grid'], store.event_images, 'image', 'event_images', 'Event Photos (15 Photos)');
@@ -579,38 +579,19 @@ function startApplication() {
             const numStr = idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`;
 
             if (type === 'video') {
+                cardWrapper.className = 'pinterest-masonry-card revealed';
                 cardWrapper.innerHTML = `
-                    <div class="placeholder-card video-placeholder-card ${hasUrl ? 'has-media' : ''}">
-                        <div class="video-duration">${escapeHTML(item.duration || '03:45')}</div>
-                        ${isAdmin() ? `
-                            <div class="admin-card-actions">
-                                <button class="btn-card-edit" data-id="${item.id}" data-section="${sectionKey}" data-type="${type}" title="Edit"><i class="fas fa-pen"></i></button>
-                                <button class="btn-card-delete" data-id="${item.id}" data-section="${sectionKey}" title="Delete"><i class="fas fa-trash"></i></button>
-                            </div>
-                        ` : ''}
-                        ${hasUrl ? `
-                            <video src="${escapeHTML(item.url)}" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" ondragstart="return false;"></video>
-                            <div class="media-watermark-overlay">© Madura College Memories 2022–2025</div>
-                        ` : `
-                            <div class="placeholder-content">
-                                <div class="play-btn-circle"><i class="fas fa-play"></i></div>
-                                <h4 class="video-title">${escapeHTML(item.title)}</h4>
-                                <span class="code-comment">${item.comment || `<!-- VIDEO ${numStr} -->`}</span>
-                            </div>
-                        `}
-                    </div>
-                    <div class="video-info">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span class="video-category"><i class="fas fa-film"></i> Reel #${numStr}</span>
-                            ${isAdmin() ? `
-                                <span>
-                                    <button class="btn-icon-sm btn-card-edit" data-id="${item.id}" data-section="${sectionKey}" data-type="${type}"><i class="fas fa-pen"></i></button>
-                                    <button class="btn-icon-sm btn-card-delete danger" data-id="${item.id}" data-section="${sectionKey}"><i class="fas fa-trash"></i></button>
-                                </span>
-                            ` : ''}
+                    <div class="gallery-badge"><i class="fas fa-video"></i> Reel #${numStr}</div>
+                    ${hasUrl ? `
+                        <video src="${escapeHTML(item.url)}" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" ondragstart="return false;" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;" preload="metadata"></video>
+                    ` : `
+                        <div class="placeholder-content">
+                            <div class="play-btn-circle"><i class="fas fa-play"></i></div>
+                            <h4 class="video-title">${escapeHTML(item.title)}</h4>
+                            <span class="code-comment">${item.comment || `<!-- VIDEO ${numStr} -->`}</span>
                         </div>
-                        <h3>${escapeHTML(item.title)}</h3>
-                    </div>
+                    `}
+                    <div class="card-caption">${escapeHTML(item.title)} • Madura College</div>
                 `;
             } else if (type === 'teacher') {
                 cardWrapper.innerHTML = `
@@ -1668,53 +1649,58 @@ function startApplication() {
     updateActiveNavLink();
 
     function applyPinterestMasonryLayout() {
-        const grid = document.getElementById('gallery-grid');
-        if (!grid) return;
+        const grids = [document.getElementById('gallery-grid'), document.getElementById('video-archive-grid')].filter(Boolean);
+        if (grids.length === 0) return;
 
-        const width = window.innerWidth;
-        let colCount = 2; // Mobile default: 2 columns
-        if (width >= 1200) colCount = 5;       // Desktop: 5 columns
-        else if (width >= 900) colCount = 4;   // Laptop: 4 columns
-        else if (width >= 600) colCount = 3;   // Tablet: 3 columns
+        grids.forEach(grid => {
+            const width = window.innerWidth;
+            let colCount = 2; // Mobile default: 2 columns
+            if (width >= 1200) colCount = grid.id === 'video-archive-grid' ? 4 : 5;
+            else if (width >= 900) colCount = 3;
+            else if (width >= 600) colCount = 2;
 
-        const cards = Array.from(grid.querySelectorAll('.gallery-item-wrapper, .pinterest-masonry-card'));
-        if (cards.length === 0) return;
+            const cards = Array.from(grid.querySelectorAll('.gallery-item-wrapper, .pinterest-masonry-card, .video-card'));
+            if (cards.length === 0) return;
 
-        grid.innerHTML = '';
-        grid.className = 'pinterest-masonry-container';
+            grid.innerHTML = '';
+            grid.className = 'pinterest-masonry-container';
 
-        const columns = [];
-        const colHeights = new Array(colCount).fill(0);
+            const columns = [];
+            const colHeights = new Array(colCount).fill(0);
 
-        for (let i = 0; i < colCount; i++) {
-            const col = document.createElement('div');
-            col.className = 'pinterest-masonry-column';
-            grid.appendChild(col);
-            columns.push(col);
-        }
+            for (let i = 0; i < colCount; i++) {
+                const col = document.createElement('div');
+                col.className = 'pinterest-masonry-column';
+                grid.appendChild(col);
+                columns.push(col);
+            }
 
-        cards.forEach((card) => {
-            let minColIdx = 0;
-            let minHeight = colHeights[0];
-            for (let c = 1; c < colCount; c++) {
-                if (colHeights[c] < minHeight) {
-                    minHeight = colHeights[c];
-                    minColIdx = c;
+            cards.forEach((card) => {
+                let minColIdx = 0;
+                let minHeight = colHeights[0];
+                for (let c = 1; c < colCount; c++) {
+                    if (colHeights[c] < minHeight) {
+                        minHeight = colHeights[c];
+                        minColIdx = c;
+                    }
                 }
-            }
 
-            card.className = 'pinterest-masonry-card revealed';
-            card.style.opacity = '1';
-            card.style.transform = 'none';
+                card.className = 'pinterest-masonry-card revealed';
+                card.style.opacity = '1';
+                card.style.transform = 'none';
 
-            columns[minColIdx].appendChild(card);
+                columns[minColIdx].appendChild(card);
 
-            const img = card.querySelector('img');
-            let estimatedH = 250;
-            if (img && img.naturalWidth && img.naturalHeight) {
-                estimatedH = (img.naturalHeight / img.naturalWidth) * 200;
-            }
-            colHeights[minColIdx] += estimatedH + 12;
+                const img = card.querySelector('img');
+                const vid = card.querySelector('video');
+                let estimatedH = 250;
+                if (img && img.naturalWidth && img.naturalHeight) {
+                    estimatedH = (img.naturalHeight / img.naturalWidth) * 200;
+                } else if (vid && vid.videoWidth && vid.videoHeight) {
+                    estimatedH = (vid.videoHeight / vid.videoWidth) * 200;
+                }
+                colHeights[minColIdx] += estimatedH + 12;
+            });
         });
     }
 

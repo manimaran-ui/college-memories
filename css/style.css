@@ -4558,7 +4558,8 @@ body.screenshot-shield-active canvas {
     }
 }
 
-.pinterest-masonry-card img.card-media-img {
+.pinterest-masonry-card img.card-media-img,
+.pinterest-masonry-card video.card-media-video {
     width: 100% !important;
     height: auto !important;
     display: block !important;

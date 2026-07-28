@@ -3,7 +3,18 @@
    ========================================================================== */
 
 export const galleryVideos = [];
-export const videoArchive = [];
+export const videoArchive = Array.from({ length: 12 }, (_, idx) => {
+    const i = idx + 1;
+    const numStr = i < 10 ? '00' + i : (i < 100 ? '0' + i : '' + i);
+    return {
+        id: i,
+        title: `College Memory Video #${numStr}`,
+        category: 'College Archive',
+        duration: '00:45',
+        url: `videos/video_${numStr}.mp4`,
+        src: `videos/video_${numStr}.mp4`
+    };
+});
 export const eventVideos = [];
 
 if (typeof window !== 'undefined') {

@@ -19,9 +19,9 @@ export const journeyImages = [
     "images/journey/journey_005.jpg"
 ];
 
-export const galleryImages = Array.from({ length: 52 }, (_, idx) => {
+export const galleryImages = Array.from({ length: 71 }, (_, idx) => {
     const i = idx + 1;
-    const numStr = i < 10 ? '00' + i : '0' + i;
+    const numStr = i < 10 ? '00' + i : (i < 100 ? '0' + i : '' + i);
     return {
         id: i,
         src: `images/gallery/gallery_${numStr}.jpg`,
