@@ -2,619 +2,404 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Admin Login</title>
-
+    <title>Admin Login | Madura College</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
     <style>
-        /* ===========================
-RESET
-=========================== */
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        html,
-        body {
-
+        html, body {
             width: 100%;
-            height: 100%;
-            overflow: hidden;
-
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background: #090c15;
         }
 
-        /* ===========================
-BACKGROUND IMAGE
-=========================== */
-
+        /* CLEAR, UNBLURRED VISIBLE BACKGROUND PHOTO */
         .bg-image {
-
             position: fixed;
-
             top: 0;
             left: 0;
-
             width: 100%;
             height: 100%;
-
             object-fit: cover;
-
             object-position: center;
-
-            z-index: -5;
-
-            animation: bgZoom 18s ease-in-out infinite alternate;
-
+            z-index: 1;
+            animation: bgZoom 20s ease-in-out infinite alternate;
         }
 
-        /* ===========================
-OVERLAY
-=========================== */
-
+        /* LIGHT CRISP OVERLAY */
         .bg-overlay {
-
             position: fixed;
-
             top: 0;
             left: 0;
-
             width: 100%;
             height: 100%;
-
-            background:
-
-                linear-gradient(180deg,
-                    rgba(0, 0, 0, .10),
-                    rgba(0, 0, 0, .35),
-                    rgba(0, 0, 0, .78));
-
-            backdrop-filter: blur(2px);
-
-            z-index: -4;
-
+            background: linear-gradient(180deg, rgba(8, 11, 20, 0.15) 0%, rgba(8, 11, 20, 0.55) 100%);
+            z-index: 2;
         }
 
-        /* ===========================
-BODY
-=========================== */
-
+        /* BODY LAYOUT - POSITIONED AT BOTTOM OF SCREEN */
         body {
-
             display: flex;
-
             justify-content: center;
-
             align-items: flex-end;
-
-            padding: 40px;
-
+            padding: 30px 20px;
+            position: relative;
+            z-index: 5;
+            background: transparent;
         }
 
-        /* ===========================
-LOGIN WRAPPER
-=========================== */
-
+        /* LOGIN WRAPPER AT BOTTOM */
         .login-wrapper {
-
             width: 100%;
-
+            max-width: 760px;
             display: flex;
-
-            justify-content: center;
-
-            align-items: flex-end;
-
-        }
-
-        /* ===========================
-PREMIUM LOGIN BOX
-=========================== */
-
-        .login-box {
-
-            width: 100%;
-
-            max-width: 720px;
-
-            min-height: 180px;
-
-            padding: 35px;
-
-            border-radius: 28px;
-
-            display: flex;
-
-            justify-content: space-between;
-
+            flex-direction: column;
             align-items: center;
-
-            gap: 35px;
-
-            background:
-
-                rgba(255, 255, 255, .14);
-
-            border:
-
-                1px solid rgba(255, 255, 255, .20);
-
-            backdrop-filter: blur(22px);
-
-            -webkit-backdrop-filter: blur(22px);
-
-            box-shadow:
-
-                0 20px 60px rgba(0, 0, 0, .45),
-
-                0 0 40px rgba(255, 255, 255, .05);
-
-            animation: loginUp 1s ease;
-
+            justify-content: flex-end;
+            margin-top: auto;
+            position: relative;
+            z-index: 10;
         }
 
-        /* ===========================
-LEFT SIDE
-=========================== */
+        /* ULTRA PREMIUM GLASSMORPHIC LOGIN BOX */
+        .login-box {
+            width: 100%;
+            padding: 36px 42px;
+            border-radius: 26px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 35px;
+            background: rgba(14, 18, 30, 0.82);
+            border: 1px solid rgba(0, 242, 254, 0.35);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75), 0 0 35px rgba(0, 242, 254, 0.15);
+            animation: loginUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
 
+        /* TOP GLOWING ACCENT LINE */
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00f2fe, #4facfe, #0066ff);
+        }
+
+        /* LEFT SIDE BRANDING */
         .left-side {
-
             flex: 1;
+        }
 
+        .college-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            background: rgba(0, 242, 254, 0.12);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            color: #00f2fe;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 14px;
         }
 
         .left-side h1 {
-
-            font-size: 34px;
-
-            font-weight: 700;
-
-            color: #fff;
-
-            margin-bottom: 10px;
-
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            line-height: 1.15;
         }
 
         .left-side p {
-
-            font-size: 17px;
-
-            color: rgba(255, 255, 255, .85);
-
+            font-size: 0.92rem;
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.5;
         }
 
-        /* ===========================
-RIGHT SIDE
-=========================== */
+        .left-side p span {
+            color: #00f2fe;
+            font-weight: 600;
+        }
 
+        /* RIGHT SIDE FORM */
         .right-side {
-
-            width: 330px;
-
+            width: 320px;
+            flex-shrink: 0;
         }
 
-        /* ===========================
-INPUT
-=========================== */
-
+        /* INPUTS */
         .input-group {
-
             position: relative;
-
-            margin-bottom: 18px;
-
+            margin-bottom: 16px;
         }
 
         .input-group i {
-
             position: absolute;
-
             left: 16px;
-
             top: 50%;
-
             transform: translateY(-50%);
-
-            color: #fff;
-
+            color: rgba(0, 242, 254, 0.85);
+            font-size: 1rem;
+            transition: color 0.3s ease;
         }
 
         .input-group input {
-
             width: 100%;
-
-            height: 52px;
-
-            border: none;
-
+            height: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
             outline: none;
-
-            padding-left: 45px;
-
-            padding-right: 45px;
-
+            padding-left: 46px;
+            padding-right: 46px;
             border-radius: 14px;
-
-            background:
-
-                rgba(255, 255, 255, .16);
-
-            color: #fff;
-
-            font-size: 15px;
-
-            transition: .35s;
-
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            font-size: 0.92rem;
+            transition: all 0.3s ease;
         }
 
         .input-group input::placeholder {
-
-            color: rgba(255, 255, 255, .70);
-
+            color: rgba(255, 255, 255, 0.6);
         }
 
         .input-group input:focus {
-
-            background:
-
-                rgba(255, 255, 255, .22);
-
-            box-shadow:
-
-                0 0 0 3px rgba(255, 255, 255, .12);
-
+            background: rgba(255, 255, 255, 0.14);
+            border-color: #00f2fe;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.35);
         }
 
-        /* ===========================
-PASSWORD ICON
-=========================== */
-
+        /* PASSWORD EYE ICON */
         .eye {
-
             position: absolute;
-
             right: 16px;
-
             top: 50%;
-
             transform: translateY(-50%);
-
             cursor: pointer;
-
-            color: #fff;
-
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s ease;
         }
 
-        /* ===========================
-BUTTON
-=========================== */
+        .eye:hover {
+            color: #00f2fe;
+        }
 
+        /* PREMIUM BUTTON */
         .login-btn {
-
             width: 100%;
-
-            height: 54px;
-
+            height: 50px;
             border: none;
-
             border-radius: 14px;
-
             cursor: pointer;
-
-            font-size: 16px;
-
-            font-weight: 600;
-
-            color: #fff;
-
-            background:
-
-                linear-gradient(135deg,
-                    #0066ff,
-                    #00bfff);
-
-            transition: .35s;
-
-            box-shadow:
-
-                0 10px 25px rgba(0, 102, 255, .35);
-
+            font-size: 0.96rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: linear-gradient(135deg, #00f2fe 0%, #0066ff 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 242, 254, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .login-btn:hover {
-
-            transform: translateY(-3px);
-
-            box-shadow:
-
-                0 15px 35px rgba(0, 102, 255, .55);
-
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0, 242, 254, 0.55);
+            background: linear-gradient(135deg, #00f2fe 20%, #0052cc 100%);
         }
 
-        /* ===========================
-MESSAGE
-=========================== */
-
+        /* ERROR & SUCCESS MESSAGES */
         #msg {
-
-            margin-top: 12px;
-
-            height: 20px;
-
+            margin-top: 10px;
+            min-height: 18px;
             text-align: center;
-
-            font-size: 14px;
-
-            color: #ffdddd;
-
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #ff5252;
         }
 
-        /* ===========================
-LOADER
-=========================== */
-
+        /* LOADER */
         .loader {
-
             display: none;
-
-            margin: 15px auto;
-
-            width: 30px;
-
-            height: 30px;
-
+            margin: 12px auto;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
-
-            border: 4px solid rgba(255, 255, 255, .25);
-
-            border-top: 4px solid #fff;
-
-            animation: spin .8s linear infinite;
-
+            border: 3px solid rgba(0, 242, 254, 0.2);
+            border-top: 3px solid #00f2fe;
+            animation: spin 0.8s linear infinite;
         }
 
-        /* ===========================
-RESPONSIVE
-=========================== */
+        /* DEVELOPER FOOTER CREDIT INSIDE FORM DIV */
+        .developer-credit-inside {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.75);
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
 
-        @media(max-width:768px) {
+        .dev-tag {
+            color: #00f2fe;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: rgba(0, 242, 254, 0.15);
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 242, 254, 0.35);
+            letter-spacing: 0.8px;
+        }
 
+        /* MOBILE RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
             body {
-
-                padding: 20px;
-
+                padding: 16px 12px;
+                align-items: flex-end;
             }
 
             .login-box {
-
                 flex-direction: column;
-
                 max-width: 100%;
-
-                padding: 25px;
-
+                padding: 26px 20px;
                 gap: 20px;
-
                 border-radius: 22px;
-
+                text-align: center;
             }
 
             .left-side {
+                width: 100%;
+            }
 
-                text-align: center;
-
+            .college-badge {
+                font-size: 0.7rem;
+                padding: 4px 10px;
             }
 
             .left-side h1 {
-
-                font-size: 28px;
-
+                font-size: 1.75rem;
             }
 
             .left-side p {
-
-                font-size: 14px;
-
+                font-size: 0.85rem;
             }
 
             .right-side {
-
                 width: 100%;
-
             }
 
+            .developer-credit-inside {
+                font-size: 0.75rem;
+                flex-wrap: wrap;
+            }
         }
 
-        /* ===========================
-ANIMATIONS
-=========================== */
-
+        /* ANIMATIONS */
         @keyframes loginUp {
-
             from {
-
                 opacity: 0;
-
-                transform: translateY(80px);
-
+                transform: translateY(40px) scale(0.96);
             }
-
             to {
-
                 opacity: 1;
-
-                transform: translateY(0);
-
+                transform: translateY(0) scale(1);
             }
-
         }
 
         @keyframes spin {
-
             100% {
-
                 transform: rotate(360deg);
-
             }
-
         }
 
         @keyframes bgZoom {
-
             0% {
-
                 transform: scale(1);
-
             }
-
             100% {
-
-                transform: scale(1.08);
-
+                transform: scale(1.06);
             }
-
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-
-                transform: translateX(0);
-
-            }
-
-            20% {
-
-                transform: translateX(-8px);
-
-            }
-
-            40% {
-
-                transform: translateX(8px);
-
-            }
-
-            60% {
-
-                transform: translateX(-6px);
-
-            }
-
-            80% {
-
-                transform: translateX(6px);
-
-            }
-
-        }
-
-        .shake {
-
-            animation: shake .45s;
-
-        }
-
-        .bg-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            z-index: -2;
         }
     </style>
-
-
 </head>
 
 <body>
 
-    <!-- Background -->
-
-    <img src="images/gallery/gallery_001.jpg" class="bg-image" alt="Background">
-
+    <!-- CLEAR UNBLURRED VISIBLE BACKGROUND PHOTO -->
+    <img src="images/gallery/gallery_029.jpg" class="bg-image" alt="Madura College Background">
     <div class="bg-overlay"></div>
 
-    <!-- Login -->
-
+    <!-- MAIN LOGIN CONTAINER AT BOTTOM OF SCREEN -->
     <div class="login-wrapper">
-
         <div class="login-box" id="loginBox">
-
             <div class="left-side">
-
-                <h1>
-
-                    Madura College
-
-                </h1>
-
+                <span class="college-badge"><i class="fas fa-graduation-cap"></i> Madura College 2022–2025</span>
+                <h1>Madura College</h1>
                 <p>
-    Madura College 2022–2025 <br>
-    <span>College Memories</span>
-</p>
-
+                    Honoring 3 Years of Unforgettable<br>
+                    <span>College Memories</span>
+                </p>
             </div>
 
             <div class="right-side">
-
                 <div class="input-group">
-
                     <i class="fas fa-envelope"></i>
-
                     <input type="email" id="email" placeholder="Admin Email">
-
                 </div>
 
                 <div class="input-group">
-
                     <i class="fas fa-lock"></i>
-
                     <input type="password" id="password" placeholder="Password">
-
                     <span class="eye" onclick="togglePassword()">
-
                         <i id="eyeIcon" class="fas fa-eye"></i>
-
                     </span>
-
                 </div>
 
                 <button class="login-btn" onclick="login()">
-
-                   Unlocked Memories
-
+                    <i class="fas fa-lock-open"></i> Unlock Memories
                 </button>
 
-                <div class="loader" id="loader">
-
-                </div>
-
+                <div class="loader" id="loader"></div>
                 <p id="msg"></p>
 
+                <!-- DEVELOPER FOOTER CREDIT INSIDE FORM DIV -->
+                <div class="developer-credit-inside">
+                    <i class="fas fa-code" style="color: #00f2fe;"></i> Designed & Developed by <span class="dev-tag">2022COM045</span>
+                </div>
             </div>
-
         </div>
-
-        <script type="module" src="js/auth.js"></script>
-
     </div>
+
+    <script type="module" src="js/auth.js"></script>
+</body>
+
+</html>
