@@ -2467,7 +2467,7 @@ body [data-reveal] {
     position: fixed;
     inset: 0;
     z-index: 100;
-    background: linear-gradient(180deg, rgba(8, 9, 14, 0.2) 0%, rgba(8, 9, 14, 0.65) 60%, rgba(8, 9, 14, 0.95) 100%), url('../batch-group-photo.jpg') center/cover no-repeat;
+    background: linear-gradient(180deg, rgba(8, 9, 14, 0.2) 0%, rgba(8, 9, 14, 0.65) 60%, rgba(8, 9, 14, 0.95) 100%), url('../images/gallery/gallery_001.jpg') center/cover no-repeat;
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -2480,7 +2480,7 @@ body [data-reveal] {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: linear-gradient(135deg, rgba(8, 9, 14, 0.45) 0%, rgba(8, 9, 14, 0.75) 100%), url('../batch-group-photo.jpg') center/cover no-repeat;
+    background: linear-gradient(135deg, rgba(8, 9, 14, 0.45) 0%, rgba(8, 9, 14, 0.75) 100%), url('../images/gallery/gallery_001.jpg') center/cover no-repeat;
     display: flex;
     justify-content: center;
     align-items: flex-end;

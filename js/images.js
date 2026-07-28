@@ -4,19 +4,19 @@
    ========================================================================== */
 
 export const homeImages = [
-    "../images/home/home_001.jpg",
-    "../images/home/home_002.jpg",
-    "../images/home/home_003.jpg",
-    "../images/home/home_004.jpg",
-    "../images/home/home_005.jpg"
+    "images/home/home_001.jpg",
+    "images/home/home_002.jpg",
+    "images/home/home_003.jpg",
+    "images/home/home_004.jpg",
+    "images/home/home_005.jpg"
 ];
 
 export const journeyImages = [
-    "../images/journey/journey_001.jpg",
-    "../images/journey/journey_002.jpg",
-    "../images/journey/journey_003.jpg",
-    "../images/journey/journey_004.jpg",
-    "../images/journey/journey_005.jpg"
+    "images/journey/journey_001.jpg",
+    "images/journey/journey_002.jpg",
+    "images/journey/journey_003.jpg",
+    "images/journey/journey_004.jpg",
+    "images/journey/journey_005.jpg"
 ];
 
 export const galleryImages = Array.from({ length: 52 }, (_, idx) => {
@@ -24,8 +24,8 @@ export const galleryImages = Array.from({ length: 52 }, (_, idx) => {
     const numStr = i < 10 ? '00' + i : '0' + i;
     return {
         id: i,
-        src: `../images/gallery/gallery_${numStr}.jpg`,
-        url: `../images/gallery/gallery_${numStr}.jpg`,
+        src: `images/gallery/gallery_${numStr}.jpg`,
+        url: `images/gallery/gallery_${numStr}.jpg`,
         title: `Gallery Photo #${numStr}`,
         category: ['campus', 'canteen', 'events', 'farewell'][i % 4]
     };
@@ -33,8 +33,8 @@ export const galleryImages = Array.from({ length: 52 }, (_, idx) => {
 
 export const eventImages = [1,2,3].map(i => ({
     id: i,
-    src: `../images/events/event_00${i}.jpg`,
-    url: `../images/events/event_00${i}.jpg`,
+    src: `images/events/event_00${i}.jpg`,
+    url: `images/events/event_00${i}.jpg`,
     title: `Event Photo #0${i}`,
     category: 'events'
 }));
@@ -44,16 +44,16 @@ export const friendImages = [1,2,3,4,5,6].map(i => ({
     name: `Batchmate Profile #0${i}`,
     nickname: 'Canteen Squad',
     memory: 'Classroom laughter & tea breaks.',
-    src: `../images/friends/friend_00${i}.jpg`,
-    url: `../images/friends/friend_00${i}.jpg`
+    src: `images/friends/friend_00${i}.jpg`,
+    url: `images/friends/friend_00${i}.jpg`
 }));
 
 export const gradImages = [1,2,3,4,5,6].map(i => ({
     id: i,
     title: `Graduation Memory #0${i}`,
     category: 'graduation',
-    src: `../images/graduation/graduation_00${i}.jpg`,
-    url: `../images/graduation/graduation_00${i}.jpg`
+    src: `images/graduation/graduation_00${i}.jpg`,
+    url: `images/graduation/graduation_00${i}.jpg`
 }));
 
 export const teacherImages = homeImages.map((imgUrl, i) => ({

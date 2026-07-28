@@ -260,13 +260,13 @@ function startApplication() {
     const DEFAULT_FRIEND_IMAGES = (typeof friendImages !== 'undefined' && friendImages.length) ? friendImages : (window.friendImages || []);
     const DEFAULT_GRAD_IMAGES = (typeof gradImages !== 'undefined' && gradImages.length) ? gradImages : (window.gradImages || []);
     const DEFAULT_TEACHER_VIDEOS = Array.from({ length: 5 }, (_, i) => ({
-        id: i + 1, title: `Professor Tribute Video #${i + 1}`, duration: '05:00', url: `../assets/videos/video${(i % 3) + 1}.mp4`, comment: `<!-- TEACHER VIDEO ${i + 1} -->`
+        id: i + 1, title: `Professor Tribute Video #${i + 1}`, duration: '05:00', url: `assets/videos/video${(i % 3) + 1}.mp4`, comment: `<!-- TEACHER VIDEO ${i + 1} -->`
     }));
     const DEFAULT_FRIEND_VIDEOS = Array.from({ length: 10 }, (_, i) => ({
-        id: i + 1, title: `Friendship Memory Reel #${i + 1}`, duration: '02:45', url: `../assets/videos/video${(i % 3) + 1}.mp4`, comment: `<!-- FRIEND VIDEO ${i + 1} -->`
+        id: i + 1, title: `Friendship Memory Reel #${i + 1}`, duration: '02:45', url: `assets/videos/video${(i % 3) + 1}.mp4`, comment: `<!-- FRIEND VIDEO ${i + 1} -->`
     }));
     const DEFAULT_GRAD_VIDEOS = Array.from({ length: 10 }, (_, i) => ({
-        id: i + 1, title: `Graduation Ceremony Reel #${i + 1}`, duration: '05:30', url: `../assets/videos/video${(i % 3) + 1}.mp4`, comment: `<!-- GRADUATION VIDEO ${i + 1} -->`
+        id: i + 1, title: `Graduation Ceremony Reel #${i + 1}`, duration: '05:30', url: `assets/videos/video${(i % 3) + 1}.mp4`, comment: `<!-- GRADUATION VIDEO ${i + 1} -->`
     }));
 
     // Classroom: 10 Photos & 5 Videos
@@ -314,7 +314,7 @@ function startApplication() {
         const liveGradImages = (typeof gradImages !== 'undefined' && gradImages.length) ? gradImages : (window.gradImages || DEFAULT_GRAD_IMAGES || []);
 
         return {
-            hero_photo: [{ id: 1, title: 'Madura College Hero Photo', url: '../batch-group-photo.jpg' }],
+            hero_photo: [{ id: 1, title: 'Madura College Hero Photo', url: 'batch-group-photo.jpg' }],
             gallery_images: liveGalleryImages,
             gallery_videos: liveGalleryVideos,
             video_archive: liveVideoArchive,
@@ -434,7 +434,7 @@ function startApplication() {
 
         const img = heroCard.querySelector('.card-media-img');
         if (img) {
-            img.src = (item && item.url && item.url.length > 5) ? item.url : '../batch-group-photo.jpg';
+            img.src = (item && item.url && item.url.length > 5) ? item.url : 'batch-group-photo.jpg';
         }
 
         if (isAdmin()) {
@@ -1034,7 +1034,7 @@ function startApplication() {
         if (!item) {
             const btnEl = document.querySelector(`.btn-card-edit[data-id="${id}"][data-section="${sectionKey}"]`) || document.querySelector(`.btn-card-edit[data-id="${id}"]`);
             const cardImg = btnEl?.closest('.gallery-card, .apple-media-card, .placeholder-card')?.querySelector('img');
-            const imgUrl = cardImg?.src || '../images/gallery_001.jpeg';
+            const imgUrl = cardImg?.src || 'images/gallery/gallery_001.jpg';
             item = { id: id, url: imgUrl, title: `Photo #${id}` };
         }
 
@@ -1242,7 +1242,7 @@ function startApplication() {
 
                 currentScaleX = 1;
                 currentScaleY = 1;
-                targetImg.src = item.url || '../hero-group-photo.jpg';
+                targetImg.src = item.url || 'hero-group-photo.jpg';
 
                 // Calculate exact aspect ratio of the target DIV box in the page DOM
                 let currentCardAspectRatio = NaN;
