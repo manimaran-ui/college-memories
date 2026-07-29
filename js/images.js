@@ -48,13 +48,17 @@ export const friendImages = [1,2,3,4,5,6].map(i => ({
     url: `images/friends/friend_00${i}.jpg`
 }));
 
-export const gradImages = [1,2,3,4,5,6].map(i => ({
-    id: i,
-    title: `Graduation Memory #0${i}`,
-    category: 'graduation',
-    src: `images/graduation/graduation_00${i}.jpg`,
-    url: `images/graduation/graduation_00${i}.jpg`
-}));
+export const gradImages = Array.from({ length: 55 }, (_, idx) => {
+    const i = idx + 1;
+    const numStr = i < 10 ? '00' + i : (i < 100 ? '0' + i : '' + i);
+    return {
+        id: i,
+        title: `Graduation Memory #${numStr}`,
+        category: 'graduation',
+        src: `images/graduation/graduation_${numStr}.jpg`,
+        url: `images/graduation/graduation_${numStr}.jpg`
+    };
+});
 
 export const teacherImages = homeImages.map((imgUrl, i) => ({
     id: i + 1,

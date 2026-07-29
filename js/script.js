@@ -355,7 +355,7 @@ function startApplication() {
         renderGridSection(['gallery-video-grid', 'gallery-videos-grid'], store.gallery_videos, 'video', 'gallery_videos', 'Gallery Video Vault (10 Videos)');
 
         // 2. Videos Archive
-        renderGridSection(['video-archive-grid', 'videos-grid', 'video-grid'], store.video_archive, 'video', 'video_archive', 'College Video Archive (12 Videos)');
+        renderGridSection(['video-archive-grid', 'videos-grid', 'video-grid'], store.video_archive, 'video', 'video_archive', `College Video Archive (${(store.video_archive && store.video_archive.length) ? store.video_archive.length : 39} Videos)`);
 
         // 3. Events
         renderGridSection(['events-image-grid', 'event-image-grid'], store.event_images, 'image', 'event_images', 'Event Photos (15 Photos)');
@@ -370,7 +370,7 @@ function startApplication() {
         renderGridSection(['friends-video-grid', 'friend-video-grid'], store.friend_videos, 'video', 'friend_videos', 'Friendship Memory Reels (10 Videos)');
 
         // 6. Graduation
-        renderGridSection(['graduation-image-grid', 'grad-image-grid'], store.grad_images, 'image', 'grad_images', 'Graduation Photos (60 Photos)');
+        renderGridSection(['graduation-image-grid', 'grad-image-grid'], store.grad_images, 'image', 'grad_images', `Graduation Photos (${(store.grad_images && store.grad_images.length) ? store.grad_images.length : 55} Photos)`);
         renderGridSection(['graduation-video-grid', 'grad-video-grid'], store.grad_videos, 'video', 'grad_videos', 'Graduation Reels (10 Videos)');
 
         // 7. Journey
