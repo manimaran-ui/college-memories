@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>College Videos | Madura College 2022–2025</title>
-    <meta name="description" content="College Video Archive with 10+ video placeholders for Madura College Batch 2022–2025.">
+    <meta name="description"
+        content="College Video Archive with 10+ video placeholders for Madura College Batch 2022–2025.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <!-- Firebase Auth Guard -->
     <script type="module" src="js/auth-guard.js"></script>
     <script>
-        window.toggleMobileMenu = function(e) {
+        window.toggleMobileMenu = function (e) {
             if (e) { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); }
             var menu = document.getElementById('nav-menu') || document.querySelector('.nav-menu');
             var toggleBtn = document.getElementById('mobile-toggle') || document.querySelector('.mobile-toggle');
@@ -25,7 +29,7 @@
                 }
             }
         };
-        window.renderUserRoleUI = function() {
+        window.renderUserRoleUI = function () {
             var isAdminLoggedIn = localStorage.getItem("isAdminLoggedIn") === "true";
             var userEmail = localStorage.getItem("userEmail") || (isAdminLoggedIn ? "admin123@gmail.com" : "batch2025@maduracollege.edu");
             var navActions = document.querySelector('.nav-actions');
@@ -40,8 +44,8 @@
                 }
                 badge.className = isAdminLoggedIn ? 'role-badge admin' : 'role-badge user';
                 badge.style.display = 'inline-flex';
-                badge.innerHTML = isAdminLoggedIn 
-                    ? '<i class="fas fa-shield-halved"></i> Admin' 
+                badge.innerHTML = isAdminLoggedIn
+                    ? '<i class="fas fa-shield-halved"></i> Admin'
                     : '<i class="fas fa-user-circle"></i> Friend';
 
                 var logoutBtn = document.getElementById('logout-btn');
@@ -51,7 +55,7 @@
                     logoutBtn.style.visibility = 'visible';
                     logoutBtn.style.opacity = '1';
                     logoutBtn.innerHTML = '<i class="fas fa-right-from-bracket"></i> Logout';
-                    logoutBtn.onclick = function() {
+                    logoutBtn.onclick = function () {
                         localStorage.removeItem("isAdminLoggedIn");
                         localStorage.removeItem("userEmail");
                         window.location.replace("login.html");
@@ -62,6 +66,7 @@
         document.addEventListener('DOMContentLoaded', window.renderUserRoleUI);
     </script>
 </head>
+
 <body>
 
     <div class="cursor-dot" id="cursor-dot"></div>
@@ -70,10 +75,12 @@
 
     <header class="navbar-header" id="navbar">
         <div class="nav-container">
-            <button class="mobile-toggle" id="mobile-toggle" onclick="window.toggleMobileMenu(event)"><i class="fas fa-bars"></i></button>
+            <button class="mobile-toggle" id="mobile-toggle" onclick="window.toggleMobileMenu(event)"><i
+                    class="fas fa-bars"></i></button>
             <a href="index.html" class="nav-brand">
                 <span class="brand-logo"><i class="fas fa-graduation-cap"></i></span>
-                <div class="brand-text"><span class="brand-title">Madura College</span><span class="brand-sub">Batch 2022–2025</span></div>
+                <div class="brand-text"><span class="brand-title">Madura College</span><span class="brand-sub">Batch
+                        2022–2025</span></div>
             </a>
             <nav class="nav-menu" id="nav-menu">
                 <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
@@ -102,53 +109,289 @@
                         Every video tells a story of our friendship.
                 </div>
 
-                <div class="glass-panel" data-reveal="fade-up" style="padding: 24px 30px; margin-bottom: 30px; border-color: rgba(127, 0, 255, 0.3); background: rgba(127, 0, 255, 0.05); text-align: center;">
-                    <p style="font-family: var(--font-quote); font-size: 1.35rem; font-style: italic; color: #ffffff; margin: 0;">
+                <div class="glass-panel" data-reveal="fade-up"
+                    style="padding: 24px 30px; margin-bottom: 30px; border-color: rgba(127, 0, 255, 0.3); background: rgba(127, 0, 255, 0.05); text-align: center;">
+                    <p
+                        style="font-family: var(--font-quote); font-size: 1.35rem; font-style: italic; color: #ffffff; margin: 0;">
                         <i class="fas fa-quote-left" style="color: var(--color-pink); margin-right: 8px;"></i>
                         "Pictures freeze time, but videos bring back the sound of our unscripted laughter."
                     </p>
                 </div>
 
                 <div class="gallery-grid masonry-layout" id="video-archive-grid" style="margin-bottom: 60px;">
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #01</div><video src="videos/video_001.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #01 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #02</div><video src="videos/video_002.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #02 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #03</div><video src="videos/video_003.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #03 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #04</div><video src="videos/video_004.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #04 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #05</div><video src="videos/video_005.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #05 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #06</div><video src="videos/video_006.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #06 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #07</div><video src="videos/video_007.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #07 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #08</div><video src="videos/video_008.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #08 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #09</div><video src="videos/video_009.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #09 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #10</div><video src="videos/video_010.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #10 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #11</div><video src="videos/video_011.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #11 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #12</div><video src="videos/video_012.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #12 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #13</div><video src="videos/video_013.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #13 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #14</div><video src="videos/video_014.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #14 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #15</div><video src="videos/video_015.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #15 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #16</div><video src="videos/video_016.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #16 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #17</div><video src="videos/video_017.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #17 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #18</div><video src="videos/video_018.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #18 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #19</div><video src="videos/video_019.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #19 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #20</div><video src="videos/video_020.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #20 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #21</div><video src="videos/video_021.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #21 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #22</div><video src="videos/video_022.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #22 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #23</div><video src="videos/video_023.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #23 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #24</div><video src="videos/video_024.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #24 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #25</div><video src="videos/video_025.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #25 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #26</div><video src="videos/video_026.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #26 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #27</div><video src="videos/video_027.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #27 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #28</div><video src="videos/video_028.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #28 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #29</div><video src="videos/video_029.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #29 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #30</div><video src="videos/video_030.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #30 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #31</div><video src="videos/video_031.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #31 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #32</div><video src="videos/video_032.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #32 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #33</div><video src="videos/video_033.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #33 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #34</div><video src="videos/video_034.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #34 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #35</div><video src="videos/video_035.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #35 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #36</div><video src="videos/video_036.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #36 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #37</div><video src="videos/video_037.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #37 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #38</div><video src="videos/video_038.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #38 • Madura College</div></div>
-                    <div class="pinterest-masonry-card revealed"><div class="gallery-badge"><i class="fas fa-video"></i> Reel #39</div><video src="videos/video_039.mp4" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" preload="metadata" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video><div class="card-caption">Reel #39 • Madura College</div></div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #01</div><video
+                            src="videos/video_001.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #01 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #02</div><video
+                            src="videos/video_002.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #02 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #03</div><video
+                            src="videos/video_003.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #03 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #04</div><video
+                            src="videos/video_004.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #04 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #05</div><video
+                            src="videos/video_005.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #05 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #06</div><video
+                            src="videos/video_006.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #06 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #07</div><video
+                            src="videos/video_007.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #07 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #08</div><video
+                            src="videos/video_008.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #08 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #09</div><video
+                            src="videos/video_009.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #09 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #10</div><video
+                            src="videos/video_010.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #10 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #11</div><video
+                            src="videos/video_011.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #11 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #12</div><video
+                            src="videos/video_012.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #12 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #13</div><video
+                            src="videos/video_013.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #13 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #14</div><video
+                            src="videos/video_014.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #14 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #15</div><video
+                            src="videos/video_015.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #15 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #16</div><video
+                            src="videos/video_016.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #16 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #17</div><video
+                            src="videos/video_017.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #17 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #18</div><video
+                            src="videos/video_018.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #18 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #19</div><video
+                            src="videos/video_019.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #19 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #20</div><video
+                            src="videos/video_020.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #20 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #21</div><video
+                            src="videos/video_021.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #21 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #22</div><video
+                            src="videos/video_022.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #22 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #23</div><video
+                            src="videos/video_023.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #23 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #24</div><video
+                            src="videos/video_024.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #24 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #25</div><video
+                            src="videos/video_025.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #25 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #26</div><video
+                            src="videos/video_026.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #26 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #27</div><video
+                            src="videos/video_027.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #27 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #28</div><video
+                            src="videos/video_028.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #28 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #29</div><video
+                            src="videos/video_029.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #29 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #30</div><video
+                            src="videos/video_030.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #30 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #31</div><video
+                            src="videos/video_031.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #31 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #32</div><video
+                            src="videos/video_032.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #32 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #33</div><video
+                            src="videos/video_033.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #33 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #34</div><video
+                            src="videos/video_034.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #34 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #35</div><video
+                            src="videos/video_035.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #35 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #36</div><video
+                            src="videos/video_036.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #36 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #37</div><video
+                            src="videos/video_037.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #37 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #38</div><video
+                            src="videos/video_038.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #38 • Madura College</div>
+                    </div>
+                    <div class="pinterest-masonry-card revealed">
+                        <div class="gallery-badge"><i class="fas fa-video"></i> Reel #39</div><video
+                            src="videos/video_039.mp4" class="card-media-video" controls controlsList="nodownload"
+                            disablePictureInPicture oncontextmenu="return false;" preload="metadata"
+                            style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;"></video>
+                        <div class="card-caption">Reel #39 • Madura College</div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -158,8 +401,13 @@
     <div class="floating-music-player glass-panel" id="music-player">
         <button class="player-toggle-btn" id="player-toggle-btn"><i class="fas fa-music"></i></button>
         <div class="player-content">
-            <div class="track-artwork"><div class="vinyl-disc" id="vinyl-disc"><i class="fas fa-compact-disc"></i></div></div>
-            <div class="track-details"><h4 class="track-title">Madura Nostalgia Theme</h4><p class="track-artist">Batch 2022–2025</p></div>
+            <div class="track-artwork">
+                <div class="vinyl-disc" id="vinyl-disc"><i class="fas fa-compact-disc"></i></div>
+            </div>
+            <div class="track-details">
+                <h4 class="track-title">Madura Nostalgia Theme</h4>
+                <p class="track-artist">Batch 2022–2025</p>
+            </div>
             <div class="player-controls">
                 <button class="ctrl-btn" id="prev-btn"><i class="fas fa-backward"></i></button>
                 <button class="ctrl-btn play-main" id="play-btn"><i class="fas fa-play"></i></button>
@@ -188,4 +436,5 @@
     <script type="module" src="js/script.js"></script>
     <script type="module" src="js/main.js"></script>
 </body>
+
 </html>

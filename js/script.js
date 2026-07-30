@@ -2,7 +2,7 @@ import { galleryImages, eventImages, friendImages, teacherImages, gradImages } f
 import { galleryVideos, videoArchive, eventVideos } from "./videos.js";
 
 // Immediately attach global helper functions to window object to prevent undefined/TypeError console errors
-window.toggleMobileMenu = function(e) {
+window.toggleMobileMenu = function (e) {
     if (e) {
         if (e.preventDefault) e.preventDefault();
         if (e.stopPropagation) e.stopPropagation();
@@ -23,7 +23,7 @@ window.toggleMobileMenu = function(e) {
     }
 };
 
-window.openPageLightbox = function(element) {
+window.openPageLightbox = function (element) {
     if (!element) return;
     const card = element.closest('.gallery-card, .gallery-item-wrapper, .apple-media-card, .placeholder-card, .story-media, .story-slot') || element;
     const cardImg = card.querySelector('img');
@@ -41,7 +41,7 @@ window.openPageLightbox = function(element) {
     }
 };
 
-window.openPageEditor = function(element) {
+window.openPageEditor = function (element) {
     if (!element) return;
     const editBtn = element.closest('.btn-card-edit') || element;
     const id = editBtn.getAttribute('data-id') || '1';
@@ -96,7 +96,7 @@ function startApplication() {
 
     function getCurrentUser() {
         const sessionStr = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY);
-        try { return sessionStr ? JSON.parse(sessionStr) : null; } catch(e) { return null; }
+        try { return sessionStr ? JSON.parse(sessionStr) : null; } catch (e) { return null; }
     }
 
     function isAdmin() {
@@ -124,8 +124,8 @@ function startApplication() {
             badge.className = loggedInAsAdmin ? 'role-badge admin' : 'role-badge user';
             badge.style.display = 'inline-flex';
             badge.style.marginRight = '8px';
-            badge.innerHTML = loggedInAsAdmin 
-                ? `<i class="fas fa-shield-halved"></i> Admin` 
+            badge.innerHTML = loggedInAsAdmin
+                ? `<i class="fas fa-shield-halved"></i> Admin`
                 : `<i class="fas fa-user-circle"></i> Friend`;
 
             let logoutBtn = document.getElementById('logout-btn');
@@ -135,7 +135,7 @@ function startApplication() {
                 logoutBtn.style.visibility = 'visible';
                 logoutBtn.style.opacity = '1';
                 logoutBtn.innerHTML = '<i class="fas fa-right-from-bracket"></i> Logout';
-                logoutBtn.onclick = function() {
+                logoutBtn.onclick = function () {
                     localStorage.removeItem("isAdminLoggedIn");
                     localStorage.removeItem("userEmail");
                     localStorage.removeItem(SESSION_KEY);
@@ -188,15 +188,15 @@ function startApplication() {
         const inputPassword = passInput ? passInput.value.trim() : '';
 
         const account = ACCOUNTS[inputEmail];
-        const isValid = (account && account.password === inputPassword) || 
-                        (inputEmail.includes('admin') || inputPassword === 'teammc123' || inputPassword === 'admin');
+        const isValid = (account && account.password === inputPassword) ||
+            (inputEmail.includes('admin') || inputPassword === 'teammc123' || inputPassword === 'admin');
 
         if (isValid) {
             if (errorMsg) errorMsg.classList.remove('active');
             const role = (account?.role) || (inputEmail.includes('admin') || inputPassword === 'admin' || inputPassword === 'teammc123' ? 'admin' : 'user');
             const name = (account?.name) || (role === 'admin' ? 'Administrator' : 'Batch Friend');
             const userObj = { email: inputEmail || 'admin123@gmail.com', role: role, name: name };
-            
+
             localStorage.setItem("isAdminLoggedIn", "true");
             localStorage.setItem(SESSION_KEY, JSON.stringify(userObj));
             sessionStorage.setItem(SESSION_KEY, JSON.stringify(userObj));
@@ -338,7 +338,7 @@ function startApplication() {
     function saveMediaStore(store) {
         try {
             localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(store));
-        } catch(e) {
+        } catch (e) {
             // Local storage cache quota exceeded; Cloudinary + Firestore handle cloud media storage safely
         }
     }
@@ -463,7 +463,7 @@ function startApplication() {
             if (!item) continue;
 
             const hasUrl = item.url && item.url.length > 5;
-            
+
             if (hasUrl) {
                 slotEl.classList.add('has-media');
                 slotEl.innerHTML = `
@@ -538,7 +538,7 @@ function startApplication() {
                 item.url = item.url + '?v=9';
             }
             const cardWrapper = document.createElement('div');
-            
+
             // Dynamic Apple Asymmetrical & Staggered Patterns with Mixed Aspect Ratios
             const patternIndex = idx % 6;
             let layoutClass = 'apple-layout-compact';
@@ -1561,7 +1561,7 @@ function startApplication() {
         if (typeof updateBackToTopProgress === 'function') updateBackToTopProgress();
     });
 
-    window.toggleMobileMenu = function(e) {
+    window.toggleMobileMenu = function (e) {
         if (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -1967,7 +1967,7 @@ function startApplication() {
 
     window.openFullscreenLightbox = openFullscreenLightbox;
 
-    window.openPageLightbox = function(element) {
+    window.openPageLightbox = function (element) {
         if (!element) return;
         const card = element.closest('.gallery-card, .gallery-item-wrapper, .apple-media-card, .placeholder-card, .story-media, .story-slot') || element;
         const cardImg = card.querySelector('img');
@@ -1983,7 +1983,7 @@ function startApplication() {
         openFullscreenLightbox(imgList, clickedIdx >= 0 ? clickedIdx : 0);
     };
 
-    window.openPageEditor = function(element) {
+    window.openPageEditor = function (element) {
         if (!element) return;
         const editBtn = element.closest('.btn-card-edit') || element;
         const id = editBtn.getAttribute('data-id') || '1';
@@ -2103,7 +2103,7 @@ function startApplication() {
     function saveHonestReviews(reviews) {
         try {
             localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(reviews));
-        } catch (e) {}
+        } catch (e) { }
     }
 
     function renderHonestReviews() {
@@ -2126,7 +2126,7 @@ function startApplication() {
 
         let html = '';
         reviews.forEach((item) => {
-            const stars = Array.from({ length: 5 }, (_, i) => 
+            const stars = Array.from({ length: 5 }, (_, i) =>
                 `<i class="fas fa-star" style="color: ${i < item.rating ? '#ffc107' : 'rgba(255,255,255,0.2)'}"></i>`
             ).join('');
 
@@ -2224,78 +2224,78 @@ function startApplication() {
 
 
 
-/* --------------------------------------------------------------------------
-   MEDIA PROTECTION SYSTEM IMPLEMENTATION
-   -------------------------------------------------------------------------- */
-(function setupMediaProtectionSystem() {
-    // 1. Disable Right-Click Context Menu on Media Elements
-    document.addEventListener('contextmenu', (e) => {
-        const isMedia = e.target.closest('img, video, canvas, .apple-media-card, .placeholder-card, .lightbox-container');
-        if (isMedia) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-    }, true);
+    /* --------------------------------------------------------------------------
+       MEDIA PROTECTION SYSTEM IMPLEMENTATION
+       -------------------------------------------------------------------------- */
+    (function setupMediaProtectionSystem() {
+        // 1. Disable Right-Click Context Menu on Media Elements
+        document.addEventListener('contextmenu', (e) => {
+            const isMedia = e.target.closest('img, video, canvas, .apple-media-card, .placeholder-card, .lightbox-container');
+            if (isMedia) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }, true);
 
-    // 2. Disable Drag and Drop on Media Elements
-    document.addEventListener('dragstart', (e) => {
-        const isMedia = e.target.closest('img, video, canvas, .apple-media-card, .placeholder-card');
-        if (isMedia) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-    }, true);
+        // 2. Disable Drag and Drop on Media Elements
+        document.addEventListener('dragstart', (e) => {
+            const isMedia = e.target.closest('img, video, canvas, .apple-media-card, .placeholder-card');
+            if (isMedia) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }, true);
 
-    // 3. Enforce Video Protection Attributes (nodownload, disablePictureInPicture)
-    function enforceVideoProtection() {
-        document.querySelectorAll('video').forEach(video => {
-            video.setAttribute('controlsList', 'nodownload');
-            video.setAttribute('disablePictureInPicture', 'true');
-            video.setAttribute('oncontextmenu', 'return false;');
-            video.setAttribute('ondragstart', 'return false;');
-        });
+        // 3. Enforce Video Protection Attributes (nodownload, disablePictureInPicture)
+        function enforceVideoProtection() {
+            document.querySelectorAll('video').forEach(video => {
+                video.setAttribute('controlsList', 'nodownload');
+                video.setAttribute('disablePictureInPicture', 'true');
+                video.setAttribute('oncontextmenu', 'return false;');
+                video.setAttribute('ondragstart', 'return false;');
+            });
+        }
+
+        // Run enforcement periodically & on DOM ready
+        document.addEventListener('DOMContentLoaded', enforceVideoProtection);
+        setInterval(enforceVideoProtection, 2000);
+
+        // 4. Keyboard Shortcuts & Screenshot Shield Deterrent
+        document.addEventListener('keydown', (e) => {
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const ctrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
+            const key = e.key ? e.key.toLowerCase() : '';
+
+            if (
+                e.key === 'F12' ||
+                e.key === 'PrintScreen' || e.code === 'PrintScreen' ||
+                (ctrlOrCmd && key === 's') ||
+                (ctrlOrCmd && key === 'u') ||
+                (ctrlOrCmd && e.shiftKey && key === 'i') ||
+                (ctrlOrCmd && e.shiftKey && key === 'c') ||
+                (ctrlOrCmd && e.shiftKey && key === 'j')
+            ) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Trigger temporary blur shield on screenshot / inspector shortcuts
+                document.body.classList.add('screenshot-shield-active');
+                setTimeout(() => {
+                    document.body.classList.remove('screenshot-shield-active');
+                }, 1500);
+
+                return false;
+            }
+        }, true);
     }
 
-    // Run enforcement periodically & on DOM ready
-    document.addEventListener('DOMContentLoaded', enforceVideoProtection);
-    setInterval(enforceVideoProtection, 2000);
-
-    // 4. Keyboard Shortcuts & Screenshot Shield Deterrent
-    document.addEventListener('keydown', (e) => {
-        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-        const ctrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
-        const key = e.key ? e.key.toLowerCase() : '';
-
-        if (
-            e.key === 'F12' ||
-            e.key === 'PrintScreen' || e.code === 'PrintScreen' ||
-            (ctrlOrCmd && key === 's') ||
-            (ctrlOrCmd && key === 'u') ||
-            (ctrlOrCmd && e.shiftKey && key === 'i') ||
-            (ctrlOrCmd && e.shiftKey && key === 'c') ||
-            (ctrlOrCmd && e.shiftKey && key === 'j')
-        ) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            // Trigger temporary blur shield on screenshot / inspector shortcuts
-            document.body.classList.add('screenshot-shield-active');
-            setTimeout(() => {
-                document.body.classList.remove('screenshot-shield-active');
-            }, 1500);
-
-            return false;
-        }
-    }, true);
-}
-
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startApplication);
-} else {
-    startApplication();
-}
-window.addEventListener('load', startApplication);
-setTimeout(startApplication, 10);
-setTimeout(startApplication, 100);
+        document.addEventListener('DOMContentLoaded', startApplication);
+    } else {
+        startApplication();
+    }
+    window.addEventListener('load', startApplication);
+    setTimeout(startApplication, 10);
+    setTimeout(startApplication, 100);

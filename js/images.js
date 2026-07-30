@@ -31,7 +31,7 @@ export const galleryImages = Array.from({ length: 71 }, (_, idx) => {
     };
 });
 
-export const eventImages = [1,2,3].map(i => ({
+export const eventImages = [1, 2, 3].map(i => ({
     id: i,
     src: `images/events/event_00${i}.jpg`,
     url: `images/events/event_00${i}.jpg`,
@@ -39,7 +39,7 @@ export const eventImages = [1,2,3].map(i => ({
     category: 'events'
 }));
 
-export const friendImages = [1,2,3,4,5,6].map(i => ({
+export const friendImages = [1, 2, 3, 4, 5, 6].map(i => ({
     id: i,
     name: `Batchmate Profile #0${i}`,
     nickname: 'Canteen Squad',
