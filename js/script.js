@@ -41,6 +41,32 @@ window.openPageLightbox = function (element) {
     }
 };
 
+window.pauseOtherVideos = function (currentVid) {
+    if (!currentVid) return;
+    const vids = document.querySelectorAll('video');
+    vids.forEach(v => {
+        if (v !== currentVid && !v.paused) {
+            try {
+                v.pause();
+            } catch (e) { }
+        }
+    });
+};
+
+document.addEventListener('play', (e) => {
+    const target = e.target;
+    if (target && (target.tagName === 'VIDEO' || target.nodeName === 'VIDEO')) {
+        window.pauseOtherVideos(target);
+    }
+}, true);
+
+document.addEventListener('playing', (e) => {
+    const target = e.target;
+    if (target && (target.tagName === 'VIDEO' || target.nodeName === 'VIDEO')) {
+        window.pauseOtherVideos(target);
+    }
+}, true);
+
 window.openPageEditor = function (element) {
     if (!element) return;
     const editBtn = element.closest('.btn-card-edit') || element;
@@ -351,11 +377,11 @@ function startApplication() {
         const store = getMediaStore();
 
         // 1. Gallery
-        renderGridSection(['gallery-grid', 'gallery-photo-grid', 'gallery-image-grid'], store.gallery_images, 'image', 'gallery_images', 'Gallery Photo Vault (71 Photos)');
+        renderGridSection(['gallery-grid', 'gallery-photo-grid', 'gallery-image-grid'], store.gallery_images, 'image', 'gallery_images', `Gallery Photo Vault (${(store.gallery_images && store.gallery_images.length) ? store.gallery_images.length : 97} Photos)`);
         renderGridSection(['gallery-video-grid', 'gallery-videos-grid'], store.gallery_videos, 'video', 'gallery_videos', 'Gallery Video Vault (10 Videos)');
 
         // 2. Videos Archive
-        renderGridSection(['video-archive-grid', 'videos-grid', 'video-grid'], store.video_archive, 'video', 'video_archive', `College Video Archive (${(store.video_archive && store.video_archive.length) ? store.video_archive.length : 39} Videos)`);
+        renderGridSection(['video-archive-grid', 'videos-grid', 'video-grid'], store.video_archive, 'video', 'video_archive', `College Video Archive (${(store.video_archive && store.video_archive.length) ? store.video_archive.length : 57} Videos)`);
 
         // 3. Events
         renderGridSection(['events-image-grid', 'event-image-grid'], store.event_images, 'image', 'event_images', 'Event Photos (15 Photos)');
@@ -366,7 +392,7 @@ function startApplication() {
         renderGridSection(['teachers-video-grid', 'teacher-video-grid'], store.teacher_videos, 'video', 'teacher_videos', 'Professors Tribute Videos (5 Videos)');
 
         // 5. Friends
-        renderGridSection(['friends-image-grid', 'friend-image-grid'], store.friend_images, 'friend', 'friend_images', 'Friend Profiles (50 Photos)');
+        renderGridSection(['friends-image-grid', 'friend-image-grid'], store.friend_images, 'image', 'friend_images', `Friend Photos (${(store.friend_images && store.friend_images.length) ? store.friend_images.length : 33} Photos)`);
         renderGridSection(['friends-video-grid', 'friend-video-grid'], store.friend_videos, 'video', 'friend_videos', 'Friendship Memory Reels (10 Videos)');
 
         // 6. Graduation
@@ -378,6 +404,7 @@ function startApplication() {
         renderGridSection(['journey-video-grid', 'journey-videos-grid'], store.journey_videos, 'video', 'journey_videos', 'Timeline Videos (5 Videos)');
         renderHeroPhotoAdminControls();
         applyMobileMasonryLayout();
+        applyPinterestMasonryLayout();
     }
 
     function applyMobileMasonryLayout() {
@@ -583,7 +610,7 @@ function startApplication() {
                 cardWrapper.innerHTML = `
                     <div class="gallery-badge"><i class="fas fa-video"></i> Reel #${numStr}</div>
                     ${hasUrl ? `
-                        <video src="${escapeHTML(item.url)}" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" ondragstart="return false;" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;" preload="metadata"></video>
+                        <video src="${escapeHTML(item.url)}" class="card-media-video" controls controlsList="nodownload" disablePictureInPicture oncontextmenu="return false;" ondragstart="return false;" onplay="window.pauseOtherVideos(this)" style="width:100% !important; height:auto !important; border-radius:16px !important; display:block !important; object-fit:cover !important;" preload="metadata"></video>
                     ` : `
                         <div class="placeholder-content">
                             <div class="play-btn-circle"><i class="fas fa-play"></i></div>
@@ -1649,13 +1676,13 @@ function startApplication() {
     updateActiveNavLink();
 
     function applyPinterestMasonryLayout() {
-        const grids = [document.getElementById('gallery-grid'), document.getElementById('video-archive-grid')].filter(Boolean);
+        const grids = [document.getElementById('gallery-grid'), document.getElementById('video-archive-grid'), document.getElementById('friends-image-grid')].filter(Boolean);
         if (grids.length === 0) return;
 
         grids.forEach(grid => {
             const width = window.innerWidth;
             let colCount = 2; // Mobile default: 2 columns
-            if (width >= 1200) colCount = grid.id === 'video-archive-grid' ? 4 : 5;
+            if (width >= 1200) colCount = (grid.id === 'video-archive-grid' || grid.id === 'friends-image-grid') ? 4 : 5;
             else if (width >= 900) colCount = 3;
             else if (width >= 600) colCount = 2;
 
@@ -2248,15 +2275,32 @@ function startApplication() {
             }
         }, true);
 
-        // 3. Enforce Video Protection Attributes (nodownload, disablePictureInPicture)
+        // 3. Enforce Video Protection Attributes (nodownload, disablePictureInPicture) & Single Video Playback
         function enforceVideoProtection() {
             document.querySelectorAll('video').forEach(video => {
                 video.setAttribute('controlsList', 'nodownload');
                 video.setAttribute('disablePictureInPicture', 'true');
                 video.setAttribute('oncontextmenu', 'return false;');
                 video.setAttribute('ondragstart', 'return false;');
+                video.setAttribute('onplay', 'window.pauseOtherVideos(this)');
+                if (!video.dataset.singlePlayBound) {
+                    video.dataset.singlePlayBound = 'true';
+                    video.addEventListener('play', function () { window.pauseOtherVideos(this); });
+                    video.addEventListener('playing', function () { window.pauseOtherVideos(this); });
+                }
             });
         }
+
+        // Single Video Playback Enforcement: Pause all other videos when any video plays
+        document.addEventListener('play', (e) => {
+            if (e.target && e.target.tagName === 'VIDEO') {
+                document.querySelectorAll('video').forEach(video => {
+                    if (video !== e.target && !video.paused) {
+                        video.pause();
+                    }
+                });
+            }
+        }, true);
 
         // Run enforcement periodically & on DOM ready
         document.addEventListener('DOMContentLoaded', enforceVideoProtection);
