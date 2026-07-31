@@ -39,17 +39,17 @@ export const eventImages = [1, 2, 3].map(i => ({
     category: 'events'
 }));
 
-export const friendImages = Array.from({ length: 32 }, (_, idx) => {
+export const friendImages = Array.from({ length: 33 }, (_, idx) => {
     const i = idx + 1;
-    const numStr = i < 10 ? '00' + i : (i < 100 ? '0' + i : '' + i);
+    const numStr = i < 10 ? '00' + i : '' + i;
     const nicknames = ['Canteen Squad', 'Soul Tribe', 'Backbenchers', 'Classroom Gang', 'Campus Squad', 'Forever Friends', 'Fun Tribe', 'Canteen Squad', 'Soul Tribe', 'Classroom Gang', 'Campus Squad', 'Forever Friends'];
     return {
         id: i,
         name: `Batchmate Profile #${numStr}`,
         nickname: nicknames[idx % nicknames.length],
         memory: 'Classroom laughter & tea breaks.',
-        src: `images/friends/friend_${numStr}.jpg`,
-        url: `images/friends/friend_${numStr}.jpg`
+        src: `images/friends/friend_${i < 10 ? '00' + i : (i < 100 ? '0' + i : '' + i)}.jpg`,
+        url: `images/friends/friend_${i < 10 ? '00' + i : (i < 100 ? '0' + i : '' + i)}.jpg`
     };
 });
 

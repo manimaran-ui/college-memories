@@ -392,7 +392,7 @@ function startApplication() {
         renderGridSection(['teachers-video-grid', 'teacher-video-grid'], store.teacher_videos, 'video', 'teacher_videos', 'Professors Tribute Videos (5 Videos)');
 
         // 5. Friends
-        renderGridSection(['friends-image-grid', 'friend-image-grid'], store.friend_images, 'image', 'friend_images', `Friend Photos (${(store.friend_images && store.friend_images.length) ? store.friend_images.length : 32} Photos)`);
+        renderGridSection(['friends-image-grid', 'friend-image-grid'], store.friend_images, 'image', 'friend_images', `Friend Photos (${(store.friend_images && store.friend_images.length) ? store.friend_images.length : 33} Photos)`);
         renderGridSection(['friends-video-grid', 'friend-video-grid'], store.friend_videos, 'video', 'friend_videos', 'Friendship Memory Reels (10 Videos)');
 
         // 6. Graduation
@@ -1530,82 +1530,30 @@ function startApplication() {
 
         window.addEventListener('resize', () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; });
         const particles = [];
-        const numParticles = Math.min(Math.floor(width / 18), 75);
+        const numParticles = Math.min(Math.floor(width / 15), 65);
 
-        const colors = [
-            'rgba(6, 182, 212, ',  // Cyan
-            'rgba(139, 92, 246, ', // Purple
-            'rgba(236, 72, 153, ', // Pink
-            'rgba(59, 130, 246, ', // Blue
-            'rgba(245, 158, 11, '  // Gold
-        ];
-
-        class MemoryParticle {
+        class Particle {
             constructor() {
-                this.reset(true);
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.radius = Math.random() * 2 + 1;
+                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+                this.color = Math.random() > 0.5 ? 'rgba(0, 242, 254, ' : 'rgba(127, 0, 255, ';
+                this.alpha = Math.random() * 0.6 + 0.2;
             }
-            reset(initial = false) {
-                this.x = Math.random() * width;
-                this.y = initial ? Math.random() * height : height + 20;
-                this.radius = Math.random() * 2.5 + 1;
-                this.vx = (Math.random() - 0.5) * 0.4;
-                this.vy = -(Math.random() * 0.4 + 0.15);
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.alpha = Math.random() * 0.5 + 0.25;
-                this.pulseSpeed = Math.random() * 0.02 + 0.008;
-                this.pulse = Math.random() * Math.PI;
-                this.type = Math.random() > 0.88 ? 'heart' : (Math.random() > 0.72 ? 'sparkle' : 'dot');
-                this.size = Math.random() * 8 + 6;
-            }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.pulse += this.pulseSpeed;
-                if (this.y < -30 || this.x < -30 || this.x > width + 30) {
-                    this.reset(false);
-                }
-            }
-            draw() {
-                const currentAlpha = this.alpha * (0.6 + 0.4 * Math.sin(this.pulse));
-                ctx.save();
-                ctx.globalAlpha = currentAlpha;
-
-                if (this.type === 'heart') {
-                    ctx.font = `${Math.floor(this.size)}px sans-serif`;
-                    ctx.fillStyle = this.color + currentAlpha + ')';
-                    ctx.fillText('❤️', this.x, this.y);
-                } else if (this.type === 'sparkle') {
-                    ctx.font = `${Math.floor(this.size)}px sans-serif`;
-                    ctx.fillStyle = this.color + currentAlpha + ')';
-                    ctx.fillText('✨', this.x, this.y);
-                } else {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = this.color + currentAlpha + ')';
-                    ctx.shadowColor = this.color + '0.8)';
-                    ctx.shadowBlur = 8;
-                    ctx.fill();
-                }
-                ctx.restore();
-            }
+            update() { this.x += this.vx; this.y += this.vy; if (this.x < 0 || this.x > width) this.vx *= -1; if (this.y < 0 || this.y > height) this.vy *= -1; }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fillStyle = this.color + this.alpha + ')'; ctx.fill(); }
         }
-
-        for (let i = 0; i < numParticles; i++) particles.push(new MemoryParticle());
+        for (let i = 0; i < numParticles; i++) particles.push(new Particle());
 
         function renderParticles() {
             ctx.clearRect(0, 0, width, height);
             for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
+                particles[i].update(); particles[i].draw();
                 for (let j = i + 1; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y, dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 110) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(139, 92, 246, ${0.12 * (1 - dist / 110)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
+                    if (dist < 120) {
+                        ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(0, 242, 254, ${0.15 * (1 - dist / 120)})`; ctx.lineWidth = 0.6; ctx.stroke();
                     }
                 }
             }
