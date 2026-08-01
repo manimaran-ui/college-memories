@@ -392,7 +392,7 @@ function startApplication() {
         renderGridSection(['teachers-video-grid', 'teacher-video-grid'], store.teacher_videos, 'video', 'teacher_videos', 'Professors Tribute Videos (5 Videos)');
 
         // 5. Friends
-        renderGridSection(['friends-image-grid', 'friend-image-grid'], store.friend_images, 'image', 'friend_images', `Friend Photos (${(store.friend_images && store.friend_images.length) ? store.friend_images.length : 33} Photos)`);
+        renderGridSection(['friends-image-grid', 'friend-image-grid'], store.friend_images, 'image', 'friend_images', `Friend Photos (${(store.friend_images && store.friend_images.length) ? store.friend_images.length : 31} Photos)`);
         renderGridSection(['friends-video-grid', 'friend-video-grid'], store.friend_videos, 'video', 'friend_videos', 'Friendship Memory Reels (10 Videos)');
 
         // 6. Graduation
@@ -683,7 +683,7 @@ function startApplication() {
             } else {
                 cardWrapper.innerHTML = `
                     <div class="placeholder-card gallery-card ${hasUrl ? 'has-media' : ''}">
-                        <div class="gallery-badge"><i class="fas fa-camera"></i> Photo #${numStr}</div>
+                        <div class="gallery-badge"><i class="fas ${sectionKey.includes('friend') ? 'fa-user-friends' : 'fa-camera'}"></i> ${escapeHTML(item.title || ('Photo #' + numStr))}</div>
                         ${isAdmin() ? `
                             <div class="admin-card-actions">
                                 <button class="btn-card-edit" data-id="${item.id}" data-section="${sectionKey}" data-type="${type}" title="Edit"><i class="fas fa-pen"></i></button>
