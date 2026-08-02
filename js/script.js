@@ -59,6 +59,42 @@ window.saveLocalHonestReviews = function(reviews) {
     } catch (e) { }
 };
 
+const CLOUD_SYNC_ENDPOINT = 'https://jsonblob.com/api/jsonBlob/019fc232-0b9e-7d2a-a993-28107990d70c';
+
+window.fetchCloudReviews = async function() {
+    try {
+        const res = await fetch(CLOUD_SYNC_ENDPOINT, { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                window.saveLocalHonestReviews(data);
+                window.renderReviewList(data);
+                return data;
+            }
+        }
+    } catch(err) {
+        console.warn("Cloud fetch notice:", err);
+    }
+    return null;
+};
+
+window.syncReviewsToCloud = async function(reviewsList) {
+    try {
+        let current = window.getLocalHonestReviews();
+        let listToSync = Array.isArray(reviewsList) && reviewsList.length > 0 ? reviewsList : current;
+        await fetch(CLOUD_SYNC_ENDPOINT, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(listToSync)
+        });
+    } catch(err) {
+        console.warn("Cloud push notice:", err);
+    }
+};
+
 window.deleteReviewItem = async function(targetId) {
     if (!window.isAdminUser()) {
         alert("Only Admin (teammc@gmail.com) can delete reviews!");
@@ -71,9 +107,9 @@ window.deleteReviewItem = async function(targetId) {
         let reviews = window.getLocalHonestReviews();
         reviews = reviews.filter(r => r.id !== targetId && r.docId !== targetId);
         localStorage.setItem('mc_honest_reviews_v3', JSON.stringify(reviews));
+        window.renderReviewList(reviews);
+        await window.syncReviewsToCloud(reviews);
     } catch(e) {}
-
-    window.renderReviewList();
 
     try {
         if (db && targetId) {
@@ -192,7 +228,15 @@ window.submitHonestReview = async function (e) {
     if (nameInput) nameInput.value = '';
     if (contentInput) contentInput.value = '';
 
-    // 3. Background Firebase Cloud Firestore sync
+    // 3. Sync to Global Cloud Storage (works across ALL devices & phones)
+    try {
+        const currentList = window.getLocalHonestReviews();
+        await window.syncReviewsToCloud(currentList);
+    } catch (err) {
+        console.warn("Cloud sync notice:", err);
+    }
+
+    // 4. Background Firebase Cloud Firestore sync
     try {
         if (db) {
             await addDoc(collection(db, "reviews"), newReview);
@@ -209,15 +253,25 @@ window.submitHonestReview = async function (e) {
     return false;
 };
 
-// Real-time Live Firebase Firestore Sync for Reviews across ALL devices & phones
+// Real-time Live Sync for Reviews across ALL devices & phones
 window.initFirebaseReviewsRealtimeSync = function () {
     const listWrapper = document.getElementById('reviews-display-list');
     if (!listWrapper) return;
 
-    // Initial render from local cache
+    // 1. Initial render from local cache
     window.renderReviewList();
 
-    // Real-time Cloud Sync from Firebase Firestore
+    // 2. Fetch from Global Cloud Database (instantly merges reviews from mobile, laptop, and all phones)
+    window.fetchCloudReviews();
+
+    // 3. Auto-refresh cloud sync every 5 seconds for real-time live updates
+    if (!window._reviewSyncInterval) {
+        window._reviewSyncInterval = setInterval(() => {
+            window.fetchCloudReviews();
+        }, 5000);
+    }
+
+    // 4. Real-time Cloud Sync from Firebase Firestore if configured
     if (db) {
         try {
             const reviewsRef = collection(db, "reviews");
@@ -240,26 +294,25 @@ window.initFirebaseReviewsRealtimeSync = function () {
 
                 if (cloudReviews.length > 0) {
                     window.saveLocalHonestReviews(cloudReviews);
+                    window.renderReviewList(cloudReviews);
                 }
-                window.renderReviewList(cloudReviews);
             }, (error) => {
                 console.warn("Firestore onSnapshot sync notice:", error);
-                window.renderReviewList();
             });
         } catch (err) {
             console.error("Firestore sync error:", err);
-            window.renderReviewList();
         }
     }
 };
 
-// Initial auto-sync reviews on script parse, DOMContentLoaded, and window load
+// Initial auto-sync reviews on script parse, DOMContentLoaded, window load & focus
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => { window.initFirebaseReviewsRealtimeSync(); });
 } else {
     window.initFirebaseReviewsRealtimeSync();
 }
 window.addEventListener('load', () => { window.initFirebaseReviewsRealtimeSync(); });
+window.addEventListener('focus', () => { window.fetchCloudReviews(); });
 
 window.toggleMobileMenu = function (e) {
     if (e) {
