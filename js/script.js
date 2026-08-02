@@ -6,7 +6,6 @@ import { collection, addDoc, getDocs, onSnapshot, query, orderBy, deleteDoc, doc
 // Immediately attach global helper functions to window object to prevent undefined/TypeError console errors
 window.isAdminUser = function() {
     try {
-        const isAdminLogged = localStorage.getItem("isAdminLoggedIn") === "true";
         const email = (localStorage.getItem("userEmail") || "").toLowerCase().trim();
         const user = localStorage.getItem("mc_user_session_v1");
         let parsed = null;
@@ -14,10 +13,10 @@ window.isAdminUser = function() {
             try { parsed = JSON.parse(user); } catch(e){}
         }
         const userEmail = (parsed?.email || "").toLowerCase().trim();
-        const userRole = (parsed?.role || "").toLowerCase().trim();
 
-        if (isAdminLogged) return true;
-        if (email === "teammc@gmail.com" || userEmail === "teammc@gmail.com" || userRole === "admin") return true;
+        if (email === "teammc@gmail.com" || userEmail === "teammc@gmail.com") {
+            return true;
+        }
         return false;
     } catch(e) {
         return false;
@@ -33,9 +32,13 @@ window.getLocalHonestReviews = function() {
     }
 };
 
-window.saveLocalHonestReviews = function(reviews) {
+window.saveLocalHonestReviews = function(reviews, forceReplace = false) {
     if (!Array.isArray(reviews)) return;
     try {
+        if (forceReplace) {
+            localStorage.setItem('mc_honest_reviews_v3', JSON.stringify(reviews));
+            return;
+        }
         const existingData = localStorage.getItem('mc_honest_reviews_v3');
         const existing = existingData ? JSON.parse(existingData) : [];
         const map = new Map();
@@ -67,8 +70,8 @@ window.fetchCloudReviews = async function() {
         if (res.ok) {
             const data = await res.json();
             if (Array.isArray(data)) {
-                window.saveLocalHonestReviews(data);
-                window.renderReviewList(data);
+                window.saveLocalHonestReviews(data, true);
+                window.renderReviewList(data, true);
                 return data;
             }
         }
@@ -81,7 +84,7 @@ window.fetchCloudReviews = async function() {
 window.syncReviewsToCloud = async function(reviewsList) {
     try {
         let current = window.getLocalHonestReviews();
-        let listToSync = Array.isArray(reviewsList) && reviewsList.length > 0 ? reviewsList : current;
+        let listToSync = Array.isArray(reviewsList) ? reviewsList : current;
         await fetch(CLOUD_SYNC_ENDPOINT, {
             method: 'PUT',
             headers: {
@@ -107,7 +110,7 @@ window.deleteReviewItem = async function(targetId) {
         let reviews = window.getLocalHonestReviews();
         reviews = reviews.filter(r => r.id !== targetId && r.docId !== targetId);
         localStorage.setItem('mc_honest_reviews_v3', JSON.stringify(reviews));
-        window.renderReviewList(reviews);
+        window.renderReviewList(reviews, true);
         await window.syncReviewsToCloud(reviews);
     } catch(e) {}
 
@@ -120,18 +123,23 @@ window.deleteReviewItem = async function(targetId) {
     }
 };
 
-window.renderReviewList = function(reviews) {
+window.renderReviewList = function(reviews, isAuthoritative = false) {
     const listWrapper = document.getElementById('reviews-display-list');
     const countEl = document.getElementById('review-count');
     if (!listWrapper) return;
 
-    const stored = window.getLocalHonestReviews();
-    const map = new Map();
-    stored.forEach(r => { if (r) map.set(r.id || r.docId || (r.name + '_' + r.content), r); });
-    if (Array.isArray(reviews)) {
-        reviews.forEach(r => { if (r) map.set(r.id || r.docId || (r.name + '_' + r.content), r); });
+    let listToRender = [];
+    if (isAuthoritative && Array.isArray(reviews)) {
+        listToRender = reviews;
+    } else {
+        const stored = window.getLocalHonestReviews();
+        const map = new Map();
+        stored.forEach(r => { if (r) map.set(r.id || r.docId || (r.name + '_' + r.content), r); });
+        if (Array.isArray(reviews)) {
+            reviews.forEach(r => { if (r) map.set(r.id || r.docId || (r.name + '_' + r.content), r); });
+        }
+        listToRender = Array.from(map.values());
     }
-    const listToRender = Array.from(map.values());
 
     if (countEl) countEl.textContent = listToRender.length;
 
