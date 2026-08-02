@@ -158,7 +158,7 @@ window.submitHonestReview = async function (e) {
     const nameInput = document.getElementById('review-name');
     const contentInput = document.getElementById('review-content');
     const starContainer = document.getElementById('star-rating-select');
-    const submitBtn = document.querySelector('#honest-review-form button[type="submit"]');
+    const submitBtn = document.querySelector('#honest-review-form button');
 
     const name = nameInput ? nameInput.value.trim() : '';
     const content = contentInput ? contentInput.value.trim() : '';
@@ -192,11 +192,10 @@ window.submitHonestReview = async function (e) {
     if (nameInput) nameInput.value = '';
     if (contentInput) contentInput.value = '';
 
-    // 3. Background Firebase sync with 3s timeout
+    // 3. Background Firebase Cloud Firestore sync
     try {
         if (db) {
-            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000));
-            await Promise.race([addDoc(collection(db, "reviews"), newReview), timeoutPromise]);
+            await addDoc(collection(db, "reviews"), newReview);
         }
     } catch (err) {
         console.warn("Firebase sync notice:", err);
@@ -210,13 +209,57 @@ window.submitHonestReview = async function (e) {
     return false;
 };
 
-// Initial auto-render reviews on script parse, DOMContentLoaded, and window load
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { window.renderReviewList(); });
-} else {
+// Real-time Live Firebase Firestore Sync for Reviews across ALL devices & phones
+window.initFirebaseReviewsRealtimeSync = function () {
+    const listWrapper = document.getElementById('reviews-display-list');
+    if (!listWrapper) return;
+
+    // Initial render from local cache
     window.renderReviewList();
+
+    // Real-time Cloud Sync from Firebase Firestore
+    if (db) {
+        try {
+            const reviewsRef = collection(db, "reviews");
+
+            onSnapshot(reviewsRef, (snapshot) => {
+                const cloudReviews = [];
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data && (data.name || data.content)) {
+                        cloudReviews.push({
+                            docId: docSnap.id,
+                            id: data.id || docSnap.id,
+                            name: data.name || 'Anonymous',
+                            content: data.content || '',
+                            rating: data.rating || 5,
+                            date: data.date || 'Recent'
+                        });
+                    }
+                });
+
+                if (cloudReviews.length > 0) {
+                    window.saveLocalHonestReviews(cloudReviews);
+                }
+                window.renderReviewList(cloudReviews);
+            }, (error) => {
+                console.warn("Firestore onSnapshot sync notice:", error);
+                window.renderReviewList();
+            });
+        } catch (err) {
+            console.error("Firestore sync error:", err);
+            window.renderReviewList();
+        }
+    }
+};
+
+// Initial auto-sync reviews on script parse, DOMContentLoaded, and window load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => { window.initFirebaseReviewsRealtimeSync(); });
+} else {
+    window.initFirebaseReviewsRealtimeSync();
 }
-window.addEventListener('load', () => { window.renderReviewList(); });
+window.addEventListener('load', () => { window.initFirebaseReviewsRealtimeSync(); });
 
 window.toggleMobileMenu = function (e) {
     if (e) {
