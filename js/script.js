@@ -1,7 +1,223 @@
 import { galleryImages, eventImages, friendImages, teacherImages, gradImages } from "./images.js";
 import { galleryVideos, videoArchive, eventVideos } from "./videos.js";
+import { db } from "./firebase.js";
+import { collection, addDoc, getDocs, onSnapshot, query, orderBy, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // Immediately attach global helper functions to window object to prevent undefined/TypeError console errors
+window.isAdminUser = function() {
+    try {
+        const isAdminLogged = localStorage.getItem("isAdminLoggedIn") === "true";
+        const email = (localStorage.getItem("userEmail") || "").toLowerCase().trim();
+        const user = localStorage.getItem("mc_user_session_v1");
+        let parsed = null;
+        if (user) {
+            try { parsed = JSON.parse(user); } catch(e){}
+        }
+        const userEmail = (parsed?.email || "").toLowerCase().trim();
+        const userRole = (parsed?.role || "").toLowerCase().trim();
+
+        if (isAdminLogged) return true;
+        if (email === "teammc@gmail.com" || userEmail === "teammc@gmail.com" || userRole === "admin") return true;
+        return false;
+    } catch(e) {
+        return false;
+    }
+};
+
+window.getLocalHonestReviews = function() {
+    try {
+        const data = localStorage.getItem('mc_honest_reviews_v3');
+        return data ? JSON.parse(data) : [];
+    } catch (e) {
+        return [];
+    }
+};
+
+window.saveLocalHonestReviews = function(reviews) {
+    if (!Array.isArray(reviews)) return;
+    try {
+        const existingData = localStorage.getItem('mc_honest_reviews_v3');
+        const existing = existingData ? JSON.parse(existingData) : [];
+        const map = new Map();
+
+        existing.forEach(r => {
+            if (r) {
+                const k = r.id || r.docId || (r.name + '_' + r.content);
+                map.set(k, r);
+            }
+        });
+
+        reviews.forEach(r => {
+            if (r) {
+                const k = r.id || r.docId || (r.name + '_' + r.content);
+                map.set(k, r);
+            }
+        });
+
+        const mergedList = Array.from(map.values());
+        localStorage.setItem('mc_honest_reviews_v3', JSON.stringify(mergedList));
+    } catch (e) { }
+};
+
+window.deleteReviewItem = async function(targetId) {
+    if (!window.isAdminUser()) {
+        alert("Only Admin (teammc@gmail.com) can delete reviews!");
+        return;
+    }
+
+    if (!confirm("Are you sure you want to delete this review?")) return;
+
+    try {
+        let reviews = window.getLocalHonestReviews();
+        reviews = reviews.filter(r => r.id !== targetId && r.docId !== targetId);
+        localStorage.setItem('mc_honest_reviews_v3', JSON.stringify(reviews));
+    } catch(e) {}
+
+    window.renderReviewList();
+
+    try {
+        if (db && targetId) {
+            await deleteDoc(doc(db, "reviews", targetId));
+        }
+    } catch(e) {
+        console.warn("Firebase delete notice:", e);
+    }
+};
+
+window.renderReviewList = function(reviews) {
+    const listWrapper = document.getElementById('reviews-display-list');
+    const countEl = document.getElementById('review-count');
+    if (!listWrapper) return;
+
+    const stored = window.getLocalHonestReviews();
+    const map = new Map();
+    stored.forEach(r => { if (r) map.set(r.id || r.docId || (r.name + '_' + r.content), r); });
+    if (Array.isArray(reviews)) {
+        reviews.forEach(r => { if (r) map.set(r.id || r.docId || (r.name + '_' + r.content), r); });
+    }
+    const listToRender = Array.from(map.values());
+
+    if (countEl) countEl.textContent = listToRender.length;
+
+    if (listToRender.length === 0) {
+        listWrapper.innerHTML = `
+            <div class="empty-reviews-state" style="padding: 40px 20px; text-align: center; color: #a0aec0;">
+                <i class="fas fa-comment-dots" style="font-size: 2.5rem; color: #00f2fe; margin-bottom: 12px; display: block;"></i>
+                <p style="margin: 0; font-size: 1rem; color: #e2e8f0;">No reviews submitted yet. Be the first to share your honest review!</p>
+            </div>
+        `;
+        return;
+    }
+
+    const isAdmin = window.isAdminUser();
+
+    let html = '';
+    listToRender.forEach((item) => {
+        const rating = item.rating || 5;
+        const stars = Array.from({ length: 5 }, (_, i) =>
+            `<i class="fas fa-star" style="color: ${i < rating ? '#ffc107' : 'rgba(255,255,255,0.2)'}; margin-right: 2px;"></i>`
+        ).join('');
+
+        const safeName = (item.name || 'Anonymous').replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        const safeContent = (item.content || '').replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        const safeDate = (item.date || 'Recent').replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        const revId = item.id || item.docId || '';
+
+        const deleteBtnHtml = isAdmin ? `
+            <button class="btn-delete-review" onclick="window.deleteReviewItem('${revId}')" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; border-radius: 8px; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; margin-left: 8px;" title="Delete Review">
+                <i class="fas fa-trash-alt" style="font-size: 0.8rem;"></i>
+            </button>
+        ` : '';
+
+        html += `
+            <div class="review-card-item">
+                <div class="review-card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span class="review-author-name" style="font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-user-circle" style="color: #00f2fe;"></i> ${safeName}
+                    </span>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span class="review-date-badge" style="font-size: 0.78rem; color: #a0aec0; background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 12px;">${safeDate}</span>
+                        ${deleteBtnHtml}
+                    </div>
+                </div>
+                <div class="review-stars-display" style="margin-bottom: 10px;">${stars}</div>
+                <p class="review-body-text" style="color: #e2e8f0; font-size: 0.95rem; line-height: 1.5; margin: 0;">${safeContent}</p>
+            </div>
+        `;
+    });
+
+    listWrapper.innerHTML = html;
+};
+
+window.submitHonestReview = async function (e) {
+    if (e) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+    }
+
+    const nameInput = document.getElementById('review-name');
+    const contentInput = document.getElementById('review-content');
+    const starContainer = document.getElementById('star-rating-select');
+    const submitBtn = document.querySelector('#honest-review-form button[type="submit"]');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const content = contentInput ? contentInput.value.trim() : '';
+    const rating = starContainer ? parseInt(starContainer.getAttribute('data-rating')) || 5 : 5;
+
+    if (!name || !content) {
+        alert('Please enter both your Name and Review!');
+        return false;
+    }
+
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span>Posting...</span> <i class="fas fa-spinner fa-spin"></i>`;
+    }
+
+    const formattedDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+    const newReview = {
+        id: 'rev_' + Date.now(),
+        name: name,
+        content: content,
+        rating: rating,
+        date: formattedDate
+    };
+
+    // 1. Immediately save to local storage & render UI
+    window.saveLocalHonestReviews([newReview]);
+    window.renderReviewList([newReview]);
+
+    // 2. Clear inputs
+    if (nameInput) nameInput.value = '';
+    if (contentInput) contentInput.value = '';
+
+    // 3. Background Firebase sync with 3s timeout
+    try {
+        if (db) {
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000));
+            await Promise.race([addDoc(collection(db, "reviews"), newReview), timeoutPromise]);
+        }
+    } catch (err) {
+        console.warn("Firebase sync notice:", err);
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<span>Submit Review</span> <i class="fas fa-paper-plane"></i>`;
+        }
+    }
+
+    return false;
+};
+
+// Initial auto-render reviews on script parse, DOMContentLoaded, and window load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => { window.renderReviewList(); });
+} else {
+    window.renderReviewList();
+}
+window.addEventListener('load', () => { window.renderReviewList(); });
+
 window.toggleMobileMenu = function (e) {
     if (e) {
         if (e.preventDefault) e.preventDefault();
@@ -25,14 +241,14 @@ window.toggleMobileMenu = function (e) {
 
 window.openPageLightbox = function (element) {
     if (!element) return;
-    const card = element.closest('.gallery-card, .gallery-item-wrapper, .apple-media-card, .placeholder-card, .story-media, .story-slot') || element;
+    const card = element.closest('.gallery-card, .gallery-item-wrapper, .apple-media-card, .placeholder-card, .story-media, .story-slot, .pinterest-masonry-card') || element;
     const cardImg = card.querySelector('img');
     if (!cardImg || !cardImg.src || cardImg.src.length < 5) return;
 
-    const allImgs = Array.from(document.querySelectorAll('.gallery-card img, .gallery-item-wrapper img, .apple-media-card img, .story-slot img, .story-media img')).filter(img => img.src && img.src.length > 5);
+    const allImgs = Array.from(document.querySelectorAll('.gallery-card img, .gallery-item-wrapper img, .apple-media-card img, .story-slot img, .story-media img, .pinterest-masonry-card img')).filter(img => img.src && img.src.length > 5);
     const imgList = allImgs.map((img, idx) => ({
         src: img.src,
-        title: img.closest('.gallery-card, .apple-media-card, .story-slot, .story-media')?.querySelector('.overlay-label, .gallery-title, h3, .story-title')?.textContent || `Photo #${idx + 1}`
+        title: img.closest('.gallery-card, .apple-media-card, .story-slot, .story-media, .pinterest-masonry-card')?.querySelector('.overlay-label, .gallery-title, h3, .story-title, .card-caption')?.textContent || `Graduation Photo #${idx + 1}`
     }));
 
     const clickedIdx = allImgs.indexOf(cardImg);
@@ -105,9 +321,11 @@ function startApplication() {
     };
 
     const SESSION_KEY = 'mc_user_session';
-    const MEDIA_STORAGE_KEY = 'mc_static_media_store_v10';
+    const MEDIA_STORAGE_KEY = 'mc_static_media_store_v12';
 
     // Clear legacy storage cache to instantly load real static images
+    localStorage.removeItem('mc_static_media_store_v11');
+    localStorage.removeItem('mc_static_media_store_v10');
     localStorage.removeItem('mc_static_media_store_v9');
     localStorage.removeItem('mc_static_media_store_v8');
     localStorage.removeItem('mc_static_media_store_v7');
@@ -1996,14 +2214,14 @@ function startApplication() {
 
     window.openPageLightbox = function (element) {
         if (!element) return;
-        const card = element.closest('.gallery-card, .gallery-item-wrapper, .apple-media-card, .placeholder-card, .story-media, .story-slot') || element;
+        const card = element.closest('.gallery-card, .gallery-item-wrapper, .apple-media-card, .placeholder-card, .story-media, .story-slot, .pinterest-masonry-card') || element;
         const cardImg = card.querySelector('img');
         if (!cardImg || !cardImg.src || cardImg.src.length < 5) return;
 
-        const allImgs = Array.from(document.querySelectorAll('.gallery-card img, .gallery-item-wrapper img, .apple-media-card img, .story-slot img, .story-media img')).filter(img => img.src && img.src.length > 5);
+        const allImgs = Array.from(document.querySelectorAll('.gallery-card img, .gallery-item-wrapper img, .apple-media-card img, .story-slot img, .story-media img, .pinterest-masonry-card img')).filter(img => img.src && img.src.length > 5);
         const imgList = allImgs.map((img, idx) => ({
             src: img.src,
-            title: img.closest('.gallery-card, .apple-media-card, .story-slot, .story-media')?.querySelector('.overlay-label, .gallery-title, h3, .story-title')?.textContent || `Photo #${idx + 1}`
+            title: img.closest('.gallery-card, .apple-media-card, .story-slot, .story-media, .pinterest-masonry-card')?.querySelector('.overlay-label, .gallery-title, h3, .story-title, .card-caption')?.textContent || `Graduation Photo #${idx + 1}`
         }));
 
         const clickedIdx = allImgs.indexOf(cardImg);
@@ -2061,51 +2279,96 @@ function startApplication() {
         const statNumbers = document.querySelectorAll('.stat-number');
         if (!statNumbers.length) return;
 
-        const store = getMediaStore();
+        // Calculate real-time Days Together starting from July 1, 2022 (Batch 2022-2025 start date)
+        const batchStartDate = new Date('2022-07-01');
+        const today = new Date();
+        const diffTime = Math.abs(today - batchStartDate);
+        const realTimeDays = Math.max(1095, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
+
+        // Fetch real-time total memories count from media store & static data stores
         let totalMemoriesCount = 0;
-        Object.keys(store).forEach(key => {
-            if (Array.isArray(store[key])) {
-                totalMemoriesCount += store[key].length;
+        try {
+            if (typeof getMediaStore === 'function') {
+                const store = getMediaStore();
+                Object.keys(store).forEach(key => {
+                    if (Array.isArray(store[key])) {
+                        totalMemoriesCount += store[key].length;
+                    }
+                });
             }
-        });
+        } catch (e) { }
+
+        if (!totalMemoriesCount) {
+            const g = (window.galleryImages || []).length;
+            const f = (window.friendImages || []).length;
+            const gr = (window.gradImages || []).length;
+            const v = (window.galleryVideos || []).length;
+            const e = (window.eventImages || []).length;
+            totalMemoriesCount = (g + f + gr + v + e) || 500;
+        }
 
         statNumbers.forEach(stat => {
-            let target = parseInt(stat.getAttribute('data-target')) || 0;
-            const label = stat.nextElementSibling ? stat.nextElementSibling.textContent.trim() : '';
+            const card = stat.closest('.stat-card') || stat.parentElement;
+            const labelText = (card ? card.textContent : (stat.nextElementSibling?.textContent || '')).toLowerCase();
 
-            if (label.includes('Memories')) {
-                target = Math.max(totalMemoriesCount, 215);
+            let target = parseInt(stat.getAttribute('data-target')) || 0;
+
+            if (labelText.includes('days')) {
+                target = realTimeDays;
+            } else if (labelText.includes('memories')) {
+                target = Math.max(totalMemoriesCount, 500);
+            } else if (labelText.includes('laughs')) {
+                target = target || 999;
             }
 
-            let count = 0;
-            const duration = 2000;
-            const step = Math.max(1, Math.ceil(target / (duration / 30)));
+            if (!target) target = 100;
 
-            const timer = setInterval(() => {
-                count += step;
-                if (count >= target) {
-                    stat.textContent = target + '+';
-                    clearInterval(timer);
+            if (stat.dataset.animating === 'true') return;
+            stat.dataset.animating = 'true';
+
+            stat.textContent = '0'; // Start animation from 0
+
+            const duration = 2000; // 2 seconds smooth animation
+            const startTime = performance.now();
+
+            function updateCounter(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                const progress = Math.min(elapsedTime / duration, 1);
+
+                // Smooth easeOutCubic animation curve
+                const easeOutProgress = 1 - Math.pow(1 - progress, 3);
+                const currentCount = Math.floor(easeOutProgress * target);
+
+                stat.textContent = currentCount.toLocaleString() + '+';
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
                 } else {
-                    stat.textContent = count;
+                    stat.textContent = target.toLocaleString() + '+';
+                    stat.dataset.animating = 'false';
                 }
-            }, 30);
+            }
+
+            requestAnimationFrame(updateCounter);
         });
     }
 
+    // Run hero stats animation immediately & on DOM load & scroll fallback
+    animateHeroStats();
+    setTimeout(animateHeroStats, 50);
+    setTimeout(animateHeroStats, 300);
+    setTimeout(animateHeroStats, 1000);
+
     const heroStatsEl = document.querySelector('.hero-stats');
     if (heroStatsEl) {
-        let animated = false;
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && !animated) {
-                    animated = true;
+                if (entry.isIntersecting) {
                     animateHeroStats();
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.01 });
         observer.observe(heroStatsEl);
-        setTimeout(animateHeroStats, 400);
     }
 
     function escapeHTML(str) {
@@ -2114,80 +2377,10 @@ function startApplication() {
     }
 
     /* --------------------------------------------------------------------------
-       32. OUR HONEST REVIEWS SYSTEM
+       32. OUR HONEST REVIEWS SYSTEM (STAR RATING HANDLER & AUTOMATIC SYNC)
        -------------------------------------------------------------------------- */
-    const REVIEWS_STORAGE_KEY = 'mc_honest_reviews_v1';
-
-    function getHonestReviews() {
-        try {
-            const data = localStorage.getItem(REVIEWS_STORAGE_KEY);
-            return data ? JSON.parse(data) : [];
-        } catch (e) {
-            return [];
-        }
-    }
-
-    function saveHonestReviews(reviews) {
-        try {
-            localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(reviews));
-        } catch (e) { }
-    }
-
-    function renderHonestReviews() {
-        const listWrapper = document.getElementById('reviews-display-list');
-        const countEl = document.getElementById('review-count');
-        if (!listWrapper) return;
-
-        const reviews = getHonestReviews();
-        if (countEl) countEl.textContent = reviews.length;
-
-        if (reviews.length === 0) {
-            listWrapper.innerHTML = `
-                <div class="empty-reviews-state">
-                    <i class="fas fa-comment-dots"></i>
-                    <p>No reviews submitted yet. Be the first to share your honest review!</p>
-                </div>
-            `;
-            return;
-        }
-
-        let html = '';
-        reviews.forEach((item) => {
-            const stars = Array.from({ length: 5 }, (_, i) =>
-                `<i class="fas fa-star" style="color: ${i < item.rating ? '#ffc107' : 'rgba(255,255,255,0.2)'}"></i>`
-            ).join('');
-
-            html += `
-                <div class="review-card-item">
-                    <div class="review-card-header">
-                        <span class="review-author-name"><i class="fas fa-user-circle"></i> ${escapeHTML(item.name)}</span>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span class="review-date-badge">${escapeHTML(item.date)}</span>
-                            ${isAdmin() ? `<button class="btn-icon-sm danger btn-delete-review" data-id="${item.id}" title="Delete Review"><i class="fas fa-trash"></i></button>` : ''}
-                        </div>
-                    </div>
-                    <div class="review-stars-display">${stars}</div>
-                    <p class="review-body-text">${escapeHTML(item.content)}</p>
-                </div>
-            `;
-        });
-
-        listWrapper.innerHTML = html;
-
-        if (isAdmin()) {
-            listWrapper.querySelectorAll('.btn-delete-review').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = parseInt(btn.getAttribute('data-id'));
-                    if (confirm('Delete this review?')) {
-                        const current = getHonestReviews();
-                        const updated = current.filter(x => x.id !== id);
-                        saveHonestReviews(updated);
-                        renderHonestReviews();
-                        showToast('Review deleted!', 'info');
-                    }
-                });
-            });
-        }
+    if (typeof window.renderReviewList === 'function') {
+        window.renderReviewList();
     }
 
     // Star Rating Selection Handler
@@ -2209,44 +2402,71 @@ function startApplication() {
         });
     }
 
-    // Form Submit Handler
-    const reviewForm = document.getElementById('honest-review-form');
-    if (reviewForm) {
-        renderHonestReviews();
-
-        reviewForm.addEventListener('submit', (e) => {
+    // Form Submit Handler (Saves to Firebase Firestore & Local Store)
+    window.submitHonestReview = async function (e) {
+        if (e) {
             e.preventDefault();
-            const nameInput = document.getElementById('review-name');
-            const contentInput = document.getElementById('review-content');
-            const starContainer = document.getElementById('star-rating-select');
+            e.stopPropagation();
+        }
+        const reviewForm = document.getElementById('honest-review-form');
+        const submitBtn = reviewForm ? reviewForm.querySelector('button[type="submit"]') : null;
+        const nameInput = document.getElementById('review-name');
+        const contentInput = document.getElementById('review-content');
+        const starContainer = document.getElementById('star-rating-select');
 
-            const name = nameInput ? nameInput.value.trim() : '';
-            const content = contentInput ? contentInput.value.trim() : '';
-            const rating = starContainer ? parseInt(starContainer.getAttribute('data-rating')) || 5 : 5;
+        const name = nameInput ? nameInput.value.trim() : '';
+        const content = contentInput ? contentInput.value.trim() : '';
+        const rating = starContainer ? parseInt(starContainer.getAttribute('data-rating')) || 5 : 5;
 
-            if (!name || !content) {
-                showToast('Please enter both your name and review!', 'error');
-                return;
+        if (!name || !content) {
+            if (typeof showToast === 'function') showToast('Please enter both your name and review!', 'error');
+            else alert('Please enter both your name and review!');
+            return false;
+        }
+
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span>Saving...</span> <i class="fas fa-spinner fa-spin"></i>`;
+        }
+
+        const formattedDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+        const newReviewObj = {
+            id: 'rev_' + Date.now(),
+            name: name,
+            content: content,
+            rating: rating,
+            date: formattedDate
+        };
+
+        // Instant update in UI & Local Storage
+        const currentCache = getLocalHonestReviews();
+        currentCache.unshift(newReviewObj);
+        saveLocalHonestReviews(currentCache);
+        renderReviewList(currentCache);
+
+        try {
+            if (db) {
+                await addDoc(collection(db, "reviews"), newReviewObj);
             }
-
-            const newReview = {
-                id: Date.now(),
-                name: name,
-                content: content,
-                rating: rating,
-                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-            };
-
-            const existing = getHonestReviews();
-            existing.unshift(newReview);
-            saveHonestReviews(existing);
-            renderHonestReviews();
-
+            if (typeof showToast === 'function') showToast('Thank you! Your honest review has been posted.', 'success');
+        } catch (err) {
+            console.error("Error saving review to Firebase:", err);
+            if (typeof showToast === 'function') showToast('Thank you! Your review has been saved.', 'success');
+        } finally {
             if (nameInput) nameInput.value = '';
             if (contentInput) contentInput.value = '';
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<span>Submit Review</span> <i class="fas fa-paper-plane"></i>`;
+            }
+        }
+        return false;
+    };
 
-            showToast('Thank you! Your honest review has been posted.', 'success');
-        });
+    const reviewForm = document.getElementById('honest-review-form');
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', window.submitHonestReview);
     }
 
 
@@ -2333,13 +2553,14 @@ function startApplication() {
                 return false;
             }
         }, true);
-    }
+    })();
+}
 
 if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', startApplication);
-    } else {
-        startApplication();
-    }
-    window.addEventListener('load', startApplication);
-    setTimeout(startApplication, 10);
-    setTimeout(startApplication, 100);
+    document.addEventListener('DOMContentLoaded', startApplication);
+} else {
+    startApplication();
+}
+window.addEventListener('load', startApplication);
+setTimeout(startApplication, 10);
+setTimeout(startApplication, 100);

@@ -98,7 +98,6 @@
                 <a href="journey.html" class="nav-link"><i class="fas fa-route"></i> Journey</a>
                 <a href="gallery.html" class="nav-link"><i class="fas fa-images"></i> Gallery</a>
                 <a href="videos.html" class="nav-link"><i class="fas fa-video"></i> Videos</a>
-                <a href="events.html" class="nav-link"><i class="fas fa-calendar-star"></i> Events</a>
                 <a href="friends.html" class="nav-link"><i class="fas fa-user-friends"></i> Friends</a>
                 <a href="graduation.html" class="nav-link"><i class="fas fa-award"></i> Graduation</a>
                 <a href="review.html" class="nav-link active"><i class="fas fa-star"></i> Our Review</a>
@@ -140,7 +139,7 @@
                             Your feedback matters. Please share your honest experience with us.
                         </p>
 
-                        <form id="honest-review-form">
+                        <form id="honest-review-form" onsubmit="event.preventDefault(); if (window.submitHonestReview) { window.submitHonestReview(event); } return false;">
                             <div class="form-group">
                                 <label for="review-name"><i class="fas fa-user"></i> Name</label>
                                 <input type="text" id="review-name" placeholder="Enter your full name" required>
@@ -162,7 +161,7 @@
                                 <textarea id="review-content" rows="5" placeholder="Write your honest review and thoughts here..." required style="width: 100%; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--color-border); border-radius: var(--radius-md); color: #fff; font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-block btn-glow">
+                            <button type="button" onclick="window.submitHonestReview(event)" class="btn btn-primary btn-block btn-glow">
                                 <span>Submit Review</span>
                                 <i class="fas fa-paper-plane"></i>
                             </button>

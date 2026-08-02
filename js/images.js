@@ -12,24 +12,25 @@ export const homeImages = [
 ];
 
 export const journeyImages = [
-    "images/journey/journey_001.jpg",
-    "images/journey/journey_002.jpg",
-    "images/journey/journey_003.jpg",
-    "images/journey/journey_004.jpg",
-    "images/journey/journey_005.jpg"
+    "images/journey/classroom.jpg",
+    "images/journey/teachers.jpg",
+    "images/journey/download.jfif",
+    "images/journey/libray.png",
+    "images/journey/canteen.jfif"
 ];
 
-export const galleryImages = Array.from({ length: 97 }, (_, idx) => {
+export const galleryImages = Array.from({ length: 116 }, (_, idx) => {
     const i = idx + 1;
+    if (i === 92) return null;
     const numStr = i < 10 ? '00' + i : (i < 100 ? '0' + i : '' + i);
     return {
         id: i,
         src: `images/gallery/gallery_${numStr}.jpg`,
         url: `images/gallery/gallery_${numStr}.jpg`,
-        title: `Gallery Photo #${i < 10 ? '0' + i : '' + i}`,
+        title: `Group Image ${i < 10 ? '0' + i : '' + i}`,
         category: ['campus', 'canteen', 'events', 'farewell'][i % 4]
     };
-});
+}).filter(Boolean);
 
 export const eventImages = [1, 2, 3].map(i => ({
     id: i,
@@ -41,14 +42,15 @@ export const eventImages = [1, 2, 3].map(i => ({
 
 const friendFileNumbers = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-    18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
+    18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+    33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49
 ];
 
 export const friendImages = friendFileNumbers.map((num, idx) => {
     const i = idx + 1;
     const fileNumStr = num < 10 ? '00' + num : '0' + num;
     const displayNumStr = i < 10 ? '0' + i : '' + i;
-    const nicknames = ['Canteen Squad', 'Soul Tribe', 'Backbenchers', 'Classroom Gang', 'Campus Squad', 'Forever Friends', 'Fun Tribe', 'Canteen Squad', 'Soul Tribe', 'Classroom Gang', 'Campus Squad', 'Forever Friends'];
+    const nicknames = ['Canteen Squad', 'Soul Tribe', 'Backbenchers', 'Classroom Gang', 'Campus Squad', 'Forever Friends', 'Fun Tribe'];
     return {
         id: i,
         name: `Best Friend #${displayNumStr}`,
